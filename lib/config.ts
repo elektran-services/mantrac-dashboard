@@ -20,6 +20,12 @@ export const APP_CONFIG = {
   SESSION_TIMEOUT: parseInt(process.env.SESSION_TIMEOUT || '3600000', 10),
 } as const;
 
+export const MONITORING_CONFIG = {
+  OVERSPEED_LIMIT_KMH: 120, // Speed limit in km/h for automated monitoring
+  OVERSPEED_DURATION_THRESHOLD_MS: 60000, // 60 seconds minimum duration
+  CHECK_INTERVAL_MS: 5 * 60 * 1000, // 5 minutes
+} as const;
+
 /**
  * Build GPS51 API URL with action and token
  */

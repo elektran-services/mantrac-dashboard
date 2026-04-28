@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getAuthToken, getUserData } from '@/lib/auth';
 import { buildHereReverseGeocodeUrl } from '@/lib/config';
+import { apiCallWithAutoRefresh } from '@/lib/utils';
 
 interface Device {
   deviceid: string;
@@ -13,6 +14,7 @@ interface Device {
 interface OverspeedRecord {
   tripid: string;
   deviceid: string;
+  deviceName?: string;
   begintime: number;
   endtime: number;
   startlat: number;
@@ -53,6 +55,8 @@ export default function OverspeedReport() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loadingAddresses, setLoadingAddresses] = useState(false);
   const [exportingWithAddresses, setExportingWithAddresses] = useState(false);
+  const [reportMode, setReportMode] = useState<'single' | 'all'>('single');
+  const [progressMessage, setProgressMessage] = useState('');
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -85,7 +89,7 @@ export default function OverspeedReport() {
         return;
       }
 
-      const response = await fetch('/api/devices', {
+      const data = await apiCallWithAutoRefresh('/api/devices', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -93,8 +97,6 @@ export default function OverspeedReport() {
           token 
         }),
       });
-
-      const data = await response.json();
       
       if (data.status === 0 && data.groups) {
         const allDevices = data.groups.flatMap((group: any) =>
@@ -192,7 +194,7 @@ export default function OverspeedReport() {
   }, [currentPage]);
 
   const fetchOverspeedReport = async () => {
-    if (!selectedDevice) {
+    if (reportMode === 'single' && !selectedDevice) {
       setError('Please select a device');
       return;
     }
@@ -205,38 +207,98 @@ export default function OverspeedReport() {
     setLoading(true);
     setError('');
     setOverspeedData(null);
+    setProgressMessage('');
 
     try {
       const token = getAuthToken();
       const begintime = formatDateForAPI(startDate);
       const endtime = formatDateForAPI(endDate);
 
-      const response = await fetch('/api/overspeed', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          deviceid: selectedDevice,
-          begintime,
-          endtime,
-          speedlimit: speedLimit,
-          token
-        }),
-      });
+      if (reportMode === 'single') {
+        // Single device report (existing logic)
+        const data = await apiCallWithAutoRefresh('/api/overspeed', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deviceid: selectedDevice,
+            begintime,
+            endtime,
+            speedlimit: speedLimit,
+            token
+          }),
+        });
 
-      const data = await response.json();
-
-      if (data.status === 0) {
-        console.log('Overspeed API Response:', data);
-        setOverspeedData(data);
-        setCurrentPage(1); // Reset to first page
-        // Fetch addresses for first page
-        if (data.records && data.records.length > 0) {
-          fetchAddressesForPage(data.records, 1);
+        if (data.status === 0) {
+          console.log('Overspeed API Response:', data);
+          setOverspeedData(data);
+          setCurrentPage(1);
+          if (data.records && data.records.length > 0) {
+            fetchAddressesForPage(data.records, 1);
+          }
+        } else {
+          const errorMsg = data.cause || data.details || 'Failed to fetch overspeed data';
+          setError(errorMsg);
+          console.error('API Error:', data);
         }
       } else {
-        const errorMsg = data.cause || data.details || 'Failed to fetch overspeed data';
-        setError(errorMsg);
-        console.error('API Error:', data);
+        // All devices report (new logic)
+        const allRecords: OverspeedRecord[] = [];
+        const devicesToQuery = devices.filter(d => d.deviceid); // Filter out empty deviceids
+        
+        setProgressMessage(`Processing 0 of ${devicesToQuery.length} devices...`);
+
+        for (let i = 0; i < devicesToQuery.length; i++) {
+          const device = devicesToQuery[i];
+          setProgressMessage(`Processing ${i + 1} of ${devicesToQuery.length} devices (${device.name})...`);
+
+          try {
+            const data = await apiCallWithAutoRefresh('/api/overspeed', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                deviceid: device.deviceid,
+                begintime,
+                endtime,
+                speedlimit: speedLimit,
+                token
+              }),
+            });
+
+            if (data.status === 0 && data.records && data.records.length > 0) {
+              // Add device info to each record
+              const recordsWithDevice = data.records.map((record: OverspeedRecord) => ({
+                ...record,
+                deviceid: device.deviceid,
+                deviceName: device.name
+              }));
+              allRecords.push(...recordsWithDevice);
+            }
+
+            // Small delay to avoid overwhelming the API
+            await new Promise(resolve => setTimeout(resolve, 200));
+          } catch (err) {
+            console.error(`Error fetching data for device ${device.deviceid}:`, err);
+            // Continue with other devices even if one fails
+          }
+        }
+
+        // Sort by start time (most recent first)
+        allRecords.sort((a, b) => b.begintime - a.begintime);
+
+        setOverspeedData({
+          status: 0,
+          cause: 'OK',
+          speedlimit: speedLimit,
+          totalviolations: allRecords.length,
+          records: allRecords
+        });
+        
+        setCurrentPage(1);
+        setProgressMessage('');
+        
+        if (allRecords.length > 0) {
+          fetchAddressesForPage(allRecords, 1);
+        }
       }
     } catch (err) {
       console.error('Error fetching overspeed report:', err);
@@ -303,9 +365,6 @@ export default function OverspeedReport() {
         setOverspeedData(prev => prev ? { ...prev, records: [...overspeedData.records] } : null);
       }
 
-      const selectedDeviceData = devices.find(d => d.deviceid === selectedDevice);
-      const deviceName = selectedDeviceData?.name || selectedDevice;
-
       const headers = [
         'Device',
         'Start Time',
@@ -320,19 +379,25 @@ export default function OverspeedReport() {
         'End Location'
       ];
 
-      const rows = overspeedData.records.map(record => [
-        deviceName,
-        formatDateTime(record.begintime),
-        formatDateTime(record.endtime),
-        formatDuration(record.duration),
-        record.maxspeed.toFixed(1),
-        record.avgspeed.toFixed(1),
-        record.speedlimit.toString(),
-        record.overspeed.toFixed(1),
-        record.distance.toFixed(2),
-        record.startaddress || `${record.startlat.toFixed(6)}, ${record.startlon.toFixed(6)}`,
-        record.endaddress || `${record.endlat.toFixed(6)}, ${record.endlon.toFixed(6)}`
-      ]);
+      const rows = overspeedData.records.map(record => {
+        const deviceName = record.deviceName || 
+          (reportMode === 'single' ? devices.find(d => d.deviceid === selectedDevice)?.name : null) ||
+          record.deviceid;
+
+        return [
+          deviceName,
+          formatDateTime(record.begintime),
+          formatDateTime(record.endtime),
+          formatDuration(record.duration),
+          record.maxspeed.toFixed(1),
+          record.avgspeed.toFixed(1),
+          record.speedlimit.toString(),
+          record.overspeed.toFixed(1),
+          record.distance.toFixed(2),
+          record.startaddress || `${record.startlat.toFixed(6)}, ${record.startlon.toFixed(6)}`,
+          record.endaddress || `${record.endlat.toFixed(6)}, ${record.endlon.toFixed(6)}`
+        ];
+      });
 
       const csvContent = [
         headers.join(','),
@@ -343,7 +408,10 @@ export default function OverspeedReport() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `overspeed-report-${deviceName}-${startDate}-to-${endDate}.csv`;
+      const filename = reportMode === 'all' 
+        ? `overspeed-report-all-devices-${startDate}-to-${endDate}.csv`
+        : `overspeed-report-${devices.find(d => d.deviceid === selectedDevice)?.name || selectedDevice}-${startDate}-to-${endDate}.csv`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -395,40 +463,78 @@ export default function OverspeedReport() {
       <div className="bg-white rounded shadow-sm p-4">
         <h3 className="text-sm font-semibold text-gray-900 mb-3">Filters</h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-          {/* Search */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">
-              Search Device
+        {/* Report Mode Toggle */}
+        <div className="mb-4 pb-3 border-b border-gray-200">
+          <label className="block text-xs font-medium text-gray-700 mb-2">Report Mode</label>
+          <div className="flex gap-3">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="reportMode"
+                value="single"
+                checked={reportMode === 'single'}
+                onChange={(e) => setReportMode(e.target.value as 'single' | 'all')}
+                className="w-4 h-4 text-[#FFC107] border-gray-300 focus:ring-[#FFC107]"
+              />
+              <span className="ml-2 text-sm text-gray-700">Single Device</span>
             </label>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearch}
-              placeholder="Search by name or IMEI"
-              className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900"
-            />
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="reportMode"
+                value="all"
+                checked={reportMode === 'all'}
+                onChange={(e) => setReportMode(e.target.value as 'single' | 'all')}
+                className="w-4 h-4 text-[#FFC107] border-gray-300 focus:ring-[#FFC107]"
+              />
+              <span className="ml-2 text-sm text-gray-700">All Devices</span>
+            </label>
           </div>
+          {reportMode === 'all' && (
+            <p className="text-xs text-gray-500 mt-1.5">
+              ⚠️ This will generate reports for all {devices.length} devices. May take several minutes.
+            </p>
+          )}
+        </div>
 
-          {/* Device Selector */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">
-              Select Device
-            </label>
-            <select
-              value={selectedDevice}
-              onChange={(e) => setSelectedDevice(e.target.value)}
-              disabled={loadingDevices}
-              className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900 disabled:bg-gray-100"
-            >
-              <option value="">Select a device</option>
-              {filteredDevices.map((device) => (
-                <option key={device.deviceid} value={device.deviceid}>
-                  {device.name} ({device.deviceid})
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+          {/* Search - Only show for single device mode */}
+          {reportMode === 'single' && (
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                Search Device
+              </label>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearch}
+                placeholder="Search by name or IMEI"
+                className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900"
+              />
+            </div>
+          )}
+
+          {/* Device Selector - Only show for single device mode */}
+          {reportMode === 'single' && (
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">
+                Select Device
+              </label>
+              <select
+                value={selectedDevice}
+                onChange={(e) => setSelectedDevice(e.target.value)}
+                disabled={loadingDevices}
+                className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900 disabled:bg-gray-100"
+              >
+                <option value="">Select a device</option>
+                {filteredDevices.map((device) => (
+                  <option key={device.deviceid} value={device.deviceid}>
+                    {device.name} ({device.deviceid})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Start Date */}
           <div>
@@ -476,10 +582,10 @@ export default function OverspeedReport() {
         <div className="mt-3">
           <button
             onClick={fetchOverspeedReport}
-            disabled={loading || !selectedDevice || !startDate || !endDate}
+            disabled={loading || (reportMode === 'single' && !selectedDevice) || !startDate || !endDate}
             className="px-4 py-1.5 text-sm bg-[#FFC107] text-gray-900 rounded hover:bg-[#FFD54F] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
           >
-            {loading ? 'Analyzing...' : 'Generate Report'}
+            {loading ? 'Analyzing...' : `Generate Report ${reportMode === 'all' ? `(${devices.length} devices)` : ''}`}
           </button>
         </div>
       </div>
@@ -497,8 +603,15 @@ export default function OverspeedReport() {
         <div className="bg-white rounded shadow-sm p-8">
           <div className="flex flex-col items-center justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#FFC107] mb-3"></div>
-            <p className="text-sm text-gray-600">Analyzing speed data...</p>
-            <p className="text-xs text-gray-500 mt-1">This may take a moment for large date ranges</p>
+            <p className="text-sm text-gray-600">
+              {progressMessage || 'Analyzing speed data...'}
+            </p>
+            {reportMode === 'all' && (
+              <p className="text-xs text-gray-500 mt-1">This may take several minutes for all devices</p>
+            )}
+            {reportMode === 'single' && (
+              <p className="text-xs text-gray-500 mt-1">This may take a moment for large date ranges</p>
+            )}
           </div>
         </div>
       )}
@@ -528,6 +641,9 @@ export default function OverspeedReport() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  {reportMode === 'all' && (
+                    <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Device</th>
+                  )}
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Time</th>
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Duration</th>
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Max Speed</th>
@@ -541,6 +657,12 @@ export default function OverspeedReport() {
                   .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                   .map((record, index) => (
                   <tr key={index} className="hover:bg-gray-50">
+                    {reportMode === 'all' && (
+                      <td className="px-3 py-2">
+                        <div className="text-xs font-medium text-gray-900">{record.deviceName || record.deviceid}</div>
+                        <div className="text-xs text-gray-500">{record.deviceid}</div>
+                      </td>
+                    )}
                     <td className="px-3 py-2">
                       <div className="text-xs text-gray-900">Start: {formatDateTime(record.begintime)}</div>
                       <div className="text-xs text-gray-500">End: {formatDateTime(record.endtime)}</div>

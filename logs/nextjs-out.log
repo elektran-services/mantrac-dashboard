@@ -1,0 +1,635 @@
+2026-04-19 08:25:02 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-19 08:25:02 +01:00: - Local:         http://localhost:3000
+2026-04-19 08:25:02 +01:00: - Network:       http://10.75.137.230:3000
+2026-04-19 08:25:02 +01:00: - Environments: .env.local
+2026-04-19 08:25:02 +01:00: 
+2026-04-19 08:25:02 +01:00: ✓ Starting...
+2026-04-19 08:25:04 +01:00: ✓ Ready in 2.7s
+2026-04-19 08:25:08 +01:00:  GET / 200 in 2.1s (compile: 1163ms, proxy.ts: 7ms, render: 888ms)
+2026-04-19 08:25:09 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-18: 2026-04-18 00:00:00 to 2026-04-18 23:59:59
+2026-04-19 08:25:13 +01:00:  POST /api/monitor-overspeed 400 in 5.1s (compile: 1202ms, render: 3.9s)
+2026-04-19 08:25:15 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-18: 2026-04-18 00:00:00 to 2026-04-18 23:59:59
+2026-04-19 08:25:15 +01:00: [Monitor] Found 257 devices to check
+2026-04-19 08:33:37 +01:00: [?25h
+2026-04-19 08:33:37 +01:00: 
+2026-04-19 08:33:45 +01:00: [?25h
+2026-04-19 08:33:45 +01:00: 
+2026-04-19 08:33:53 +01:00: [?25h
+2026-04-19 08:33:53 +01:00: 
+2026-04-19 08:34:02 +01:00: [?25h
+2026-04-19 08:34:02 +01:00: 
+2026-04-19 08:34:11 +01:00: [?25h
+2026-04-19 08:34:11 +01:00: 
+2026-04-19 08:34:19 +01:00: [?25h
+2026-04-19 08:34:19 +01:00: 
+2026-04-19 08:34:26 +01:00: [?25h
+2026-04-19 08:34:26 +01:00: 
+2026-04-19 08:34:34 +01:00: [?25h
+2026-04-19 08:34:34 +01:00: 
+2026-04-19 08:34:42 +01:00: [?25h
+2026-04-19 08:34:42 +01:00: 
+2026-04-19 08:34:50 +01:00: [?25h
+2026-04-19 08:34:50 +01:00: 
+2026-04-19 08:37:29 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-19 08:37:29 +01:00: - Local:         http://localhost:3000
+2026-04-19 08:37:29 +01:00: - Network:       http://10.75.137.230:3000
+2026-04-19 08:37:29 +01:00: - Environments: .env.local
+2026-04-19 08:37:29 +01:00: 
+2026-04-19 08:37:29 +01:00: ✓ Starting...
+2026-04-19 08:37:31 +01:00: ✓ Ready in 2.3s
+2026-04-19 08:37:34 +01:00:  GET / 200 in 131ms (compile: 13ms, proxy.ts: 11ms, render: 108ms)
+2026-04-19 08:37:35 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-18: 2026-04-18 00:00:00 to 2026-04-18 23:59:59
+2026-04-19 08:37:37 +01:00:  POST /api/monitor-overspeed 400 in 3.5s (compile: 754ms, render: 2.7s)
+2026-04-19 08:37:40 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-18: 2026-04-18 00:00:00 to 2026-04-18 23:59:59
+2026-04-19 08:37:41 +01:00: [Monitor] Found 257 devices to check
+2026-04-19 08:48:17 +01:00: [Monitor] Progress: 50/257 devices checked (50 API calls)
+2026-04-19 09:00:06 +01:00: [Monitor] Progress: 100/257 devices checked (100 API calls)
+2026-04-19 09:11:35 +01:00: [Monitor] Progress: 150/257 devices checked (150 API calls)
+2026-04-19 09:24:48 +01:00: [Monitor] Progress: 200/257 devices checked (200 API calls)
+2026-04-19 09:36:41 +01:00: [Monitor] Progress: 250/257 devices checked (250 API calls)
+2026-04-19 09:38:27 +01:00: [Monitor] Progress: 257/257 devices checked (257 API calls)
+2026-04-19 09:38:36 +01:00: [Monitor] No violations found for TODAY (2026-04-18).
+2026-04-19 09:38:46 +01:00: [Email] No violations report sent successfully to: ifodomartin@gmail.com, contact@lascofed.com, murphy.emamezi@jvmorris.biz, murphyisioro@gmail.com, emamezi@marketafricka.com
+2026-04-19 09:38:46 +01:00: [Email] Message ID: <d59d6173-a8cd-fbe8-dda4-f633b73b843c@safetrack.com.ng>
+2026-04-19 09:38:46 +01:00: [Monitor] Email sent with daily summary - No violations detected today
+2026-04-19 09:38:46 +01:00:  POST /api/monitor-overspeed 200 in 61.1min (compile: 13ms, render: 61.1min)
+2026-04-19 10:08:46 +01:00:  GET / 200 in 314ms (compile: 61ms, proxy.ts: 8ms, render: 245ms)
+2026-04-19 10:38:46 +01:00:  GET / 200 in 114ms (compile: 13ms, proxy.ts: 7ms, render: 94ms)
+2026-04-19 11:08:46 +01:00:  GET / 200 in 94ms (compile: 8ms, proxy.ts: 5ms, render: 82ms)
+2026-04-19 11:38:46 +01:00:  GET / 200 in 148ms (compile: 19ms, proxy.ts: 13ms, render: 116ms)
+2026-04-19 12:08:46 +01:00:  GET / 200 in 264ms (compile: 14ms, proxy.ts: 8ms, render: 242ms)
+2026-04-19 12:38:46 +01:00:  GET / 200 in 164ms (compile: 16ms, proxy.ts: 10ms, render: 138ms)
+2026-04-19 13:08:46 +01:00:  GET / 200 in 206ms (compile: 16ms, proxy.ts: 6ms, render: 184ms)
+2026-04-19 13:38:46 +01:00:  GET / 200 in 304ms (compile: 61ms, proxy.ts: 39ms, render: 204ms)
+2026-04-19 14:08:46 +01:00:  GET / 200 in 168ms (compile: 21ms, proxy.ts: 10ms, render: 136ms)
+2026-04-19 14:38:46 +01:00:  GET / 200 in 169ms (compile: 19ms, proxy.ts: 22ms, render: 129ms)
+2026-04-19 15:08:46 +01:00:  GET / 200 in 223ms (compile: 15ms, proxy.ts: 11ms, render: 197ms)
+2026-04-19 15:38:47 +01:00:  GET / 200 in 363ms (compile: 83ms, proxy.ts: 14ms, render: 265ms)
+2026-04-19 16:08:47 +01:00:  GET / 200 in 454ms (compile: 57ms, proxy.ts: 105ms, render: 292ms)
+2026-04-19 16:19:40 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-19 16:19:40 +01:00: - Local:         http://localhost:3000
+2026-04-19 16:19:40 +01:00: - Network:       http://10.75.137.230:3000
+2026-04-19 16:19:40 +01:00: - Environments: .env.local
+2026-04-19 16:19:40 +01:00: 
+2026-04-19 16:19:40 +01:00: ✓ Starting...
+2026-04-19 16:19:42 +01:00: ✓ Ready in 3.1s
+2026-04-19 16:19:44 +01:00:  GET / 200 in 156ms (compile: 14ms, proxy.ts: 11ms, render: 132ms)
+2026-04-19 16:19:45 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-18: 2026-04-18 00:00:00 to 2026-04-18 23:59:59
+2026-04-19 16:19:49 +01:00:  POST /api/monitor-overspeed 400 in 4.2s (compile: 962ms, render: 3.3s)
+2026-04-19 16:19:51 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-18: 2026-04-18 00:00:00 to 2026-04-18 23:59:59
+2026-04-19 16:19:52 +01:00: [Monitor] Found 257 devices to check
+2026-04-19 16:32:37 +01:00: [Monitor] Progress: 50/257 devices checked (49 API calls)
+2026-04-19 16:46:00 +01:00: [Monitor] Progress: 100/257 devices checked (99 API calls)
+2026-04-19 17:00:19 +01:00: [Monitor] Progress: 150/257 devices checked (149 API calls)
+2026-04-19 17:14:57 +01:00: [Monitor] Progress: 200/257 devices checked (199 API calls)
+2026-04-19 17:27:55 +01:00: [Monitor] Progress: 250/257 devices checked (249 API calls)
+2026-04-19 17:29:56 +01:00: [Monitor] Progress: 257/257 devices checked (256 API calls)
+2026-04-19 17:30:07 +01:00: [Monitor] No violations found for TODAY (2026-04-18).
+2026-04-19 17:30:14 +01:00: [Email] No violations report sent successfully to: ifodomartin@gmail.com, contact@lascofed.com, murphy.emamezi@jvmorris.biz, murphyisioro@gmail.com, emamezi@marketafricka.com
+2026-04-19 17:30:14 +01:00: [Email] Message ID: <fba79318-a307-6f25-a0c4-41380de445d3@safetrack.com.ng>
+2026-04-19 17:30:14 +01:00: [Monitor] Email sent with daily summary - No violations detected today
+2026-04-19 17:30:14 +01:00:  POST /api/monitor-overspeed 200 in 70.4min (compile: 5ms, render: 70.4min)
+2026-04-19 18:00:15 +01:00:  GET / 200 in 518ms (compile: 98ms, proxy.ts: 50ms, render: 370ms)
+2026-04-19 18:30:15 +01:00:  GET / 200 in 452ms (compile: 154ms, proxy.ts: 12ms, render: 286ms)
+2026-04-19 19:00:15 +01:00:  GET / 200 in 441ms (compile: 86ms, proxy.ts: 14ms, render: 341ms)
+2026-04-19 19:30:14 +01:00:  GET / 200 in 187ms (compile: 29ms, proxy.ts: 5ms, render: 153ms)
+2026-04-19 20:00:15 +01:00:  GET / 200 in 346ms (compile: 89ms, proxy.ts: 11ms, render: 246ms)
+2026-04-19 20:30:15 +01:00:  GET / 200 in 512ms (compile: 169ms, proxy.ts: 15ms, render: 327ms)
+2026-04-19 21:00:15 +01:00:  GET / 200 in 288ms (compile: 44ms, proxy.ts: 9ms, render: 235ms)
+2026-04-19 21:30:15 +01:00:  GET / 200 in 395ms (compile: 89ms, proxy.ts: 43ms, render: 264ms)
+2026-04-19 22:00:15 +01:00:  GET / 200 in 609ms (compile: 93ms, proxy.ts: 14ms, render: 501ms)
+2026-04-19 22:30:15 +01:00:  GET / 200 in 447ms (compile: 94ms, proxy.ts: 42ms, render: 312ms)
+2026-04-19 23:00:15 +01:00:  GET / 200 in 450ms (compile: 94ms, proxy.ts: 9ms, render: 347ms)
+2026-04-19 23:30:17 +01:00:  GET / 200 in 448ms (compile: 138ms, proxy.ts: 11ms, render: 298ms)
+2026-04-20 00:00:17 +01:00:  GET / 200 in 397ms (compile: 112ms, proxy.ts: 10ms, render: 276ms)
+2026-04-20 00:30:17 +01:00:  GET / 200 in 290ms (compile: 39ms, proxy.ts: 7ms, render: 244ms)
+2026-04-20 01:00:17 +01:00:  GET / 200 in 380ms (compile: 92ms, proxy.ts: 38ms, render: 250ms)
+2026-04-20 01:30:17 +01:00:  GET / 200 in 288ms (compile: 21ms, proxy.ts: 7ms, render: 260ms)
+2026-04-20 02:00:17 +01:00:  GET / 200 in 451ms (compile: 105ms, proxy.ts: 43ms, render: 304ms)
+2026-04-20 02:30:17 +01:00:  GET / 200 in 349ms (compile: 52ms, proxy.ts: 8ms, render: 289ms)
+2026-04-20 03:00:18 +01:00:  GET / 200 in 512ms (compile: 105ms, proxy.ts: 49ms, render: 357ms)
+2026-04-20 03:30:18 +01:00:  GET / 200 in 396ms (compile: 91ms, proxy.ts: 9ms, render: 297ms)
+2026-04-20 04:00:18 +01:00:  GET / 200 in 482ms (compile: 123ms, proxy.ts: 56ms, render: 303ms)
+2026-04-20 04:30:19 +01:00:  GET / 200 in 1343ms (compile: 201ms, proxy.ts: 18ms, render: 1124ms)
+2026-04-20 05:00:18 +01:00:  GET / 200 in 623ms (compile: 175ms, proxy.ts: 12ms, render: 437ms)
+2026-04-20 05:30:17 +01:00:  GET / 200 in 375ms (compile: 81ms, proxy.ts: 8ms, render: 287ms)
+2026-04-20 06:00:18 +01:00:  GET / 200 in 542ms (compile: 171ms, proxy.ts: 10ms, render: 361ms)
+2026-04-20 06:30:17 +01:00:  GET / 200 in 208ms (compile: 11ms, proxy.ts: 6ms, render: 191ms)
+2026-04-20 07:00:18 +01:00:  GET / 200 in 471ms (compile: 112ms, proxy.ts: 12ms, render: 348ms)
+2026-04-24 22:41:15 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-24 22:41:15 +01:00: - Local:         http://localhost:3000
+2026-04-24 22:41:15 +01:00: - Network:       http://10.114.40.230:3000
+2026-04-24 22:41:15 +01:00: - Environments: .env.local
+2026-04-24 22:41:15 +01:00: 
+2026-04-24 22:41:15 +01:00: ✓ Starting...
+2026-04-24 22:41:17 +01:00: ✓ Ready in 3.1s
+2026-04-24 22:41:21 +01:00:  GET / 200 in 2.6s (compile: 2.2s, proxy.ts: 10ms, render: 416ms)
+2026-04-24 22:41:22 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-23: 2026-04-23 00:00:00 to 2026-04-23 23:59:59
+2026-04-24 22:41:26 +01:00:  POST /api/monitor-overspeed 403 in 5.3s (compile: 941ms, render: 4.4s)
+2026-04-24 22:42:44 +01:00:  GET / 200 in 220ms (compile: 27ms, proxy.ts: 17ms, render: 176ms)
+2026-04-24 23:02:53 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-24 23:02:53 +01:00: - Local:         http://localhost:3000
+2026-04-24 23:02:53 +01:00: - Network:       http://10.114.40.230:3000
+2026-04-24 23:02:53 +01:00: - Environments: .env.local
+2026-04-24 23:02:53 +01:00: 
+2026-04-24 23:02:53 +01:00: ✓ Starting...
+2026-04-24 23:02:54 +01:00: ✓ Ready in 2.5s
+2026-04-24 23:02:56 +01:00:  GET / 200 in 1571ms (compile: 900ms, proxy.ts: 14ms, render: 657ms)
+2026-04-24 23:02:57 +01:00:  GET / 200 in 170ms (compile: 13ms, proxy.ts: 10ms, render: 146ms)
+2026-04-24 23:02:58 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-23: 2026-04-23 00:00:00 to 2026-04-23 23:59:59
+2026-04-24 23:03:00 +01:00:  POST /api/monitor-overspeed 400 in 3.1s (compile: 1078ms, render: 1995ms)
+2026-04-24 23:03:01 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-23: 2026-04-23 00:00:00 to 2026-04-23 23:59:59
+2026-04-24 23:03:02 +01:00: [Monitor] Found 257 devices to check
+2026-04-24 23:15:12 +01:00: [Monitor] Progress: 50/257 devices checked (50 API calls)
+2026-04-24 23:28:18 +01:00: [Monitor] Progress: 100/257 devices checked (100 API calls)
+2026-04-24 23:43:19 +01:00: [Monitor] Progress: 150/257 devices checked (150 API calls)
+2026-04-24 23:57:11 +01:00: [Monitor] Progress: 200/257 devices checked (200 API calls)
+2026-04-25 00:11:34 +01:00: [Monitor] Progress: 250/257 devices checked (250 API calls)
+2026-04-25 00:13:49 +01:00: [Monitor] Progress: 257/257 devices checked (257 API calls)
+2026-04-25 00:14:04 +01:00: [Monitor] Found 9 violations for TODAY (2026-04-23). Generating Excel report...
+2026-04-25 00:14:04 +01:00: [Monitor] Excel report saved: C:\Users\ELEKTRAN\Documents\SAFETRACK_CHINESE\dashboards\mantrac\mantrac-dashboard\overspeed_reports\overspeed_daily_report_2026-04-23.xlsx
+2026-04-25 00:14:26 +01:00: [Monitor] Email sent with daily summary - 9 violations detected today
+2026-04-25 00:14:26 +01:00:  POST /api/monitor-overspeed 200 in 71.4min (compile: 7ms, render: 71.4min)
+2026-04-25 00:44:26 +01:00:  GET / 200 in 162ms (compile: 16ms, proxy.ts: 5ms, render: 141ms)
+2026-04-25 01:14:26 +01:00:  GET / 200 in 104ms (compile: 9ms, proxy.ts: 13ms, render: 82ms)
+2026-04-25 01:44:26 +01:00:  GET / 200 in 96ms (compile: 12ms, proxy.ts: 7ms, render: 77ms)
+2026-04-25 02:14:26 +01:00:  GET / 200 in 78ms (compile: 6ms, proxy.ts: 4ms, render: 69ms)
+2026-04-25 02:44:26 +01:00:  GET / 200 in 145ms (compile: 10ms, proxy.ts: 14ms, render: 120ms)
+2026-04-25 03:14:26 +01:00:  GET / 200 in 98ms (compile: 8ms, proxy.ts: 6ms, render: 84ms)
+2026-04-25 03:44:26 +01:00:  GET / 200 in 100ms (compile: 8ms, proxy.ts: 5ms, render: 87ms)
+2026-04-25 04:14:26 +01:00:  GET / 200 in 104ms (compile: 15ms, proxy.ts: 12ms, render: 77ms)
+2026-04-25 04:44:26 +01:00:  GET / 200 in 136ms (compile: 9ms, proxy.ts: 8ms, render: 119ms)
+2026-04-25 05:14:26 +01:00:  GET / 200 in 96ms (compile: 7ms, proxy.ts: 7ms, render: 81ms)
+2026-04-25 05:44:26 +01:00:  GET / 200 in 125ms (compile: 13ms, proxy.ts: 14ms, render: 99ms)
+2026-04-25 06:14:26 +01:00:  GET / 200 in 196ms (compile: 7ms, proxy.ts: 7ms, render: 182ms)
+2026-04-25 06:44:26 +01:00:  GET / 200 in 96ms (compile: 10ms, proxy.ts: 13ms, render: 73ms)
+2026-04-25 07:14:26 +01:00:  GET / 200 in 98ms (compile: 6ms, proxy.ts: 12ms, render: 79ms)
+2026-04-25 07:44:26 +01:00:  GET / 200 in 102ms (compile: 13ms, proxy.ts: 17ms, render: 72ms)
+2026-04-25 08:14:26 +01:00:  GET / 200 in 109ms (compile: 8ms, proxy.ts: 8ms, render: 93ms)
+2026-04-25 08:44:26 +01:00:  GET / 200 in 179ms (compile: 61ms, proxy.ts: 8ms, render: 109ms)
+2026-04-25 09:14:26 +01:00:  GET / 200 in 127ms (compile: 25ms, proxy.ts: 8ms, render: 95ms)
+2026-04-25 09:44:26 +01:00:  GET / 200 in 215ms (compile: 20ms, proxy.ts: 5ms, render: 189ms)
+2026-04-25 10:14:26 +01:00:  GET / 200 in 100ms (compile: 19ms, proxy.ts: 7ms, render: 74ms)
+2026-04-25 10:44:26 +01:00:  GET / 200 in 103ms (compile: 11ms, proxy.ts: 8ms, render: 84ms)
+2026-04-25 11:14:26 +01:00:  GET / 200 in 122ms (compile: 15ms, proxy.ts: 24ms, render: 83ms)
+2026-04-25 11:44:26 +01:00:  GET / 200 in 107ms (compile: 12ms, proxy.ts: 7ms, render: 89ms)
+2026-04-25 12:14:26 +01:00:  GET / 200 in 95ms (compile: 7ms, proxy.ts: 5ms, render: 83ms)
+2026-04-25 12:44:26 +01:00:  GET / 200 in 94ms (compile: 13ms, proxy.ts: 7ms, render: 75ms)
+2026-04-25 15:07:02 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-25 15:07:02 +01:00: - Local:         http://localhost:3000
+2026-04-25 15:07:02 +01:00: - Network:       http://10.114.40.230:3000
+2026-04-25 15:07:02 +01:00: - Environments: .env.local
+2026-04-25 15:07:02 +01:00: 
+2026-04-25 15:07:02 +01:00: ✓ Starting...
+2026-04-25 15:07:05 +01:00: ✓ Ready in 5.4s
+2026-04-25 15:07:09 +01:00:  GET / 200 in 3.0s (compile: 1406ms, proxy.ts: 250ms, render: 1318ms)
+2026-04-25 15:07:09 +01:00:  GET / 200 in 273ms (compile: 16ms, proxy.ts: 11ms, render: 246ms)
+2026-04-25 15:07:10 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-24: 2026-04-24 00:00:00 to 2026-04-24 23:59:59
+2026-04-25 15:07:12 +01:00:  POST /api/monitor-overspeed 400 in 3.3s (compile: 1301ms, render: 2.0s)
+2026-04-25 15:07:17 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-24: 2026-04-24 00:00:00 to 2026-04-24 23:59:59
+2026-04-25 15:07:28 +01:00: [Monitor] Found 257 devices to check
+2026-04-25 15:07:44 +01:00:  GET / 200 in 474ms (compile: 42ms, proxy.ts: 14ms, render: 419ms)
+2026-04-25 15:20:40 +01:00: [Monitor] Progress: 50/257 devices checked (43 API calls)
+2026-04-25 15:28:20 +01:00: [Monitor] Progress: 100/257 devices checked (45 API calls)
+2026-04-25 15:44:42 +01:00: [Monitor] Progress: 150/257 devices checked (92 API calls)
+2026-04-25 16:00:56 +01:00: [Monitor] Progress: 200/257 devices checked (139 API calls)
+2026-04-25 16:14:56 +01:00: [Monitor] Progress: 250/257 devices checked (187 API calls)
+2026-04-25 16:17:18 +01:00: [Monitor] Progress: 257/257 devices checked (194 API calls)
+2026-04-25 16:17:41 +01:00: [Monitor] Found 6 violations for TODAY (2026-04-24). Generating Excel report...
+2026-04-25 16:17:41 +01:00: [Monitor] Excel report saved: C:\Users\ELEKTRAN\Documents\SAFETRACK_CHINESE\dashboards\mantrac\mantrac-dashboard\overspeed_reports\overspeed_daily_report_2026-04-24.xlsx
+2026-04-25 16:18:03 +01:00: [Monitor] Email sent with daily summary - 6 violations detected today
+2026-04-25 16:18:03 +01:00:  POST /api/monitor-overspeed 200 in 70.8min (compile: 9ms, render: 70.8min)
+2026-04-25 16:48:03 +01:00:  GET / 200 in 180ms (compile: 23ms, proxy.ts: 12ms, render: 145ms)
+2026-04-25 17:18:03 +01:00:  GET / 200 in 119ms (compile: 7ms, proxy.ts: 10ms, render: 102ms)
+2026-04-25 17:48:03 +01:00:  GET / 200 in 123ms (compile: 11ms, proxy.ts: 7ms, render: 105ms)
+2026-04-25 18:18:03 +01:00:  GET / 200 in 100ms (compile: 12ms, proxy.ts: 14ms, render: 73ms)
+2026-04-25 18:48:03 +01:00:  GET / 200 in 181ms (compile: 9ms, proxy.ts: 45ms, render: 127ms)
+2026-04-25 19:18:03 +01:00:  GET / 200 in 125ms (compile: 13ms, proxy.ts: 8ms, render: 104ms)
+2026-04-25 19:48:03 +01:00:  GET / 200 in 100ms (compile: 6ms, proxy.ts: 7ms, render: 86ms)
+2026-04-25 20:18:03 +01:00:  GET / 200 in 91ms (compile: 7ms, proxy.ts: 10ms, render: 74ms)
+2026-04-25 20:48:03 +01:00:  GET / 200 in 140ms (compile: 10ms, proxy.ts: 11ms, render: 119ms)
+2026-04-25 21:18:03 +01:00:  GET / 200 in 126ms (compile: 10ms, proxy.ts: 12ms, render: 105ms)
+2026-04-25 21:48:04 +01:00:  GET / 200 in 201ms (compile: 11ms, proxy.ts: 11ms, render: 179ms)
+2026-04-25 22:18:03 +01:00:  GET / 200 in 86ms (compile: 7ms, proxy.ts: 4ms, render: 76ms)
+2026-04-25 22:48:03 +01:00:  GET / 200 in 99ms (compile: 11ms, proxy.ts: 10ms, render: 78ms)
+2026-04-25 23:18:03 +01:00:  GET / 200 in 92ms (compile: 7ms, proxy.ts: 5ms, render: 80ms)
+2026-04-25 23:48:04 +01:00:  GET / 200 in 159ms (compile: 9ms, proxy.ts: 14ms, render: 137ms)
+2026-04-25 23:59:00 +01:00: [Monitor] Starting overspeed check for today (2026-04-25): 2026-04-25 00:00:00 to 2026-04-25 23:59:59
+2026-04-25 23:59:00 +01:00: [Monitor] Fetch failed (attempt 1/4), retrying in 1000ms...
+2026-04-25 23:59:01 +01:00: [Monitor] Fetch failed (attempt 2/4), retrying in 2000ms...
+2026-04-25 23:59:03 +01:00: [Monitor] Fetch failed (attempt 3/4), retrying in 4000ms...
+2026-04-25 23:59:07 +01:00:  POST /api/monitor-overspeed 503 in 7.6s (compile: 12ms, render: 7.5s)
+2026-04-26 00:18:03 +01:00:  GET / 200 in 118ms (compile: 17ms, proxy.ts: 12ms, render: 88ms)
+2026-04-26 00:48:04 +01:00:  GET / 200 in 192ms (compile: 6ms, proxy.ts: 6ms, render: 180ms)
+2026-04-26 01:18:04 +01:00:  GET / 200 in 112ms (compile: 7ms, proxy.ts: 11ms, render: 93ms)
+2026-04-26 01:48:04 +01:00:  GET / 200 in 120ms (compile: 6ms, proxy.ts: 7ms, render: 107ms)
+2026-04-26 02:18:04 +01:00:  GET / 200 in 110ms (compile: 8ms, proxy.ts: 9ms, render: 92ms)
+2026-04-26 02:48:04 +01:00:  GET / 200 in 107ms (compile: 11ms, proxy.ts: 7ms, render: 90ms)
+2026-04-26 03:18:04 +01:00:  GET / 200 in 162ms (compile: 10ms, proxy.ts: 8ms, render: 145ms)
+2026-04-26 03:48:04 +01:00:  GET / 200 in 105ms (compile: 7ms, proxy.ts: 9ms, render: 90ms)
+2026-04-26 04:18:04 +01:00:  GET / 200 in 122ms (compile: 8ms, proxy.ts: 8ms, render: 105ms)
+2026-04-26 04:48:04 +01:00:  GET / 200 in 127ms (compile: 7ms, proxy.ts: 8ms, render: 111ms)
+2026-04-26 05:18:04 +01:00:  GET / 200 in 120ms (compile: 12ms, proxy.ts: 6ms, render: 102ms)
+2026-04-26 05:48:04 +01:00:  GET / 200 in 114ms (compile: 5ms, proxy.ts: 7ms, render: 102ms)
+2026-04-26 06:18:04 +01:00:  GET / 200 in 151ms (compile: 7ms, proxy.ts: 7ms, render: 137ms)
+2026-04-26 06:48:04 +01:00:  GET / 200 in 115ms (compile: 10ms, proxy.ts: 7ms, render: 98ms)
+2026-04-26 07:18:04 +01:00:  GET / 200 in 128ms (compile: 6ms, proxy.ts: 8ms, render: 113ms)
+2026-04-26 07:25:07 +01:00:  GET /api/monitor-overspeed/failed-emails 200 in 1525ms (compile: 1465ms, render: 60ms)
+2026-04-26 07:48:04 +01:00:  GET / 200 in 913ms (compile: 461ms, proxy.ts: 5ms, render: 447ms)
+2026-04-26 07:54:52 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-26 07:54:52 +01:00: - Local:         http://localhost:3000
+2026-04-26 07:54:52 +01:00: - Network:       http://10.114.40.230:3000
+2026-04-26 07:54:52 +01:00: - Environments: .env.local
+2026-04-26 07:54:52 +01:00: 
+2026-04-26 07:54:52 +01:00: ✓ Starting...
+2026-04-26 07:54:54 +01:00: ✓ Ready in 3.5s
+2026-04-26 07:54:56 +01:00:  GET / 200 in 1602ms (compile: 928ms, proxy.ts: 7ms, render: 667ms)
+2026-04-26 07:54:57 +01:00:  POST /api/monitor-overspeed/failed-emails 200 in 569ms (compile: 527ms, render: 42ms)
+2026-04-26 07:54:58 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-25: 2026-04-25 00:00:00 to 2026-04-25 23:59:59
+2026-04-26 07:55:00 +01:00:  POST /api/monitor-overspeed 400 in 3.1s (compile: 1034ms, render: 2.1s)
+2026-04-26 07:55:04 +01:00: [Monitor] Starting overspeed check for catch-up check for 2026-04-25: 2026-04-25 00:00:00 to 2026-04-25 23:59:59
+2026-04-26 07:55:04 +01:00: [Monitor] Found 257 devices to check
+2026-04-26 08:07:02 +01:00: [Monitor] Progress: 50/257 devices checked (50 API calls)
+2026-04-26 08:21:21 +01:00: [Monitor] Progress: 100/257 devices checked (100 API calls)
+2026-04-26 08:35:39 +01:00: [Monitor] Progress: 150/257 devices checked (148 API calls)
+2026-04-26 08:41:55 +01:00: [Monitor] Progress: 200/257 devices checked (148 API calls)
+2026-04-26 08:48:10 +01:00: [Monitor] Progress: 250/257 devices checked (148 API calls)
+2026-04-26 08:49:03 +01:00: [Monitor] Progress: 257/257 devices checked (148 API calls)
+2026-04-26 08:49:11 +01:00: [Monitor] Found 1 violations for TODAY (2026-04-25). Generating Excel report...
+2026-04-26 08:49:11 +01:00: [Monitor] Excel report saved: C:\Users\ELEKTRAN\Documents\SAFETRACK_CHINESE\dashboards\mantrac\mantrac-dashboard\overspeed_reports\overspeed_daily_report_2026-04-25.xlsx
+2026-04-26 08:49:11 +01:00: [Monitor] Email NOT sent - report generated but SMTP delivery failed for 2026-04-25
+2026-04-26 08:49:11 +01:00:  POST /api/monitor-overspeed 200 in 54.1min (compile: 7ms, render: 54.1min)
+2026-04-26 09:19:11 +01:00:  GET / 200 in 265ms (compile: 24ms, proxy.ts: 11ms, render: 231ms)
+2026-04-26 09:49:11 +01:00:  GET / 200 in 125ms (compile: 6ms, proxy.ts: 10ms, render: 108ms)
+2026-04-26 09:51:06 +01:00:  GET /api/monitor-overspeed/failed-emails 200 in 65ms (compile: 35ms, render: 30ms)
+2026-04-26 09:53:12 +01:00: [?25h
+2026-04-26 09:53:12 +01:00: 
+2026-04-26 09:53:20 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-26 09:53:20 +01:00: - Local:         http://localhost:3000
+2026-04-26 09:53:20 +01:00: - Network:       http://10.114.40.230:3000
+2026-04-26 09:53:20 +01:00: - Environments: .env.local
+2026-04-26 09:53:20 +01:00: 
+2026-04-26 09:53:20 +01:00: ✓ Starting...
+2026-04-26 09:53:22 +01:00: ✓ Ready in 3.2s
+2026-04-26 10:19:14 +01:00:  GET / 200 in 2.6s (compile: 1921ms, proxy.ts: 12ms, render: 633ms)
+2026-04-26 10:49:11 +01:00:  GET / 200 in 169ms (compile: 18ms, proxy.ts: 11ms, render: 141ms)
+2026-04-26 11:19:11 +01:00:  GET / 200 in 152ms (compile: 15ms, proxy.ts: 7ms, render: 130ms)
+2026-04-26 11:49:11 +01:00:  GET / 200 in 98ms (compile: 12ms, proxy.ts: 12ms, render: 74ms)
+2026-04-26 12:19:11 +01:00:  GET / 200 in 200ms (compile: 11ms, proxy.ts: 13ms, render: 176ms)
+2026-04-26 12:49:11 +01:00:  GET / 200 in 92ms (compile: 6ms, proxy.ts: 4ms, render: 82ms)
+2026-04-26 13:19:11 +01:00:  GET / 200 in 87ms (compile: 7ms, proxy.ts: 4ms, render: 76ms)
+2026-04-26 13:49:11 +01:00:  GET / 200 in 88ms (compile: 10ms, proxy.ts: 9ms, render: 69ms)
+2026-04-26 14:19:11 +01:00:  GET / 200 in 113ms (compile: 12ms, proxy.ts: 7ms, render: 94ms)
+2026-04-26 14:49:11 +01:00:  GET / 200 in 171ms (compile: 11ms, proxy.ts: 9ms, render: 150ms)
+2026-04-26 15:19:11 +01:00:  GET / 200 in 109ms (compile: 12ms, proxy.ts: 8ms, render: 90ms)
+2026-04-26 15:49:11 +01:00:  GET / 200 in 110ms (compile: 9ms, proxy.ts: 18ms, render: 83ms)
+2026-04-26 16:19:11 +01:00:  GET / 200 in 133ms (compile: 12ms, proxy.ts: 7ms, render: 115ms)
+2026-04-26 16:49:11 +01:00:  GET / 200 in 113ms (compile: 11ms, proxy.ts: 9ms, render: 94ms)
+2026-04-26 17:19:11 +01:00:  GET / 200 in 192ms (compile: 7ms, proxy.ts: 8ms, render: 178ms)
+2026-04-26 17:49:11 +01:00:  GET / 200 in 99ms (compile: 8ms, proxy.ts: 9ms, render: 82ms)
+2026-04-26 18:19:11 +01:00:  GET / 200 in 124ms (compile: 8ms, proxy.ts: 7ms, render: 109ms)
+2026-04-26 18:49:11 +01:00:  GET / 200 in 129ms (compile: 6ms, proxy.ts: 8ms, render: 115ms)
+2026-04-26 19:19:11 +01:00:  GET / 200 in 99ms (compile: 10ms, proxy.ts: 8ms, render: 81ms)
+2026-04-26 19:49:11 +01:00:  GET / 200 in 109ms (compile: 10ms, proxy.ts: 11ms, render: 89ms)
+2026-04-26 20:19:12 +01:00:  GET / 200 in 247ms (compile: 10ms, proxy.ts: 6ms, render: 231ms)
+2026-04-26 20:49:11 +01:00:  GET / 200 in 126ms (compile: 11ms, proxy.ts: 7ms, render: 109ms)
+2026-04-26 21:19:11 +01:00:  GET / 200 in 101ms (compile: 7ms, proxy.ts: 10ms, render: 83ms)
+2026-04-26 21:49:11 +01:00:  GET / 200 in 116ms (compile: 12ms, proxy.ts: 13ms, render: 91ms)
+2026-04-26 22:19:11 +01:00:  GET / 200 in 112ms (compile: 9ms, proxy.ts: 6ms, render: 97ms)
+2026-04-26 22:49:12 +01:00:  GET / 200 in 206ms (compile: 15ms, proxy.ts: 7ms, render: 185ms)
+2026-04-26 23:19:11 +01:00:  GET / 200 in 132ms (compile: 14ms, proxy.ts: 9ms, render: 108ms)
+2026-04-26 23:49:12 +01:00:  GET / 200 in 302ms (compile: 81ms, proxy.ts: 15ms, render: 206ms)
+2026-04-26 23:51:19 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-26 23:51:19 +01:00: - Local:         http://localhost:3000
+2026-04-26 23:51:19 +01:00: - Network:       http://10.127.241.230:3000
+2026-04-26 23:51:19 +01:00: - Environments: .env.local
+2026-04-26 23:51:19 +01:00: 
+2026-04-26 23:51:19 +01:00: ✓ Starting...
+2026-04-26 23:51:21 +01:00: ✓ Ready in 3.4s
+2026-04-26 23:51:24 +01:00:  GET / 200 in 306ms (compile: 32ms, proxy.ts: 21ms, render: 252ms)
+2026-04-26 23:51:46 +01:00:  POST /api/monitor-overspeed/failed-emails 200 in 21.8s (compile: 324ms, render: 21.5s)
+2026-04-26 23:52:12 +01:00:  GET / 200 in 389ms (compile: 16ms, proxy.ts: 14ms, render: 359ms)
+2026-04-26 23:53:12 +01:00:  GET / 200 in 313ms (compile: 18ms, proxy.ts: 16ms, render: 279ms)
+2026-04-26 23:53:30 +01:00: ○ Compiling /dashboard ...
+2026-04-26 23:53:32 +01:00:  GET /dashboard 200 in 5.2s (compile: 5.0s, proxy.ts: 20ms, render: 162ms)
+2026-04-26 23:53:33 +01:00: API Route - Received request: {
+2026-04-26 23:53:33 +01:00:   username: 'MantracNig',
+2026-04-26 23:53:33 +01:00:   tokenLength: 32,
+2026-04-26 23:53:33 +01:00:   hasToken: true,
+2026-04-26 23:53:33 +01:00:   hasUsername: true
+2026-04-26 23:53:33 +01:00: }
+2026-04-26 23:53:33 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-26 23:53:33 +01:00: API Route - Received request: {
+2026-04-26 23:53:33 +01:00:   username: 'MantracNig',
+2026-04-26 23:53:33 +01:00:   tokenLength: 32,
+2026-04-26 23:53:33 +01:00:   hasToken: true,
+2026-04-26 23:53:33 +01:00:   hasUsername: true
+2026-04-26 23:53:33 +01:00: }
+2026-04-26 23:53:33 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-26 23:53:33 +01:00: API Route - Received request: {
+2026-04-26 23:53:33 +01:00:   username: 'MantracNig',
+2026-04-26 23:53:33 +01:00:   tokenLength: 32,
+2026-04-26 23:53:33 +01:00:   hasToken: true,
+2026-04-26 23:53:33 +01:00:   hasUsername: true
+2026-04-26 23:53:33 +01:00: }
+2026-04-26 23:53:33 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-26 23:53:33 +01:00: API Route - Received request: {
+2026-04-26 23:53:33 +01:00:   username: 'MantracNig',
+2026-04-26 23:53:33 +01:00:   tokenLength: 32,
+2026-04-26 23:53:33 +01:00:   hasToken: true,
+2026-04-26 23:53:33 +01:00:   hasUsername: true
+2026-04-26 23:53:33 +01:00: }
+2026-04-26 23:53:33 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-26 23:53:35 +01:00: API Route - External API response status: 200
+2026-04-26 23:53:35 +01:00: API Route - External API response: {
+2026-04-26 23:53:35 +01:00:   status: 8904,
+2026-04-26 23:53:35 +01:00:   groupCount: undefined,
+2026-04-26 23:53:35 +01:00:   cause: 'ip not in white list::102.89.32.170'
+2026-04-26 23:53:35 +01:00: }
+2026-04-26 23:53:35 +01:00:  POST /api/devices 200 in 2.9s (compile: 860ms, render: 2.0s)
+2026-04-26 23:53:35 +01:00: API Route - External API response status: 200
+2026-04-26 23:53:35 +01:00: API Route - External API response: {
+2026-04-26 23:53:35 +01:00:   status: 8904,
+2026-04-26 23:53:35 +01:00:   groupCount: undefined,
+2026-04-26 23:53:35 +01:00:   cause: 'ip not in white list::102.89.32.170'
+2026-04-26 23:53:35 +01:00: }
+2026-04-26 23:53:35 +01:00:  POST /api/devices 200 in 3.1s (compile: 936ms, render: 2.1s)
+2026-04-26 23:53:36 +01:00: API Route - External API response status: 200
+2026-04-26 23:53:36 +01:00: API Route - External API response: {
+2026-04-26 23:53:36 +01:00:   status: 8904,
+2026-04-26 23:53:36 +01:00:   groupCount: undefined,
+2026-04-26 23:53:36 +01:00:   cause: 'ip not in white list::102.89.32.170'
+2026-04-26 23:53:36 +01:00: }
+2026-04-26 23:53:36 +01:00:  POST /api/devices 200 in 3.2s (compile: 1095ms, render: 2.1s)
+2026-04-26 23:53:36 +01:00: API Route - External API response status: 200
+2026-04-26 23:53:36 +01:00: API Route - External API response: {
+2026-04-26 23:53:36 +01:00:   status: 8904,
+2026-04-26 23:53:36 +01:00:   groupCount: undefined,
+2026-04-26 23:53:36 +01:00:   cause: 'ip not in white list::102.89.32.170'
+2026-04-26 23:53:36 +01:00: }
+2026-04-26 23:53:36 +01:00:  POST /api/devices 200 in 3.7s (compile: 967ms, render: 2.8s)
+2026-04-26 23:53:38 +01:00: Alarm API - Received request: {
+2026-04-26 23:53:38 +01:00:   deviceCount: undefined,
+2026-04-26 23:53:38 +01:00:   startday: undefined,
+2026-04-26 23:53:38 +01:00:   endday: undefined,
+2026-04-26 23:53:38 +01:00:   offset: undefined,
+2026-04-26 23:53:38 +01:00:   needalarm: undefined,
+2026-04-26 23:53:38 +01:00:   hasToken: true
+2026-04-26 23:53:38 +01:00: }
+2026-04-26 23:53:38 +01:00:  POST /api/alarms 400 in 2.8s (compile: 2.5s, render: 296ms)
+2026-04-26 23:53:39 +01:00: Alarm API - Received request: {
+2026-04-26 23:53:39 +01:00:   deviceCount: undefined,
+2026-04-26 23:53:39 +01:00:   startday: undefined,
+2026-04-26 23:53:39 +01:00:   endday: undefined,
+2026-04-26 23:53:39 +01:00:   offset: undefined,
+2026-04-26 23:53:39 +01:00:   needalarm: undefined,
+2026-04-26 23:53:39 +01:00:   hasToken: true
+2026-04-26 23:53:39 +01:00: }
+2026-04-26 23:53:39 +01:00:  POST /api/alarms 400 in 21ms (compile: 6ms, render: 15ms)
+2026-04-26 23:59:01 +01:00: [Monitor] Starting overspeed check for today (2026-04-26): 2026-04-26 00:00:00 to 2026-04-26 23:59:59
+2026-04-26 23:59:03 +01:00:  POST /api/monitor-overspeed 400 in 3.1s (compile: 1373ms, render: 1765ms)
+2026-04-26 23:59:04 +01:00: [Monitor] Starting overspeed check for today (2026-04-26): 2026-04-26 00:00:00 to 2026-04-26 23:59:59
+2026-04-26 23:59:05 +01:00: [Monitor] Found 257 devices to check
+2026-04-26 23:59:16 +01:00: ✓ Compiled in 563ms
+2026-04-27 00:10:30 +01:00: [Monitor] Progress: 50/257 devices checked (50 API calls)
+2026-04-27 00:21:46 +01:00:  GET / 200 in 213ms (compile: 15ms, proxy.ts: 5ms, render: 193ms)
+2026-04-27 00:22:55 +01:00: [Monitor] Progress: 100/257 devices checked (100 API calls)
+2026-04-27 00:35:15 +01:00: [Monitor] Progress: 150/257 devices checked (150 API calls)
+2026-04-27 00:49:22 +01:00: [Monitor] Progress: 200/257 devices checked (200 API calls)
+2026-04-27 00:51:46 +01:00:  GET / 200 in 138ms (compile: 10ms, proxy.ts: 5ms, render: 123ms)
+2026-04-27 01:01:51 +01:00: [Monitor] Progress: 250/257 devices checked (250 API calls)
+2026-04-27 01:03:46 +01:00: [Monitor] Progress: 257/257 devices checked (257 API calls)
+2026-04-27 01:03:55 +01:00: [Email] Found 1 failed email(s). Attempting resend...
+2026-04-27 01:04:17 +01:00: [Email] 1 failed email(s) still pending in queue (0 capped at max retries)
+2026-04-27 01:04:17 +01:00: [Monitor] Found 6 violations for TODAY (2026-04-26). Generating Excel report...
+2026-04-27 01:04:17 +01:00: [Monitor] Excel report saved: C:\Users\ELEKTRAN\Documents\SAFETRACK_CHINESE\dashboards\mantrac\mantrac-dashboard\overspeed_reports\overspeed_daily_report_2026-04-26.xlsx
+2026-04-27 01:04:38 +01:00: [Monitor] Email NOT sent - report generated but SMTP delivery failed for 2026-04-26
+2026-04-27 01:04:38 +01:00:  POST /api/monitor-overspeed 200 in 65.6min (compile: 16ms, render: 65.6min)
+2026-04-27 01:16:00 +01:00:  POST /api/monitor-overspeed/failed-emails 200 in 43s (compile: 10ms, render: 43s)
+2026-04-27 01:21:46 +01:00:  GET / 200 in 97ms (compile: 9ms, proxy.ts: 7ms, render: 81ms)
+2026-04-27 01:35:52 +01:00:  POST /api/monitor-overspeed/failed-emails 200 in 48s (compile: 419ms, render: 48s)
+2026-04-27 01:51:52 +01:00:  GET / 200 in 122ms (compile: 16ms, proxy.ts: 9ms, render: 97ms)
+2026-04-27 02:21:52 +01:00:  GET / 200 in 130ms (compile: 15ms, proxy.ts: 15ms, render: 99ms)
+2026-04-27 02:51:52 +01:00:  GET / 200 in 107ms (compile: 17ms, proxy.ts: 14ms, render: 76ms)
+2026-04-27 03:21:52 +01:00:  GET / 200 in 89ms (compile: 10ms, proxy.ts: 6ms, render: 73ms)
+2026-04-27 03:51:52 +01:00:  GET / 200 in 169ms (compile: 21ms, proxy.ts: 13ms, render: 135ms)
+2026-04-27 04:21:52 +01:00:  GET / 200 in 112ms (compile: 8ms, proxy.ts: 6ms, render: 98ms)
+2026-04-27 04:51:52 +01:00:  GET / 200 in 241ms (compile: 17ms, proxy.ts: 5ms, render: 219ms)
+2026-04-27 05:21:52 +01:00:  GET / 200 in 97ms (compile: 9ms, proxy.ts: 6ms, render: 82ms)
+2026-04-27 05:51:52 +01:00:  GET / 200 in 100ms (compile: 13ms, proxy.ts: 9ms, render: 78ms)
+2026-04-27 06:21:52 +01:00:  GET / 200 in 95ms (compile: 11ms, proxy.ts: 10ms, render: 74ms)
+2026-04-27 06:51:52 +01:00:  GET / 200 in 105ms (compile: 18ms, proxy.ts: 12ms, render: 75ms)
+2026-04-27 07:21:52 +01:00:  GET / 200 in 104ms (compile: 13ms, proxy.ts: 6ms, render: 84ms)
+2026-04-27 07:51:52 +01:00:  GET / 200 in 107ms (compile: 16ms, proxy.ts: 12ms, render: 79ms)
+2026-04-27 22:19:38 +01:00: ▲ Next.js 16.1.6 (Turbopack)
+2026-04-27 22:19:38 +01:00: - Local:         http://localhost:3000
+2026-04-27 22:19:38 +01:00: - Network:       http://10.228.130.230:3000
+2026-04-27 22:19:38 +01:00: - Environments: .env.local
+2026-04-27 22:19:38 +01:00: 
+2026-04-27 22:19:38 +01:00: ✓ Starting...
+2026-04-27 22:19:40 +01:00: ✓ Ready in 3.6s
+2026-04-27 22:19:44 +01:00:  GET / 200 in 3.3s (compile: 2.8s, proxy.ts: 8ms, render: 501ms)
+2026-04-27 22:19:45 +01:00:  GET / 200 in 164ms (compile: 13ms, proxy.ts: 7ms, render: 144ms)
+2026-04-27 22:19:46 +01:00:  POST /api/monitor-overspeed/failed-emails 200 in 538ms (compile: 509ms, render: 30ms)
+2026-04-27 22:20:24 +01:00:  GET / 200 in 807ms (compile: 69ms, proxy.ts: 16ms, render: 722ms)
+2026-04-27 22:41:05 +01:00:  GET / 200 in 282ms (compile: 14ms, proxy.ts: 12ms, render: 256ms)
+2026-04-27 22:41:25 +01:00:  GET /dashboard 200 in 378ms (compile: 125ms, proxy.ts: 30ms, render: 223ms)
+2026-04-27 22:41:25 +01:00: API Route - Received request: {
+2026-04-27 22:41:25 +01:00:   username: 'MantracNig',
+2026-04-27 22:41:25 +01:00:   tokenLength: 32,
+2026-04-27 22:41:25 +01:00:   hasToken: true,
+2026-04-27 22:41:25 +01:00:   hasUsername: true
+2026-04-27 22:41:25 +01:00: }
+2026-04-27 22:41:25 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:41:25 +01:00: API Route - Received request: {
+2026-04-27 22:41:25 +01:00:   username: 'MantracNig',
+2026-04-27 22:41:25 +01:00:   tokenLength: 32,
+2026-04-27 22:41:25 +01:00:   hasToken: true,
+2026-04-27 22:41:25 +01:00:   hasUsername: true
+2026-04-27 22:41:25 +01:00: }
+2026-04-27 22:41:25 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:41:25 +01:00: API Route - Received request: {
+2026-04-27 22:41:25 +01:00:   username: 'MantracNig',
+2026-04-27 22:41:25 +01:00:   tokenLength: 32,
+2026-04-27 22:41:25 +01:00:   hasToken: true,
+2026-04-27 22:41:25 +01:00:   hasUsername: true
+2026-04-27 22:41:25 +01:00: }
+2026-04-27 22:41:25 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:41:26 +01:00: API Route - Received request: {
+2026-04-27 22:41:26 +01:00:   username: 'MantracNig',
+2026-04-27 22:41:26 +01:00:   tokenLength: 32,
+2026-04-27 22:41:26 +01:00:   hasToken: true,
+2026-04-27 22:41:26 +01:00:   hasUsername: true
+2026-04-27 22:41:26 +01:00: }
+2026-04-27 22:41:26 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:41:32 +01:00: API Route - External API response status: 200
+2026-04-27 22:41:32 +01:00: API Route - External API response: {
+2026-04-27 22:41:32 +01:00:   status: 8904,
+2026-04-27 22:41:32 +01:00:   groupCount: undefined,
+2026-04-27 22:41:32 +01:00:   cause: 'ip not in white list::102.90.96.175'
+2026-04-27 22:41:32 +01:00: }
+2026-04-27 22:41:32 +01:00:  POST /api/devices 200 in 7.0s (compile: 253ms, render: 6.8s)
+2026-04-27 22:41:35 +01:00: API Route - External API response status: 200
+2026-04-27 22:41:35 +01:00: API Route - External API response: {
+2026-04-27 22:41:35 +01:00:   status: 8904,
+2026-04-27 22:41:35 +01:00:   groupCount: undefined,
+2026-04-27 22:41:35 +01:00:   cause: 'ip not in white list::102.90.96.175'
+2026-04-27 22:41:35 +01:00: }
+2026-04-27 22:41:35 +01:00:  POST /api/devices 200 in 10.1s (compile: 408ms, render: 9.7s)
+2026-04-27 22:41:35 +01:00: API Route - External API response status: 200
+2026-04-27 22:41:35 +01:00: API Route - External API response: {
+2026-04-27 22:41:35 +01:00:   status: 8904,
+2026-04-27 22:41:35 +01:00:   groupCount: undefined,
+2026-04-27 22:41:35 +01:00:   cause: 'ip not in white list::102.90.96.175'
+2026-04-27 22:41:35 +01:00: }
+2026-04-27 22:41:35 +01:00:  POST /api/devices 200 in 10.3s (compile: 399ms, render: 9.9s)
+2026-04-27 22:41:37 +01:00:  POST /api/devices 500 in 11.5s (compile: 290ms, render: 11.2s)
+2026-04-27 22:44:21 +01:00:  GET /dashboard 200 in 342ms (compile: 14ms, proxy.ts: 17ms, render: 311ms)
+2026-04-27 22:44:22 +01:00: API Route - Received request: {
+2026-04-27 22:44:22 +01:00:   username: 'MantracNig',
+2026-04-27 22:44:22 +01:00:   tokenLength: 32,
+2026-04-27 22:44:22 +01:00:   hasToken: true,
+2026-04-27 22:44:22 +01:00:   hasUsername: true
+2026-04-27 22:44:22 +01:00: }
+2026-04-27 22:44:22 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:44:22 +01:00: API Route - Received request: {
+2026-04-27 22:44:22 +01:00:   username: 'MantracNig',
+2026-04-27 22:44:22 +01:00:   tokenLength: 32,
+2026-04-27 22:44:22 +01:00:   hasToken: true,
+2026-04-27 22:44:22 +01:00:   hasUsername: true
+2026-04-27 22:44:22 +01:00: }
+2026-04-27 22:44:22 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:44:22 +01:00: API Route - Received request: {
+2026-04-27 22:44:22 +01:00:   username: 'MantracNig',
+2026-04-27 22:44:22 +01:00:   tokenLength: 32,
+2026-04-27 22:44:22 +01:00:   hasToken: true,
+2026-04-27 22:44:22 +01:00:   hasUsername: true
+2026-04-27 22:44:22 +01:00: }
+2026-04-27 22:44:22 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:44:33 +01:00:  POST /api/devices 500 in 11.0s (compile: 18ms, render: 10.9s)
+2026-04-27 22:44:33 +01:00:  POST /api/devices 500 in 11.2s (compile: 74ms, render: 11.1s)
+2026-04-27 22:44:34 +01:00:  POST /api/devices 500 in 11.4s (compile: 8ms, render: 11.4s)
+2026-04-27 22:44:55 +01:00: API Route - Received request: {
+2026-04-27 22:44:55 +01:00:   username: 'MantracNig',
+2026-04-27 22:44:55 +01:00:   tokenLength: 32,
+2026-04-27 22:44:55 +01:00:   hasToken: true,
+2026-04-27 22:44:55 +01:00:   hasUsername: true
+2026-04-27 22:44:55 +01:00: }
+2026-04-27 22:44:55 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:45:06 +01:00:  POST /api/devices 500 in 10.9s (compile: 10ms, render: 10.9s)
+2026-04-27 22:45:20 +01:00:  GET / 200 in 58ms (compile: 10ms, proxy.ts: 11ms, render: 37ms)
+2026-04-27 22:45:37 +01:00:  GET /dashboard 200 in 73ms (compile: 14ms, proxy.ts: 9ms, render: 50ms)
+2026-04-27 22:45:38 +01:00: API Route - Received request: {
+2026-04-27 22:45:38 +01:00:   username: 'MantracNig',
+2026-04-27 22:45:38 +01:00:   tokenLength: 32,
+2026-04-27 22:45:38 +01:00:   hasToken: true,
+2026-04-27 22:45:38 +01:00:   hasUsername: true
+2026-04-27 22:45:38 +01:00: }
+2026-04-27 22:45:38 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:45:38 +01:00: API Route - Received request: {
+2026-04-27 22:45:38 +01:00:   username: 'MantracNig',
+2026-04-27 22:45:38 +01:00:   tokenLength: 32,
+2026-04-27 22:45:38 +01:00:   hasToken: true,
+2026-04-27 22:45:38 +01:00:   hasUsername: true
+2026-04-27 22:45:38 +01:00: }
+2026-04-27 22:45:38 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:45:38 +01:00: API Route - Received request: {
+2026-04-27 22:45:38 +01:00:   username: 'MantracNig',
+2026-04-27 22:45:38 +01:00:   tokenLength: 32,
+2026-04-27 22:45:38 +01:00:   hasToken: true,
+2026-04-27 22:45:38 +01:00:   hasUsername: true
+2026-04-27 22:45:38 +01:00: }
+2026-04-27 22:45:38 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:45:38 +01:00: API Route - Received request: {
+2026-04-27 22:45:38 +01:00:   username: 'MantracNig',
+2026-04-27 22:45:38 +01:00:   tokenLength: 32,
+2026-04-27 22:45:38 +01:00:   hasToken: true,
+2026-04-27 22:45:38 +01:00:   hasUsername: true
+2026-04-27 22:45:38 +01:00: }
+2026-04-27 22:45:38 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:45:46 +01:00: API Route - External API response status: 200
+2026-04-27 22:45:46 +01:00: API Route - External API response: {
+2026-04-27 22:45:46 +01:00:   status: 8904,
+2026-04-27 22:45:46 +01:00:   groupCount: undefined,
+2026-04-27 22:45:46 +01:00:   cause: 'ip not in white list::105.112.71.237'
+2026-04-27 22:45:46 +01:00: }
+2026-04-27 22:45:46 +01:00:  POST /api/devices 200 in 8.7s (compile: 92ms, render: 8.6s)
+2026-04-27 22:45:46 +01:00: API Route - External API response status: 200
+2026-04-27 22:45:46 +01:00: API Route - External API response: {
+2026-04-27 22:45:46 +01:00:   status: 8904,
+2026-04-27 22:45:46 +01:00:   groupCount: undefined,
+2026-04-27 22:45:46 +01:00:   cause: 'ip not in white list::105.112.71.237'
+2026-04-27 22:45:46 +01:00: }
+2026-04-27 22:45:46 +01:00:  POST /api/devices 200 in 8.7s (compile: 46ms, render: 8.7s)
+2026-04-27 22:45:47 +01:00: API Route - External API response status: 200
+2026-04-27 22:45:47 +01:00: API Route - External API response: {
+2026-04-27 22:45:47 +01:00:   status: 8904,
+2026-04-27 22:45:47 +01:00:   groupCount: undefined,
+2026-04-27 22:45:47 +01:00:   cause: 'ip not in white list::105.112.71.237'
+2026-04-27 22:45:47 +01:00: }
+2026-04-27 22:45:47 +01:00:  POST /api/devices 200 in 9.2s (compile: 99ms, render: 9.1s)
+2026-04-27 22:45:47 +01:00: API Route - External API response status: 200
+2026-04-27 22:45:47 +01:00: API Route - External API response: {
+2026-04-27 22:45:47 +01:00:   status: 8904,
+2026-04-27 22:45:47 +01:00:   groupCount: undefined,
+2026-04-27 22:45:47 +01:00:   cause: 'ip not in white list::105.112.71.237'
+2026-04-27 22:45:47 +01:00: }
+2026-04-27 22:45:47 +01:00:  POST /api/devices 200 in 9.4s (compile: 41ms, render: 9.3s)
+2026-04-27 22:46:52 +01:00: API Route - Received request: {
+2026-04-27 22:46:52 +01:00:   username: 'MantracNig',
+2026-04-27 22:46:52 +01:00:   tokenLength: 32,
+2026-04-27 22:46:52 +01:00:   hasToken: true,
+2026-04-27 22:46:52 +01:00:   hasUsername: true
+2026-04-27 22:46:52 +01:00: }
+2026-04-27 22:46:52 +01:00: API Route - Calling external API for username: MantracNig
+2026-04-27 22:47:01 +01:00: API Route - External API response status: 200
+2026-04-27 22:47:01 +01:00: API Route - External API response: { status: 0, groupCount: 14, cause: 'OK' }
+2026-04-27 22:47:01 +01:00:  POST /api/devices 200 in 8.3s (compile: 7ms, render: 8.3s)
+2026-04-27 22:49:46 +01:00:  GET / 200 in 107ms (compile: 12ms, proxy.ts: 7ms, render: 89ms)
+2026-04-27 23:19:46 +01:00:  GET / 200 in 101ms (compile: 8ms, proxy.ts: 7ms, render: 86ms)
+2026-04-27 23:49:46 +01:00:  GET / 200 in 102ms (compile: 7ms, proxy.ts: 5ms, render: 90ms)
+2026-04-27 23:59:01 +01:00: [Monitor] Starting overspeed check for today (2026-04-27): 2026-04-27 00:00:00 to 2026-04-27 23:59:59
+2026-04-27 23:59:09 +01:00:  POST /api/monitor-overspeed 400 in 9.5s (compile: 1078ms, render: 8.4s)
+2026-04-27 23:59:21 +01:00: [Monitor] Starting overspeed check for today (2026-04-27): 2026-04-27 00:00:00 to 2026-04-27 23:59:59
+2026-04-27 23:59:30 +01:00: [Monitor] Found 264 devices to check
+2026-04-28 00:13:07 +01:00: [Monitor] Progress: 50/264 devices checked (34 API calls)
+2026-04-28 00:19:46 +01:00:  GET / 200 in 255ms (compile: 12ms, proxy.ts: 6ms, render: 238ms)
+2026-04-28 00:25:19 +01:00: [Monitor] Progress: 100/264 devices checked (75 API calls)
+2026-04-28 00:36:40 +01:00: [Monitor] Progress: 150/264 devices checked (125 API calls)
+2026-04-28 00:49:41 +01:00: [Monitor] Progress: 200/264 devices checked (175 API calls)
+2026-04-28 00:49:46 +01:00:  GET / 200 in 114ms (compile: 12ms, proxy.ts: 10ms, render: 93ms)
+2026-04-28 01:01:53 +01:00: [Monitor] Progress: 250/264 devices checked (225 API calls)
+2026-04-28 01:06:25 +01:00: [Monitor] Progress: 264/264 devices checked (239 API calls)
+2026-04-28 01:06:35 +01:00: [Monitor] No violations found for TODAY (2026-04-27).
+2026-04-28 01:06:40 +01:00: [Email] No violations report sent successfully to: ifodomartin@gmail.com, contact@lascofed.com, murphy.emamezi@jvmorris.biz, murphyisioro@gmail.com, emamezi@marketafricka.com
+2026-04-28 01:06:40 +01:00: [Email] Message ID: <e72c1186-4769-6e25-86cf-cde922480744@safetrack.com.ng>
+2026-04-28 01:06:40 +01:00: [Monitor] Email sent with daily summary - No violations detected for 2026-04-27
+2026-04-28 01:06:40 +01:00:  POST /api/monitor-overspeed 200 in 67.3min (compile: 15ms, render: 67.3min)
+2026-04-28 01:19:46 +01:00:  GET / 200 in 182ms (compile: 30ms, proxy.ts: 11ms, render: 141ms)
+2026-04-28 01:49:46 +01:00:  GET / 200 in 92ms (compile: 7ms, proxy.ts: 11ms, render: 75ms)
+2026-04-28 02:19:46 +01:00:  GET / 200 in 99ms (compile: 9ms, proxy.ts: 5ms, render: 85ms)
+2026-04-28 02:49:46 +01:00:  GET / 200 in 105ms (compile: 8ms, proxy.ts: 7ms, render: 90ms)
+2026-04-28 03:19:46 +01:00:  GET / 200 in 93ms (compile: 10ms, proxy.ts: 12ms, render: 71ms)
+2026-04-28 03:49:46 +01:00:  GET / 200 in 229ms (compile: 10ms, proxy.ts: 10ms, render: 209ms)
+2026-04-28 04:19:46 +01:00:  GET / 200 in 156ms (compile: 12ms, proxy.ts: 8ms, render: 136ms)
+2026-04-28 04:49:46 +01:00:  GET / 200 in 78ms (compile: 8ms, proxy.ts: 5ms, render: 65ms)
+2026-04-28 05:19:46 +01:00:  GET / 200 in 113ms (compile: 12ms, proxy.ts: 10ms, render: 91ms)
+2026-04-28 05:49:46 +01:00:  GET / 200 in 91ms (compile: 8ms, proxy.ts: 5ms, render: 78ms)
+2026-04-28 06:19:46 +01:00:  GET / 200 in 127ms (compile: 14ms, proxy.ts: 11ms, render: 102ms)
+2026-04-28 06:49:46 +01:00:  GET / 200 in 192ms (compile: 19ms, proxy.ts: 11ms, render: 162ms)
+2026-04-28 07:19:46 +01:00:  GET / 200 in 321ms (compile: 52ms, proxy.ts: 8ms, render: 261ms)
+2026-04-28 07:49:46 +01:00:  GET / 200 in 137ms (compile: 13ms, proxy.ts: 7ms, render: 118ms)
+2026-04-28 08:19:46 +01:00:  GET / 200 in 93ms (compile: 7ms, proxy.ts: 4ms, render: 82ms)
+2026-04-28 08:49:46 +01:00:  GET / 200 in 105ms (compile: 14ms, proxy.ts: 7ms, render: 84ms)
+2026-04-28 09:19:46 +01:00:  GET / 200 in 95ms (compile: 7ms, proxy.ts: 4ms, render: 84ms)
+2026-04-28 09:49:46 +01:00:  GET / 200 in 99ms (compile: 12ms, proxy.ts: 6ms, render: 81ms)
+2026-04-28 10:19:46 +01:00:  GET / 200 in 101ms (compile: 10ms, proxy.ts: 7ms, render: 84ms)
+2026-04-28 10:49:46 +01:00:  GET / 200 in 234ms (compile: 11ms, proxy.ts: 5ms, render: 218ms)
+2026-04-28 11:19:46 +01:00:  GET / 200 in 92ms (compile: 12ms, proxy.ts: 6ms, render: 75ms)
+2026-04-28 11:49:46 +01:00:  GET / 200 in 130ms (compile: 9ms, proxy.ts: 8ms, render: 114ms)
+2026-04-28 12:19:46 +01:00:  GET / 200 in 161ms (compile: 25ms, proxy.ts: 12ms, render: 125ms)
+2026-04-28 12:49:46 +01:00:  GET / 200 in 115ms (compile: 13ms, proxy.ts: 10ms, render: 92ms)
+2026-04-28 13:19:46 +01:00:  GET / 200 in 134ms (compile: 10ms, proxy.ts: 7ms, render: 117ms)
+2026-04-28 13:49:46 +01:00:  GET / 200 in 119ms (compile: 12ms, proxy.ts: 7ms, render: 101ms)
+2026-04-28 14:19:46 +01:00:  GET / 200 in 256ms (compile: 17ms, proxy.ts: 10ms, render: 230ms)
+2026-04-28 14:23:12 +01:00:  GET / 200 in 279ms (compile: 12ms, proxy.ts: 9ms, render: 258ms)

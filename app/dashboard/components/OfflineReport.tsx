@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getAuthToken, getUserData } from '@/lib/auth';
+import { apiCallWithAutoRefresh } from '@/lib/utils';
 
 interface Device {
   deviceid: string;
@@ -54,7 +55,7 @@ export default function OfflineReport() {
         return;
       }
 
-      const response = await fetch('/api/devices', {
+      const data = await apiCallWithAutoRefresh('/api/devices', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -62,8 +63,6 @@ export default function OfflineReport() {
           token 
         }),
       });
-
-      const data = await response.json();
       
       if (data.status === 0 && data.groups) {
         const allDevices = data.groups.flatMap((group: any) =>
@@ -99,7 +98,7 @@ export default function OfflineReport() {
       const token = getAuthToken();
       const deviceids = devices.map(d => d.deviceid);
 
-      const response = await fetch('/api/offline', {
+      const data = await apiCallWithAutoRefresh('/api/offline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,8 +107,6 @@ export default function OfflineReport() {
           token
         }),
       });
-
-      const data = await response.json();
 
       if (data.status === 0) {
         setOfflineData(data);

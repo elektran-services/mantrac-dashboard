@@ -1,0 +1,6 @@
+2026-04-19 08:30:15 +01:00: ✗ Error running check: request to http://localhost:3000/api/monitor-overspeed failed, reason: read ECONNRESET
+2026-04-19 08:30:15 +01:00: Stack trace: FetchError: request to http://localhost:3000/api/monitor-overspeed failed, reason: read ECONNRESET
+2026-04-19 08:30:15 +01:00:     at ClientRequest.<anonymous> (C:\Users\ELEKTRAN\Documents\SAFETRACK_CHINESE\dashboards\mantrac\mantrac-dashboard\node_modules\node-fetch\lib\index.js:1501:11)
+2026-04-19 08:30:15 +01:00:     at ClientRequest.emit (node:events:519:28)
+2026-04-24 22:41:26 +01:00: ✗ Check failed: IP address 102.89.46.100 is not whitelisted. Please contact GPS51 support to whitelist your IP.
+2026-04-25 23:59:07 +01:00: ✗ Check failed: Failed to connect to GPS51 API. Please check your internet connection.

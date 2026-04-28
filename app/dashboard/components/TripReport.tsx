@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getAuthToken, getUserData } from '@/lib/auth';
+import { apiCallWithAutoRefresh } from '@/lib/utils';
 
 interface Device {
   deviceid: string;
@@ -78,7 +79,7 @@ export default function TripReport() {
         return;
       }
 
-      const response = await fetch('/api/devices', {
+      const data = await apiCallWithAutoRefresh('/api/devices', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -86,8 +87,6 @@ export default function TripReport() {
           token 
         }),
       });
-
-      const data = await response.json();
       
       console.log('TripReport - API response:', data);
       console.log('TripReport - Groups:', data.groups);
@@ -147,7 +146,7 @@ export default function TripReport() {
       const startDateTime = `${startDate} ${startTime}:00`;
       const endDateTime = `${endDate} ${endTime}:00`;
 
-      const response = await fetch('/api/trips', {
+      const data = await apiCallWithAutoRefresh('/api/trips', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -158,8 +157,6 @@ export default function TripReport() {
           token
         }),
       });
-
-      const data = await response.json();
 
       if (data.status === 0) {
         setTripData(data);

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getAuthToken, getUserData } from '@/lib/auth';
+import { apiCallWithAutoRefresh } from '@/lib/utils';
 
 interface Device {
   deviceid: string;
@@ -82,7 +83,7 @@ export default function MileageReport() {
         return;
       }
 
-      const response = await fetch('/api/devices', {
+      const data = await apiCallWithAutoRefresh('/api/devices', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -90,8 +91,6 @@ export default function MileageReport() {
           token 
         }),
       });
-
-      const data = await response.json();
       
       if (data.status === 0 && data.groups) {
         const allDevices = data.groups.flatMap((group: any) =>
@@ -143,7 +142,7 @@ export default function MileageReport() {
     try {
       const token = getAuthToken();
 
-      const response = await fetch('/api/mileage', {
+      const data = await apiCallWithAutoRefresh('/api/mileage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -154,8 +153,6 @@ export default function MileageReport() {
           token
         }),
       });
-
-      const data = await response.json();
 
       if (data.status === 0) {
         setMileageData(data);

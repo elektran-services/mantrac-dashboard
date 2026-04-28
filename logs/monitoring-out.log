@@ -1,0 +1,1820 @@
+2026-04-19 08:24:59 +01:00: ◇ injected env (18) from .env.local // tip: ⌘ enable debugging { debug: true }
+2026-04-19 08:24:59 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-19 08:24:59 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-19 08:24:59 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-19 08:24:59 +01:00: 
+2026-04-19 08:24:59 +01:00: Configuration:
+2026-04-19 08:24:59 +01:00:   - Speed Limit: 120 km/h
+2026-04-19 08:24:59 +01:00:   - Duration Threshold: 60 seconds
+2026-04-19 08:24:59 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-19 08:24:59 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-19 08:24:59 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-19 08:24:59 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-19 08:24:59 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-19 08:24:59 +01:00:   - API URL: http://localhost:3000
+2026-04-19 08:24:59 +01:00: 
+2026-04-19 08:24:59 +01:00: ⚠️  API Usage Compliance:
+2026-04-19 08:24:59 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-19 08:24:59 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-19 08:24:59 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-19 08:24:59 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-19 08:24:59 +01:00: 
+2026-04-19 08:24:59 +01:00: ✓ Using credentials from .env.local
+2026-04-19 08:24:59 +01:00: ✓ Auto-refresh enabled
+2026-04-19 08:24:59 +01:00: 
+2026-04-19 08:24:59 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-19 08:25:08 +01:00: ✓ Next.js server is ready!
+2026-04-19 08:25:08 +01:00: 
+2026-04-19 08:25:08 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-19 08:25:08 +01:00:    Yesterday's report (2026-04-18) was not sent.
+2026-04-19 08:25:08 +01:00:    Running immediate catch-up check for 2026-04-18...
+2026-04-19 08:25:08 +01:00: 
+2026-04-19 08:25:08 +01:00: 
+2026-04-19 08:25:08 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-19 08:25:08 +01:00: ║  🔄 CATCH-UP CHECK: 08:25 (Report Date: 2026-04-18)     ║
+2026-04-19 08:25:08 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-19 08:25:08 +01:00: [2026-04-19T07:25:08.010Z] Starting catch-up overspeed check for 2026-04-18...
+2026-04-19 08:25:08 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-19 08:25:08 +01:00: 
+2026-04-19 08:25:13 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-19 08:25:15 +01:00: ✓ Token refreshed successfully
+2026-04-19 08:25:15 +01:00: 🔄 Retrying with new token...
+2026-04-19 08:30:15 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-19 08:30:15 +01:00: 
+2026-04-19 08:30:15 +01:00: 
+2026-04-19 08:30:15 +01:00: ✅ Catch-up check complete. Resuming normal schedule...
+2026-04-19 08:30:15 +01:00: 
+2026-04-19 08:30:15 +01:00: 📅 Schedule Information:
+2026-04-19 08:30:15 +01:00:   - Next check: 4/19/2026, 11:59:00 PM (in 15h 28m)
+2026-04-19 08:30:15 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-19 08:30:15 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-19 08:30:15 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-19 08:30:15 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-19 08:30:15 +01:00: 
+2026-04-19 08:30:15 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-19 08:30:15 +01:00: 
+2026-04-19 08:30:15 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-19 08:30:15 +01:00: 
+2026-04-19 08:30:15 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-19 08:30:15 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-19 08:30:15 +01:00: 
+2026-04-19 08:33:33 +01:00: ◇ injected env (18) from .env.local // tip: ⌘ enable debugging { debug: true }
+2026-04-19 08:33:33 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-19 08:33:33 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-19 08:33:33 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-19 08:33:33 +01:00: 
+2026-04-19 08:33:33 +01:00: Configuration:
+2026-04-19 08:33:33 +01:00:   - Speed Limit: 120 km/h
+2026-04-19 08:33:33 +01:00:   - Duration Threshold: 60 seconds
+2026-04-19 08:33:33 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-19 08:33:33 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-19 08:33:33 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-19 08:33:33 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-19 08:33:33 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-19 08:33:33 +01:00:   - API URL: http://localhost:3000
+2026-04-19 08:33:33 +01:00: 
+2026-04-19 08:33:33 +01:00: ⚠️  API Usage Compliance:
+2026-04-19 08:33:33 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-19 08:33:33 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-19 08:33:33 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-19 08:33:33 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-19 08:33:33 +01:00: 
+2026-04-19 08:33:33 +01:00: ✓ Using credentials from .env.local
+2026-04-19 08:33:33 +01:00: ✓ Auto-refresh enabled
+2026-04-19 08:33:33 +01:00: 
+2026-04-19 08:33:33 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-19 08:33:34 +01:00: ✓ Next.js server is ready!
+2026-04-19 08:33:34 +01:00: 
+2026-04-19 08:33:34 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-19 08:33:34 +01:00:    Yesterday's report (2026-04-18) was not sent.
+2026-04-19 08:33:34 +01:00:    Running immediate catch-up check for 2026-04-18...
+2026-04-19 08:33:34 +01:00: 
+2026-04-19 08:33:34 +01:00: 
+2026-04-19 08:33:34 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-19 08:33:34 +01:00: ║  🔄 CATCH-UP CHECK: 08:33 (Report Date: 2026-04-18)     ║
+2026-04-19 08:33:34 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-19 08:33:34 +01:00: [2026-04-19T07:33:34.203Z] Starting catch-up overspeed check for 2026-04-18...
+2026-04-19 08:33:34 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-19 08:33:34 +01:00: 
+2026-04-19 08:33:35 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-19 08:33:37 +01:00: ✓ Token refreshed successfully
+2026-04-19 08:33:37 +01:00: 🔄 Retrying with new token...
+2026-04-19 08:37:27 +01:00: ◇ injected env (18) from .env.local // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+2026-04-19 08:37:27 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-19 08:37:27 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-19 08:37:27 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-19 08:37:27 +01:00: 
+2026-04-19 08:37:27 +01:00: Configuration:
+2026-04-19 08:37:27 +01:00:   - Speed Limit: 120 km/h
+2026-04-19 08:37:27 +01:00:   - Duration Threshold: 60 seconds
+2026-04-19 08:37:27 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-19 08:37:27 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-19 08:37:27 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-19 08:37:27 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-19 08:37:27 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-19 08:37:27 +01:00:   - API URL: http://localhost:3000
+2026-04-19 08:37:27 +01:00: 
+2026-04-19 08:37:27 +01:00: ⚠️  API Usage Compliance:
+2026-04-19 08:37:27 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-19 08:37:27 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-19 08:37:27 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-19 08:37:27 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-19 08:37:27 +01:00: 
+2026-04-19 08:37:27 +01:00: ✓ Using credentials from .env.local
+2026-04-19 08:37:27 +01:00: ✓ Auto-refresh enabled
+2026-04-19 08:37:27 +01:00: 
+2026-04-19 08:37:27 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-19 08:37:34 +01:00: ✓ Next.js server is ready!
+2026-04-19 08:37:34 +01:00: 
+2026-04-19 08:37:34 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-19 08:37:34 +01:00:    Yesterday's report (2026-04-18) was not sent.
+2026-04-19 08:37:34 +01:00:    Running immediate catch-up check for 2026-04-18...
+2026-04-19 08:37:34 +01:00: 
+2026-04-19 08:37:34 +01:00: 
+2026-04-19 08:37:34 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-19 08:37:34 +01:00: ║  🔄 CATCH-UP CHECK: 08:37 (Report Date: 2026-04-18)     ║
+2026-04-19 08:37:34 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-19 08:37:34 +01:00: [2026-04-19T07:37:34.224Z] Starting catch-up overspeed check for 2026-04-18...
+2026-04-19 08:37:34 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-19 08:37:34 +01:00: 
+2026-04-19 08:37:37 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-19 08:37:40 +01:00: ✓ Token refreshed successfully
+2026-04-19 08:37:40 +01:00: 🔄 Retrying with new token...
+2026-04-19 09:38:46 +01:00: ✓ Check complete: No violations found
+2026-04-19 09:38:46 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-19 09:38:46 +01:00: 
+2026-04-19 09:38:46 +01:00: 
+2026-04-19 09:38:46 +01:00: ✅ Catch-up check complete. Resuming normal schedule...
+2026-04-19 09:38:46 +01:00: 
+2026-04-19 09:38:46 +01:00: 📅 Schedule Information:
+2026-04-19 09:38:46 +01:00:   - Next check: 4/19/2026, 11:59:00 PM (in 14h 20m)
+2026-04-19 09:38:46 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-19 09:38:46 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-19 09:38:46 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-19 09:38:46 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-19 09:38:46 +01:00: 
+2026-04-19 09:38:46 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-19 09:38:46 +01:00: 
+2026-04-19 09:38:46 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-19 09:38:46 +01:00: 
+2026-04-19 09:38:46 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-19 09:38:46 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-19 09:38:46 +01:00: 
+2026-04-19 10:08:46 +01:00: 
+2026-04-19 10:08:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 10:08:46 AM
+2026-04-19 10:08:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 10:08:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 10:08:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 10:08:46 +01:00:    ⏰ Next check in: 13h 50m (at 11:59:00 PM)
+2026-04-19 10:08:46 +01:00: 
+2026-04-19 10:38:46 +01:00: 
+2026-04-19 10:38:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 10:38:46 AM
+2026-04-19 10:38:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 10:38:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 10:38:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 10:38:46 +01:00:    ⏰ Next check in: 13h 20m (at 11:59:00 PM)
+2026-04-19 10:38:46 +01:00: 
+2026-04-19 11:08:46 +01:00: 
+2026-04-19 11:08:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 11:08:46 AM
+2026-04-19 11:08:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 11:08:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 11:08:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 11:08:46 +01:00:    ⏰ Next check in: 12h 50m (at 11:59:00 PM)
+2026-04-19 11:08:46 +01:00: 
+2026-04-19 11:38:46 +01:00: 
+2026-04-19 11:38:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 11:38:46 AM
+2026-04-19 11:38:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 11:38:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 11:38:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 11:38:46 +01:00:    ⏰ Next check in: 12h 20m (at 11:59:00 PM)
+2026-04-19 11:38:46 +01:00: 
+2026-04-19 12:08:46 +01:00: 
+2026-04-19 12:08:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 12:08:46 PM
+2026-04-19 12:08:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 12:08:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 12:08:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 12:08:46 +01:00:    ⏰ Next check in: 11h 50m (at 11:59:00 PM)
+2026-04-19 12:08:46 +01:00: 
+2026-04-19 12:38:46 +01:00: 
+2026-04-19 12:38:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 12:38:46 PM
+2026-04-19 12:38:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 12:38:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 12:38:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 12:38:46 +01:00:    ⏰ Next check in: 11h 20m (at 11:59:00 PM)
+2026-04-19 12:38:46 +01:00: 
+2026-04-19 13:08:46 +01:00: 
+2026-04-19 13:08:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 1:08:46 PM
+2026-04-19 13:08:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 13:08:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 13:08:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 13:08:46 +01:00:    ⏰ Next check in: 10h 50m (at 11:59:00 PM)
+2026-04-19 13:08:46 +01:00: 
+2026-04-19 13:38:46 +01:00: 
+2026-04-19 13:38:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 1:38:46 PM
+2026-04-19 13:38:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 13:38:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 13:38:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 13:38:46 +01:00:    ⏰ Next check in: 10h 20m (at 11:59:00 PM)
+2026-04-19 13:38:46 +01:00: 
+2026-04-19 14:08:46 +01:00: 
+2026-04-19 14:08:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 2:08:46 PM
+2026-04-19 14:08:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 14:08:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 14:08:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 14:08:46 +01:00:    ⏰ Next check in: 9h 50m (at 11:59:00 PM)
+2026-04-19 14:08:46 +01:00: 
+2026-04-19 14:38:46 +01:00: 
+2026-04-19 14:38:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 2:38:46 PM
+2026-04-19 14:38:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 14:38:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 14:38:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 14:38:46 +01:00:    ⏰ Next check in: 9h 20m (at 11:59:00 PM)
+2026-04-19 14:38:46 +01:00: 
+2026-04-19 15:08:46 +01:00: 
+2026-04-19 15:08:46 +01:00: 💚 [HEARTBEAT] 4/19/2026, 3:08:46 PM
+2026-04-19 15:08:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 15:08:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 15:08:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 15:08:46 +01:00:    ⏰ Next check in: 8h 50m (at 11:59:00 PM)
+2026-04-19 15:08:46 +01:00: 
+2026-04-19 15:38:47 +01:00: 
+2026-04-19 15:38:47 +01:00: 💚 [HEARTBEAT] 4/19/2026, 3:38:46 PM
+2026-04-19 15:38:47 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 15:38:47 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 15:38:47 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 15:38:47 +01:00:    ⏰ Next check in: 8h 20m (at 11:59:00 PM)
+2026-04-19 15:38:47 +01:00: 
+2026-04-19 16:08:47 +01:00: 
+2026-04-19 16:08:47 +01:00: 💚 [HEARTBEAT] 4/19/2026, 4:08:46 PM
+2026-04-19 16:08:47 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 16:08:47 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 16:08:47 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 16:08:47 +01:00:    ⏰ Next check in: 7h 50m (at 11:59:00 PM)
+2026-04-19 16:08:47 +01:00: 
+2026-04-19 16:19:37 +01:00: ◇ injected env (18) from .env.local // tip: ◈ encrypted .env [www.dotenvx.com]
+2026-04-19 16:19:37 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-19 16:19:37 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-19 16:19:37 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-19 16:19:37 +01:00: 
+2026-04-19 16:19:37 +01:00: Configuration:
+2026-04-19 16:19:37 +01:00:   - Speed Limit: 120 km/h
+2026-04-19 16:19:37 +01:00:   - Duration Threshold: 60 seconds
+2026-04-19 16:19:37 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-19 16:19:37 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-19 16:19:37 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-19 16:19:37 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-19 16:19:37 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-19 16:19:37 +01:00:   - API URL: http://localhost:3000
+2026-04-19 16:19:37 +01:00: 
+2026-04-19 16:19:37 +01:00: ⚠️  API Usage Compliance:
+2026-04-19 16:19:37 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-19 16:19:37 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-19 16:19:37 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-19 16:19:37 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-19 16:19:37 +01:00: 
+2026-04-19 16:19:37 +01:00: ✓ Using credentials from .env.local
+2026-04-19 16:19:37 +01:00: ✓ Auto-refresh enabled
+2026-04-19 16:19:37 +01:00: 
+2026-04-19 16:19:37 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-19 16:19:44 +01:00: ✓ Next.js server is ready!
+2026-04-19 16:19:44 +01:00: 
+2026-04-19 16:19:44 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-19 16:19:44 +01:00:    Yesterday's report (2026-04-18) was not sent.
+2026-04-19 16:19:44 +01:00:    Running immediate catch-up check for 2026-04-18...
+2026-04-19 16:19:44 +01:00: 
+2026-04-19 16:19:44 +01:00: 
+2026-04-19 16:19:44 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-19 16:19:44 +01:00: ║  🔄 CATCH-UP CHECK: 16:19 (Report Date: 2026-04-18)     ║
+2026-04-19 16:19:44 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-19 16:19:44 +01:00: [2026-04-19T15:19:44.620Z] Starting catch-up overspeed check for 2026-04-18...
+2026-04-19 16:19:44 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-19 16:19:44 +01:00: 
+2026-04-19 16:19:49 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-19 16:19:51 +01:00: ✓ Token refreshed successfully
+2026-04-19 16:19:51 +01:00: 🔄 Retrying with new token...
+2026-04-19 17:30:14 +01:00: ✓ Check complete: No violations found
+2026-04-19 17:30:14 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-19 17:30:14 +01:00: 
+2026-04-19 17:30:14 +01:00: 
+2026-04-19 17:30:14 +01:00: ✅ Catch-up check complete. Resuming normal schedule...
+2026-04-19 17:30:14 +01:00: 
+2026-04-19 17:30:14 +01:00: 📅 Schedule Information:
+2026-04-19 17:30:14 +01:00:   - Next check: 4/19/2026, 11:59:00 PM (in 6h 28m)
+2026-04-19 17:30:14 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-19 17:30:14 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-19 17:30:14 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-19 17:30:14 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-19 17:30:14 +01:00: 
+2026-04-19 17:30:14 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-19 17:30:14 +01:00: 
+2026-04-19 17:30:14 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-19 17:30:14 +01:00: 
+2026-04-19 17:30:14 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-19 17:30:14 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-19 17:30:14 +01:00: 
+2026-04-19 18:00:15 +01:00: 
+2026-04-19 18:00:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 6:00:14 PM
+2026-04-19 18:00:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 18:00:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 18:00:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 18:00:15 +01:00:    ⏰ Next check in: 5h 58m (at 11:59:00 PM)
+2026-04-19 18:00:15 +01:00: 
+2026-04-19 18:30:15 +01:00: 
+2026-04-19 18:30:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 6:30:14 PM
+2026-04-19 18:30:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 18:30:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 18:30:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 18:30:15 +01:00:    ⏰ Next check in: 5h 28m (at 11:59:00 PM)
+2026-04-19 18:30:15 +01:00: 
+2026-04-19 19:00:15 +01:00: 
+2026-04-19 19:00:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 7:00:14 PM
+2026-04-19 19:00:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 19:00:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 19:00:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 19:00:15 +01:00:    ⏰ Next check in: 4h 58m (at 11:59:00 PM)
+2026-04-19 19:00:15 +01:00: 
+2026-04-19 19:30:14 +01:00: 
+2026-04-19 19:30:14 +01:00: 💚 [HEARTBEAT] 4/19/2026, 7:30:14 PM
+2026-04-19 19:30:14 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 19:30:14 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 19:30:14 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 19:30:14 +01:00:    ⏰ Next check in: 4h 28m (at 11:59:00 PM)
+2026-04-19 19:30:14 +01:00: 
+2026-04-19 20:00:15 +01:00: 
+2026-04-19 20:00:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 8:00:14 PM
+2026-04-19 20:00:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 20:00:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 20:00:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 20:00:15 +01:00:    ⏰ Next check in: 3h 58m (at 11:59:00 PM)
+2026-04-19 20:00:15 +01:00: 
+2026-04-19 20:30:15 +01:00: 
+2026-04-19 20:30:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 8:30:14 PM
+2026-04-19 20:30:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 20:30:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 20:30:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 20:30:15 +01:00:    ⏰ Next check in: 3h 28m (at 11:59:00 PM)
+2026-04-19 20:30:15 +01:00: 
+2026-04-19 21:00:15 +01:00: 
+2026-04-19 21:00:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 9:00:14 PM
+2026-04-19 21:00:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 21:00:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 21:00:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 21:00:15 +01:00:    ⏰ Next check in: 2h 58m (at 11:59:00 PM)
+2026-04-19 21:00:15 +01:00: 
+2026-04-19 21:30:15 +01:00: 
+2026-04-19 21:30:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 9:30:14 PM
+2026-04-19 21:30:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 21:30:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 21:30:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 21:30:15 +01:00:    ⏰ Next check in: 2h 28m (at 11:59:00 PM)
+2026-04-19 21:30:15 +01:00: 
+2026-04-19 22:00:15 +01:00: 
+2026-04-19 22:00:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 10:00:14 PM
+2026-04-19 22:00:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 22:00:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 22:00:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 22:00:15 +01:00:    ⏰ Next check in: 1h 58m (at 11:59:00 PM)
+2026-04-19 22:00:15 +01:00: 
+2026-04-19 22:30:15 +01:00: 
+2026-04-19 22:30:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 10:30:14 PM
+2026-04-19 22:30:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 22:30:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 22:30:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 22:30:15 +01:00:    ⏰ Next check in: 1h 28m (at 11:59:00 PM)
+2026-04-19 22:30:15 +01:00: 
+2026-04-19 23:00:15 +01:00: 
+2026-04-19 23:00:15 +01:00: 💚 [HEARTBEAT] 4/19/2026, 11:00:14 PM
+2026-04-19 23:00:15 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 23:00:15 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 23:00:15 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 23:00:15 +01:00:    ⏰ Next check in: 0h 58m (at 11:59:00 PM)
+2026-04-19 23:00:15 +01:00: 
+2026-04-19 23:30:17 +01:00: 
+2026-04-19 23:30:17 +01:00: 💚 [HEARTBEAT] 4/19/2026, 11:30:17 PM
+2026-04-19 23:30:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-19 23:30:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-19 23:30:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-19 23:30:17 +01:00:    ⏰ Next check in: 0h 28m (at 11:59:00 PM)
+2026-04-19 23:30:17 +01:00: 
+2026-04-20 00:00:17 +01:00: 
+2026-04-20 00:00:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 12:00:17 AM
+2026-04-20 00:00:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 00:00:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 00:00:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 00:00:17 +01:00:    ⏰ Next check in: 23h 58m (at 11:59:00 PM)
+2026-04-20 00:00:17 +01:00: 
+2026-04-20 00:30:17 +01:00: 
+2026-04-20 00:30:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 12:30:17 AM
+2026-04-20 00:30:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 00:30:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 00:30:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 00:30:17 +01:00:    ⏰ Next check in: 23h 28m (at 11:59:00 PM)
+2026-04-20 00:30:17 +01:00: 
+2026-04-20 01:00:17 +01:00: 
+2026-04-20 01:00:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 1:00:17 AM
+2026-04-20 01:00:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 01:00:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 01:00:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 01:00:17 +01:00:    ⏰ Next check in: 22h 58m (at 11:59:00 PM)
+2026-04-20 01:00:17 +01:00: 
+2026-04-20 01:30:17 +01:00: 
+2026-04-20 01:30:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 1:30:17 AM
+2026-04-20 01:30:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 01:30:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 01:30:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 01:30:17 +01:00:    ⏰ Next check in: 22h 28m (at 11:59:00 PM)
+2026-04-20 01:30:17 +01:00: 
+2026-04-20 02:00:17 +01:00: 
+2026-04-20 02:00:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 2:00:17 AM
+2026-04-20 02:00:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 02:00:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 02:00:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 02:00:17 +01:00:    ⏰ Next check in: 21h 58m (at 11:59:00 PM)
+2026-04-20 02:00:17 +01:00: 
+2026-04-20 02:30:17 +01:00: 
+2026-04-20 02:30:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 2:30:17 AM
+2026-04-20 02:30:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 02:30:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 02:30:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 02:30:17 +01:00:    ⏰ Next check in: 21h 28m (at 11:59:00 PM)
+2026-04-20 02:30:17 +01:00: 
+2026-04-20 03:00:18 +01:00: 
+2026-04-20 03:00:18 +01:00: 💚 [HEARTBEAT] 4/20/2026, 3:00:17 AM
+2026-04-20 03:00:18 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 03:00:18 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 03:00:18 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 03:00:18 +01:00:    ⏰ Next check in: 20h 58m (at 11:59:00 PM)
+2026-04-20 03:00:18 +01:00: 
+2026-04-20 03:30:18 +01:00: 
+2026-04-20 03:30:18 +01:00: 💚 [HEARTBEAT] 4/20/2026, 3:30:17 AM
+2026-04-20 03:30:18 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 03:30:18 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 03:30:18 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 03:30:18 +01:00:    ⏰ Next check in: 20h 28m (at 11:59:00 PM)
+2026-04-20 03:30:18 +01:00: 
+2026-04-20 04:00:18 +01:00: 
+2026-04-20 04:00:18 +01:00: 💚 [HEARTBEAT] 4/20/2026, 4:00:17 AM
+2026-04-20 04:00:18 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 04:00:18 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 04:00:18 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 04:00:18 +01:00:    ⏰ Next check in: 19h 58m (at 11:59:00 PM)
+2026-04-20 04:00:18 +01:00: 
+2026-04-20 04:30:19 +01:00: 
+2026-04-20 04:30:19 +01:00: 💚 [HEARTBEAT] 4/20/2026, 4:30:17 AM
+2026-04-20 04:30:19 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 04:30:19 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 04:30:19 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 04:30:19 +01:00:    ⏰ Next check in: 19h 28m (at 11:59:00 PM)
+2026-04-20 04:30:19 +01:00: 
+2026-04-20 05:00:18 +01:00: 
+2026-04-20 05:00:18 +01:00: 💚 [HEARTBEAT] 4/20/2026, 5:00:17 AM
+2026-04-20 05:00:18 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 05:00:18 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 05:00:18 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 05:00:18 +01:00:    ⏰ Next check in: 18h 58m (at 11:59:00 PM)
+2026-04-20 05:00:18 +01:00: 
+2026-04-20 05:30:17 +01:00: 
+2026-04-20 05:30:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 5:30:17 AM
+2026-04-20 05:30:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 05:30:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 05:30:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 05:30:17 +01:00:    ⏰ Next check in: 18h 28m (at 11:59:00 PM)
+2026-04-20 05:30:17 +01:00: 
+2026-04-20 06:00:18 +01:00: 
+2026-04-20 06:00:18 +01:00: 💚 [HEARTBEAT] 4/20/2026, 6:00:17 AM
+2026-04-20 06:00:18 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 06:00:18 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 06:00:18 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 06:00:18 +01:00:    ⏰ Next check in: 17h 58m (at 11:59:00 PM)
+2026-04-20 06:00:18 +01:00: 
+2026-04-20 06:30:17 +01:00: 
+2026-04-20 06:30:17 +01:00: 💚 [HEARTBEAT] 4/20/2026, 6:30:17 AM
+2026-04-20 06:30:17 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 06:30:17 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 06:30:17 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 06:30:17 +01:00:    ⏰ Next check in: 17h 28m (at 11:59:00 PM)
+2026-04-20 06:30:17 +01:00: 
+2026-04-20 07:00:18 +01:00: 
+2026-04-20 07:00:18 +01:00: 💚 [HEARTBEAT] 4/20/2026, 7:00:17 AM
+2026-04-20 07:00:18 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-20 07:00:18 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-20 07:00:18 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-20 07:00:18 +01:00:    ⏰ Next check in: 16h 58m (at 11:59:00 PM)
+2026-04-20 07:00:18 +01:00: 
+2026-04-24 22:41:12 +01:00: ◇ injected env (18) from .env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+2026-04-24 22:41:12 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-24 22:41:12 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-24 22:41:12 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-24 22:41:12 +01:00: 
+2026-04-24 22:41:12 +01:00: Configuration:
+2026-04-24 22:41:12 +01:00:   - Speed Limit: 120 km/h
+2026-04-24 22:41:12 +01:00:   - Duration Threshold: 60 seconds
+2026-04-24 22:41:12 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-24 22:41:12 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-24 22:41:12 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-24 22:41:12 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-24 22:41:12 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-24 22:41:12 +01:00:   - API URL: http://localhost:3000
+2026-04-24 22:41:12 +01:00: 
+2026-04-24 22:41:12 +01:00: ⚠️  API Usage Compliance:
+2026-04-24 22:41:12 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-24 22:41:12 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-24 22:41:12 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-24 22:41:12 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-24 22:41:12 +01:00: 
+2026-04-24 22:41:12 +01:00: ✓ Using credentials from .env.local
+2026-04-24 22:41:12 +01:00: ✓ Auto-refresh enabled
+2026-04-24 22:41:12 +01:00: 
+2026-04-24 22:41:12 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-24 22:41:21 +01:00: ✓ Next.js server is ready!
+2026-04-24 22:41:21 +01:00: 
+2026-04-24 22:41:21 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-24 22:41:21 +01:00:    Yesterday's report (2026-04-23) was not sent.
+2026-04-24 22:41:21 +01:00:    Running immediate catch-up check for 2026-04-23...
+2026-04-24 22:41:21 +01:00: 
+2026-04-24 22:41:21 +01:00: 
+2026-04-24 22:41:21 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-24 22:41:21 +01:00: ║  🔄 CATCH-UP CHECK: 22:41 (Report Date: 2026-04-23)     ║
+2026-04-24 22:41:21 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-24 22:41:21 +01:00: [2026-04-24T21:41:21.230Z] Starting catch-up overspeed check for 2026-04-23...
+2026-04-24 22:41:21 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-24 22:41:21 +01:00: 
+2026-04-24 22:41:26 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-24 22:41:26 +01:00: 
+2026-04-24 22:41:26 +01:00: 
+2026-04-24 22:41:26 +01:00: ✅ Catch-up check complete. Resuming normal schedule...
+2026-04-24 22:41:26 +01:00: 
+2026-04-24 22:41:26 +01:00: 📅 Schedule Information:
+2026-04-24 22:41:26 +01:00:   - Next check: 4/24/2026, 11:59:00 PM (in 1h 17m)
+2026-04-24 22:41:26 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-24 22:41:26 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-24 22:41:26 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-24 22:41:26 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-24 22:41:26 +01:00: 
+2026-04-24 22:41:26 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-24 22:41:26 +01:00: 
+2026-04-24 22:41:26 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-24 22:41:26 +01:00: 
+2026-04-24 22:41:26 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-24 22:41:26 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-24 22:41:26 +01:00: 
+2026-04-24 23:02:50 +01:00: ◇ injected env (18) from .env.local // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+2026-04-24 23:02:50 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-24 23:02:50 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-24 23:02:50 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-24 23:02:50 +01:00: 
+2026-04-24 23:02:50 +01:00: Configuration:
+2026-04-24 23:02:50 +01:00:   - Speed Limit: 120 km/h
+2026-04-24 23:02:50 +01:00:   - Duration Threshold: 60 seconds
+2026-04-24 23:02:50 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-24 23:02:50 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-24 23:02:50 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-24 23:02:50 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-24 23:02:50 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-24 23:02:50 +01:00:   - API URL: http://localhost:3000
+2026-04-24 23:02:50 +01:00: 
+2026-04-24 23:02:50 +01:00: ⚠️  API Usage Compliance:
+2026-04-24 23:02:50 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-24 23:02:50 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-24 23:02:50 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-24 23:02:50 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-24 23:02:50 +01:00: 
+2026-04-24 23:02:50 +01:00: ✓ Using credentials from .env.local
+2026-04-24 23:02:50 +01:00: ✓ Auto-refresh enabled
+2026-04-24 23:02:50 +01:00: 
+2026-04-24 23:02:50 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-24 23:02:57 +01:00: ✓ Next.js server is ready!
+2026-04-24 23:02:57 +01:00: 
+2026-04-24 23:02:57 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-24 23:02:57 +01:00:    Yesterday's report (2026-04-23) was not sent.
+2026-04-24 23:02:57 +01:00:    Running immediate catch-up check for 2026-04-23...
+2026-04-24 23:02:57 +01:00: 
+2026-04-24 23:02:57 +01:00: 
+2026-04-24 23:02:57 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-24 23:02:57 +01:00: ║  🔄 CATCH-UP CHECK: 23:02 (Report Date: 2026-04-23)     ║
+2026-04-24 23:02:57 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-24 23:02:57 +01:00: [2026-04-24T22:02:57.121Z] Starting catch-up overspeed check for 2026-04-23...
+2026-04-24 23:02:57 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-24 23:02:57 +01:00: 
+2026-04-24 23:03:00 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-24 23:03:01 +01:00: ✓ Token refreshed successfully
+2026-04-24 23:03:01 +01:00: 🔄 Retrying with new token...
+2026-04-25 00:14:26 +01:00: ✓ Check complete: 9 violations found
+2026-04-25 00:14:26 +01:00:   Report saved: overspeed_daily_report_2026-04-23.xlsx
+2026-04-25 00:14:26 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-25 00:14:26 +01:00: 
+2026-04-25 00:14:26 +01:00: 
+2026-04-25 00:14:26 +01:00: ✅ Catch-up check complete. Resuming normal schedule...
+2026-04-25 00:14:26 +01:00: 
+2026-04-25 00:14:26 +01:00: 📅 Schedule Information:
+2026-04-25 00:14:26 +01:00:   - Next check: 4/25/2026, 11:59:00 PM (in 23h 44m)
+2026-04-25 00:14:26 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-25 00:14:26 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-25 00:14:26 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-25 00:14:26 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-25 00:14:26 +01:00: 
+2026-04-25 00:14:26 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-25 00:14:26 +01:00: 
+2026-04-25 00:14:26 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-25 00:14:26 +01:00: 
+2026-04-25 00:14:26 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-25 00:14:26 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-25 00:14:26 +01:00: 
+2026-04-25 00:44:26 +01:00: 
+2026-04-25 00:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 12:44:26 AM
+2026-04-25 00:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 00:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 00:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 00:44:26 +01:00:    ⏰ Next check in: 23h 14m (at 11:59:00 PM)
+2026-04-25 00:44:26 +01:00: 
+2026-04-25 01:14:26 +01:00: 
+2026-04-25 01:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 1:14:26 AM
+2026-04-25 01:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 01:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 01:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 01:14:26 +01:00:    ⏰ Next check in: 22h 44m (at 11:59:00 PM)
+2026-04-25 01:14:26 +01:00: 
+2026-04-25 01:44:26 +01:00: 
+2026-04-25 01:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 1:44:26 AM
+2026-04-25 01:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 01:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 01:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 01:44:26 +01:00:    ⏰ Next check in: 22h 14m (at 11:59:00 PM)
+2026-04-25 01:44:26 +01:00: 
+2026-04-25 02:14:26 +01:00: 
+2026-04-25 02:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 2:14:26 AM
+2026-04-25 02:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 02:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 02:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 02:14:26 +01:00:    ⏰ Next check in: 21h 44m (at 11:59:00 PM)
+2026-04-25 02:14:26 +01:00: 
+2026-04-25 02:44:26 +01:00: 
+2026-04-25 02:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 2:44:26 AM
+2026-04-25 02:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 02:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 02:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 02:44:26 +01:00:    ⏰ Next check in: 21h 14m (at 11:59:00 PM)
+2026-04-25 02:44:26 +01:00: 
+2026-04-25 03:14:26 +01:00: 
+2026-04-25 03:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 3:14:26 AM
+2026-04-25 03:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 03:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 03:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 03:14:26 +01:00:    ⏰ Next check in: 20h 44m (at 11:59:00 PM)
+2026-04-25 03:14:26 +01:00: 
+2026-04-25 03:44:26 +01:00: 
+2026-04-25 03:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 3:44:26 AM
+2026-04-25 03:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 03:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 03:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 03:44:26 +01:00:    ⏰ Next check in: 20h 14m (at 11:59:00 PM)
+2026-04-25 03:44:26 +01:00: 
+2026-04-25 04:14:26 +01:00: 
+2026-04-25 04:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 4:14:26 AM
+2026-04-25 04:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 04:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 04:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 04:14:26 +01:00:    ⏰ Next check in: 19h 44m (at 11:59:00 PM)
+2026-04-25 04:14:26 +01:00: 
+2026-04-25 04:44:26 +01:00: 
+2026-04-25 04:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 4:44:26 AM
+2026-04-25 04:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 04:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 04:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 04:44:26 +01:00:    ⏰ Next check in: 19h 14m (at 11:59:00 PM)
+2026-04-25 04:44:26 +01:00: 
+2026-04-25 05:14:26 +01:00: 
+2026-04-25 05:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 5:14:26 AM
+2026-04-25 05:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 05:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 05:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 05:14:26 +01:00:    ⏰ Next check in: 18h 44m (at 11:59:00 PM)
+2026-04-25 05:14:26 +01:00: 
+2026-04-25 05:44:26 +01:00: 
+2026-04-25 05:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 5:44:26 AM
+2026-04-25 05:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 05:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 05:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 05:44:26 +01:00:    ⏰ Next check in: 18h 14m (at 11:59:00 PM)
+2026-04-25 05:44:26 +01:00: 
+2026-04-25 06:14:26 +01:00: 
+2026-04-25 06:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 6:14:26 AM
+2026-04-25 06:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 06:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 06:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 06:14:26 +01:00:    ⏰ Next check in: 17h 44m (at 11:59:00 PM)
+2026-04-25 06:14:26 +01:00: 
+2026-04-25 06:44:26 +01:00: 
+2026-04-25 06:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 6:44:26 AM
+2026-04-25 06:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 06:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 06:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 06:44:26 +01:00:    ⏰ Next check in: 17h 14m (at 11:59:00 PM)
+2026-04-25 06:44:26 +01:00: 
+2026-04-25 07:14:26 +01:00: 
+2026-04-25 07:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 7:14:26 AM
+2026-04-25 07:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 07:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 07:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 07:14:26 +01:00:    ⏰ Next check in: 16h 44m (at 11:59:00 PM)
+2026-04-25 07:14:26 +01:00: 
+2026-04-25 07:44:26 +01:00: 
+2026-04-25 07:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 7:44:26 AM
+2026-04-25 07:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 07:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 07:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 07:44:26 +01:00:    ⏰ Next check in: 16h 14m (at 11:59:00 PM)
+2026-04-25 07:44:26 +01:00: 
+2026-04-25 08:14:26 +01:00: 
+2026-04-25 08:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 8:14:26 AM
+2026-04-25 08:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 08:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 08:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 08:14:26 +01:00:    ⏰ Next check in: 15h 44m (at 11:59:00 PM)
+2026-04-25 08:14:26 +01:00: 
+2026-04-25 08:44:26 +01:00: 
+2026-04-25 08:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 8:44:26 AM
+2026-04-25 08:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 08:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 08:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 08:44:26 +01:00:    ⏰ Next check in: 15h 14m (at 11:59:00 PM)
+2026-04-25 08:44:26 +01:00: 
+2026-04-25 09:14:26 +01:00: 
+2026-04-25 09:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 9:14:26 AM
+2026-04-25 09:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 09:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 09:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 09:14:26 +01:00:    ⏰ Next check in: 14h 44m (at 11:59:00 PM)
+2026-04-25 09:14:26 +01:00: 
+2026-04-25 09:44:26 +01:00: 
+2026-04-25 09:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 9:44:26 AM
+2026-04-25 09:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 09:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 09:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 09:44:26 +01:00:    ⏰ Next check in: 14h 14m (at 11:59:00 PM)
+2026-04-25 09:44:26 +01:00: 
+2026-04-25 10:14:26 +01:00: 
+2026-04-25 10:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 10:14:26 AM
+2026-04-25 10:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 10:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 10:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 10:14:26 +01:00:    ⏰ Next check in: 13h 44m (at 11:59:00 PM)
+2026-04-25 10:14:26 +01:00: 
+2026-04-25 10:44:26 +01:00: 
+2026-04-25 10:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 10:44:26 AM
+2026-04-25 10:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 10:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 10:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 10:44:26 +01:00:    ⏰ Next check in: 13h 14m (at 11:59:00 PM)
+2026-04-25 10:44:26 +01:00: 
+2026-04-25 11:14:26 +01:00: 
+2026-04-25 11:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 11:14:26 AM
+2026-04-25 11:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 11:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 11:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 11:14:26 +01:00:    ⏰ Next check in: 12h 44m (at 11:59:00 PM)
+2026-04-25 11:14:26 +01:00: 
+2026-04-25 11:44:26 +01:00: 
+2026-04-25 11:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 11:44:26 AM
+2026-04-25 11:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 11:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 11:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 11:44:26 +01:00:    ⏰ Next check in: 12h 14m (at 11:59:00 PM)
+2026-04-25 11:44:26 +01:00: 
+2026-04-25 12:14:26 +01:00: 
+2026-04-25 12:14:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 12:14:26 PM
+2026-04-25 12:14:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 12:14:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 12:14:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 12:14:26 +01:00:    ⏰ Next check in: 11h 44m (at 11:59:00 PM)
+2026-04-25 12:14:26 +01:00: 
+2026-04-25 12:44:26 +01:00: 
+2026-04-25 12:44:26 +01:00: 💚 [HEARTBEAT] 4/25/2026, 12:44:26 PM
+2026-04-25 12:44:26 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 12:44:26 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 12:44:26 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 12:44:26 +01:00:    ⏰ Next check in: 11h 14m (at 11:59:00 PM)
+2026-04-25 12:44:26 +01:00: 
+2026-04-25 15:06:57 +01:00: ◇ injected env (18) from .env.local // tip: ⌘ suppress logs { quiet: true }
+2026-04-25 15:06:57 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-25 15:06:57 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-25 15:06:57 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-25 15:06:57 +01:00: 
+2026-04-25 15:06:57 +01:00: Configuration:
+2026-04-25 15:06:57 +01:00:   - Speed Limit: 120 km/h
+2026-04-25 15:06:57 +01:00:   - Duration Threshold: 60 seconds
+2026-04-25 15:06:57 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-25 15:06:57 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-25 15:06:57 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-25 15:06:57 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-25 15:06:57 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-25 15:06:57 +01:00:   - API URL: http://localhost:3000
+2026-04-25 15:06:57 +01:00: 
+2026-04-25 15:06:57 +01:00: ⚠️  API Usage Compliance:
+2026-04-25 15:06:57 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-25 15:06:57 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-25 15:06:57 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-25 15:06:57 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-25 15:06:57 +01:00: 
+2026-04-25 15:06:57 +01:00: ✓ Using credentials from .env.local
+2026-04-25 15:06:57 +01:00: ✓ Auto-refresh enabled
+2026-04-25 15:06:57 +01:00: 
+2026-04-25 15:06:57 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-25 15:07:09 +01:00: ✓ Next.js server is ready!
+2026-04-25 15:07:09 +01:00: 
+2026-04-25 15:07:09 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-25 15:07:09 +01:00:    Yesterday's report (2026-04-24) was not sent.
+2026-04-25 15:07:09 +01:00:    Running immediate catch-up check for 2026-04-24...
+2026-04-25 15:07:09 +01:00: 
+2026-04-25 15:07:09 +01:00: 
+2026-04-25 15:07:09 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-25 15:07:09 +01:00: ║  🔄 CATCH-UP CHECK: 15:07 (Report Date: 2026-04-24)     ║
+2026-04-25 15:07:09 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-25 15:07:09 +01:00: [2026-04-25T14:07:09.442Z] Starting catch-up overspeed check for 2026-04-24...
+2026-04-25 15:07:09 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-25 15:07:09 +01:00: 
+2026-04-25 15:07:12 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-25 15:07:17 +01:00: ✓ Token refreshed successfully
+2026-04-25 15:07:17 +01:00: 🔄 Retrying with new token...
+2026-04-25 16:18:03 +01:00: ✓ Check complete: 6 violations found
+2026-04-25 16:18:03 +01:00:   Report saved: overspeed_daily_report_2026-04-24.xlsx
+2026-04-25 16:18:03 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-25 16:18:03 +01:00: 
+2026-04-25 16:18:03 +01:00: 
+2026-04-25 16:18:03 +01:00: ✅ Catch-up check complete. Resuming normal schedule...
+2026-04-25 16:18:03 +01:00: 
+2026-04-25 16:18:03 +01:00: 📅 Schedule Information:
+2026-04-25 16:18:03 +01:00:   - Next check: 4/25/2026, 11:59:00 PM (in 7h 40m)
+2026-04-25 16:18:03 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-25 16:18:03 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-25 16:18:03 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-25 16:18:03 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-25 16:18:03 +01:00: 
+2026-04-25 16:18:03 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-25 16:18:03 +01:00: 
+2026-04-25 16:18:03 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-25 16:18:03 +01:00: 
+2026-04-25 16:18:03 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-25 16:18:03 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-25 16:18:03 +01:00: 
+2026-04-25 16:48:03 +01:00: 
+2026-04-25 16:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 4:48:03 PM
+2026-04-25 16:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 16:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 16:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 16:48:03 +01:00:    ⏰ Next check in: 7h 10m (at 11:59:00 PM)
+2026-04-25 16:48:03 +01:00: 
+2026-04-25 17:18:03 +01:00: 
+2026-04-25 17:18:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 5:18:03 PM
+2026-04-25 17:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 17:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 17:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 17:18:03 +01:00:    ⏰ Next check in: 6h 40m (at 11:59:00 PM)
+2026-04-25 17:18:03 +01:00: 
+2026-04-25 17:48:03 +01:00: 
+2026-04-25 17:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 5:48:03 PM
+2026-04-25 17:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 17:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 17:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 17:48:03 +01:00:    ⏰ Next check in: 6h 10m (at 11:59:00 PM)
+2026-04-25 17:48:03 +01:00: 
+2026-04-25 18:18:03 +01:00: 
+2026-04-25 18:18:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 6:18:03 PM
+2026-04-25 18:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 18:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 18:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 18:18:03 +01:00:    ⏰ Next check in: 5h 40m (at 11:59:00 PM)
+2026-04-25 18:18:03 +01:00: 
+2026-04-25 18:48:03 +01:00: 
+2026-04-25 18:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 6:48:03 PM
+2026-04-25 18:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 18:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 18:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 18:48:03 +01:00:    ⏰ Next check in: 5h 10m (at 11:59:00 PM)
+2026-04-25 18:48:03 +01:00: 
+2026-04-25 19:18:03 +01:00: 
+2026-04-25 19:18:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 7:18:03 PM
+2026-04-25 19:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 19:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 19:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 19:18:03 +01:00:    ⏰ Next check in: 4h 40m (at 11:59:00 PM)
+2026-04-25 19:18:03 +01:00: 
+2026-04-25 19:48:03 +01:00: 
+2026-04-25 19:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 7:48:03 PM
+2026-04-25 19:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 19:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 19:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 19:48:03 +01:00:    ⏰ Next check in: 4h 10m (at 11:59:00 PM)
+2026-04-25 19:48:03 +01:00: 
+2026-04-25 20:18:03 +01:00: 
+2026-04-25 20:18:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 8:18:03 PM
+2026-04-25 20:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 20:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 20:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 20:18:03 +01:00:    ⏰ Next check in: 3h 40m (at 11:59:00 PM)
+2026-04-25 20:18:03 +01:00: 
+2026-04-25 20:48:03 +01:00: 
+2026-04-25 20:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 8:48:03 PM
+2026-04-25 20:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 20:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 20:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 20:48:03 +01:00:    ⏰ Next check in: 3h 10m (at 11:59:00 PM)
+2026-04-25 20:48:03 +01:00: 
+2026-04-25 21:18:03 +01:00: 
+2026-04-25 21:18:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 9:18:03 PM
+2026-04-25 21:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 21:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 21:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 21:18:03 +01:00:    ⏰ Next check in: 2h 40m (at 11:59:00 PM)
+2026-04-25 21:18:03 +01:00: 
+2026-04-25 21:48:03 +01:00: 
+2026-04-25 21:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 9:48:03 PM
+2026-04-25 21:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 21:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 21:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 21:48:03 +01:00:    ⏰ Next check in: 2h 10m (at 11:59:00 PM)
+2026-04-25 21:48:03 +01:00: 
+2026-04-25 22:18:03 +01:00: 
+2026-04-25 22:18:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 10:18:03 PM
+2026-04-25 22:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 22:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 22:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 22:18:03 +01:00:    ⏰ Next check in: 1h 40m (at 11:59:00 PM)
+2026-04-25 22:18:03 +01:00: 
+2026-04-25 22:48:03 +01:00: 
+2026-04-25 22:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 10:48:03 PM
+2026-04-25 22:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 22:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 22:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 22:48:03 +01:00:    ⏰ Next check in: 1h 10m (at 11:59:00 PM)
+2026-04-25 22:48:03 +01:00: 
+2026-04-25 23:18:03 +01:00: 
+2026-04-25 23:18:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 11:18:03 PM
+2026-04-25 23:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 23:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 23:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 23:18:03 +01:00:    ⏰ Next check in: 0h 40m (at 11:59:00 PM)
+2026-04-25 23:18:03 +01:00: 
+2026-04-25 23:48:03 +01:00: 
+2026-04-25 23:48:03 +01:00: 💚 [HEARTBEAT] 4/25/2026, 11:48:03 PM
+2026-04-25 23:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-25 23:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-25 23:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-25 23:48:03 +01:00:    ⏰ Next check in: 0h 10m (at 11:59:00 PM)
+2026-04-25 23:48:03 +01:00: 
+2026-04-25 23:59:00 +01:00: 
+2026-04-25 23:59:00 +01:00: 🔔 [CRON TRIGGER] 4/25/2026, 11:59:00 PM - Scheduled check triggered!
+2026-04-25 23:59:00 +01:00: 
+2026-04-25 23:59:00 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-25 23:59:00 +01:00: ║  🕐 SCHEDULED CHECK: 23:59 (Daily Report - 23:59 Start)  ║
+2026-04-25 23:59:00 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-25 23:59:00 +01:00: [2026-04-25T22:59:00.038Z] Starting automated overspeed check...
+2026-04-25 23:59:00 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-25 23:59:00 +01:00: 
+2026-04-25 23:59:07 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-25 23:59:07 +01:00: 
+2026-04-26 00:18:03 +01:00: 
+2026-04-26 00:18:03 +01:00: 💚 [HEARTBEAT] 4/26/2026, 12:18:03 AM
+2026-04-26 00:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 00:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 00:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 00:18:03 +01:00:    ⏰ Next check in: 23h 40m (at 11:59:00 PM)
+2026-04-26 00:18:03 +01:00: 
+2026-04-26 00:48:03 +01:00: 
+2026-04-26 00:48:03 +01:00: 💚 [HEARTBEAT] 4/26/2026, 12:48:03 AM
+2026-04-26 00:48:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 00:48:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 00:48:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 00:48:03 +01:00:    ⏰ Next check in: 23h 10m (at 11:59:00 PM)
+2026-04-26 00:48:03 +01:00: 
+2026-04-26 01:18:03 +01:00: 
+2026-04-26 01:18:03 +01:00: 💚 [HEARTBEAT] 4/26/2026, 1:18:03 AM
+2026-04-26 01:18:03 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 01:18:03 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 01:18:03 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 01:18:03 +01:00:    ⏰ Next check in: 22h 40m (at 11:59:00 PM)
+2026-04-26 01:18:03 +01:00: 
+2026-04-26 01:48:04 +01:00: 
+2026-04-26 01:48:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 1:48:03 AM
+2026-04-26 01:48:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 01:48:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 01:48:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 01:48:04 +01:00:    ⏰ Next check in: 22h 10m (at 11:59:00 PM)
+2026-04-26 01:48:04 +01:00: 
+2026-04-26 02:18:04 +01:00: 
+2026-04-26 02:18:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 2:18:03 AM
+2026-04-26 02:18:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 02:18:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 02:18:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 02:18:04 +01:00:    ⏰ Next check in: 21h 40m (at 11:59:00 PM)
+2026-04-26 02:18:04 +01:00: 
+2026-04-26 02:48:04 +01:00: 
+2026-04-26 02:48:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 2:48:03 AM
+2026-04-26 02:48:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 02:48:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 02:48:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 02:48:04 +01:00:    ⏰ Next check in: 21h 10m (at 11:59:00 PM)
+2026-04-26 02:48:04 +01:00: 
+2026-04-26 03:18:04 +01:00: 
+2026-04-26 03:18:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 3:18:03 AM
+2026-04-26 03:18:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 03:18:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 03:18:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 03:18:04 +01:00:    ⏰ Next check in: 20h 40m (at 11:59:00 PM)
+2026-04-26 03:18:04 +01:00: 
+2026-04-26 03:48:04 +01:00: 
+2026-04-26 03:48:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 3:48:03 AM
+2026-04-26 03:48:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 03:48:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 03:48:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 03:48:04 +01:00:    ⏰ Next check in: 20h 10m (at 11:59:00 PM)
+2026-04-26 03:48:04 +01:00: 
+2026-04-26 04:18:04 +01:00: 
+2026-04-26 04:18:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 4:18:03 AM
+2026-04-26 04:18:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 04:18:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 04:18:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 04:18:04 +01:00:    ⏰ Next check in: 19h 40m (at 11:59:00 PM)
+2026-04-26 04:18:04 +01:00: 
+2026-04-26 04:48:04 +01:00: 
+2026-04-26 04:48:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 4:48:03 AM
+2026-04-26 04:48:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 04:48:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 04:48:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 04:48:04 +01:00:    ⏰ Next check in: 19h 10m (at 11:59:00 PM)
+2026-04-26 04:48:04 +01:00: 
+2026-04-26 05:18:04 +01:00: 
+2026-04-26 05:18:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 5:18:03 AM
+2026-04-26 05:18:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 05:18:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 05:18:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 05:18:04 +01:00:    ⏰ Next check in: 18h 40m (at 11:59:00 PM)
+2026-04-26 05:18:04 +01:00: 
+2026-04-26 05:48:04 +01:00: 
+2026-04-26 05:48:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 5:48:03 AM
+2026-04-26 05:48:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 05:48:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 05:48:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 05:48:04 +01:00:    ⏰ Next check in: 18h 10m (at 11:59:00 PM)
+2026-04-26 05:48:04 +01:00: 
+2026-04-26 06:18:04 +01:00: 
+2026-04-26 06:18:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 6:18:03 AM
+2026-04-26 06:18:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 06:18:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 06:18:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 06:18:04 +01:00:    ⏰ Next check in: 17h 40m (at 11:59:00 PM)
+2026-04-26 06:18:04 +01:00: 
+2026-04-26 06:48:04 +01:00: 
+2026-04-26 06:48:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 6:48:03 AM
+2026-04-26 06:48:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 06:48:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 06:48:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 06:48:04 +01:00:    ⏰ Next check in: 17h 10m (at 11:59:00 PM)
+2026-04-26 06:48:04 +01:00: 
+2026-04-26 07:18:04 +01:00: 
+2026-04-26 07:18:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 7:18:03 AM
+2026-04-26 07:18:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 07:18:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 07:18:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 07:18:04 +01:00:    ⏰ Next check in: 16h 40m (at 11:59:00 PM)
+2026-04-26 07:18:04 +01:00: 
+2026-04-26 07:48:04 +01:00: 
+2026-04-26 07:48:04 +01:00: 💚 [HEARTBEAT] 4/26/2026, 7:48:03 AM
+2026-04-26 07:48:04 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 07:48:04 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 07:48:04 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 07:48:04 +01:00:    ⏰ Next check in: 16h 10m (at 11:59:00 PM)
+2026-04-26 07:48:04 +01:00: 
+2026-04-26 07:54:48 +01:00: ◇ injected env (18) from .env.local // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+2026-04-26 07:54:49 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-26 07:54:49 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-26 07:54:49 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-26 07:54:49 +01:00: 
+2026-04-26 07:54:49 +01:00: Configuration:
+2026-04-26 07:54:49 +01:00:   - Speed Limit: 120 km/h
+2026-04-26 07:54:49 +01:00:   - Duration Threshold: 60 seconds
+2026-04-26 07:54:49 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-26 07:54:49 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-26 07:54:49 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-26 07:54:49 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-26 07:54:49 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-26 07:54:49 +01:00:   - API URL: http://localhost:3000
+2026-04-26 07:54:49 +01:00: 
+2026-04-26 07:54:49 +01:00: ⚠️  API Usage Compliance:
+2026-04-26 07:54:49 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-26 07:54:49 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-26 07:54:49 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-26 07:54:49 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-26 07:54:49 +01:00: 
+2026-04-26 07:54:49 +01:00: ✓ Using credentials from .env.local
+2026-04-26 07:54:49 +01:00: ✓ Auto-refresh enabled
+2026-04-26 07:54:49 +01:00: 
+2026-04-26 07:54:49 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-26 07:54:56 +01:00: ✓ Next.js server is ready!
+2026-04-26 07:54:56 +01:00: 
+2026-04-26 07:54:56 +01:00: 📨 Checking failed email queue for immediate resend...
+2026-04-26 07:54:57 +01:00: 📨 No failed emails pending
+2026-04-26 07:54:57 +01:00: ⚠️  MISSED REPORT DETECTED!
+2026-04-26 07:54:57 +01:00:    Yesterday's report (2026-04-25) was not sent.
+2026-04-26 07:54:57 +01:00:    Running immediate catch-up check for 2026-04-25...
+2026-04-26 07:54:57 +01:00: 
+2026-04-26 07:54:57 +01:00: 
+2026-04-26 07:54:57 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-26 07:54:57 +01:00: ║  🔄 CATCH-UP CHECK: 07:54 (Report Date: 2026-04-25)     ║
+2026-04-26 07:54:57 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-26 07:54:57 +01:00: [2026-04-26T06:54:57.437Z] Starting catch-up overspeed check for 2026-04-25...
+2026-04-26 07:54:57 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-26 07:54:57 +01:00: 
+2026-04-26 07:55:00 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-26 07:55:04 +01:00: ✓ Token refreshed successfully
+2026-04-26 07:55:04 +01:00: 🔄 Retrying with new token...
+2026-04-26 08:49:11 +01:00: ✓ Check complete: 1 violations found
+2026-04-26 08:49:11 +01:00:   Report saved: overspeed_daily_report_2026-04-25.xlsx
+2026-04-26 08:49:11 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-26 08:49:11 +01:00: 
+2026-04-26 08:49:11 +01:00: 
+2026-04-26 08:49:11 +01:00: ✅ Catch-up check complete. Resuming normal schedule...
+2026-04-26 08:49:11 +01:00: 
+2026-04-26 08:49:11 +01:00: 📅 Schedule Information:
+2026-04-26 08:49:11 +01:00:   - Next check: 4/26/2026, 11:59:00 PM (in 15h 9m)
+2026-04-26 08:49:11 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-26 08:49:11 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-26 08:49:11 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-26 08:49:11 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-26 08:49:11 +01:00: 
+2026-04-26 08:49:11 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-26 08:49:11 +01:00: 
+2026-04-26 08:49:11 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-26 08:49:11 +01:00: 
+2026-04-26 08:49:11 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-26 08:49:11 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-26 08:49:11 +01:00: 
+2026-04-26 09:19:11 +01:00: 
+2026-04-26 09:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 9:19:11 AM
+2026-04-26 09:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 09:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 09:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 09:19:11 +01:00:    ⏰ Next check in: 14h 39m (at 11:59:00 PM)
+2026-04-26 09:19:11 +01:00: 
+2026-04-26 09:49:11 +01:00: 
+2026-04-26 09:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 9:49:11 AM
+2026-04-26 09:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 09:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 09:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 09:49:11 +01:00:    ⏰ Next check in: 14h 9m (at 11:59:00 PM)
+2026-04-26 09:49:11 +01:00: 
+2026-04-26 10:19:14 +01:00: 
+2026-04-26 10:19:14 +01:00: 💚 [HEARTBEAT] 4/26/2026, 10:19:11 AM
+2026-04-26 10:19:14 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 10:19:14 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 10:19:14 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 10:19:14 +01:00:    ⏰ Next check in: 13h 39m (at 11:59:00 PM)
+2026-04-26 10:19:14 +01:00: 
+2026-04-26 10:49:11 +01:00: 
+2026-04-26 10:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 10:49:11 AM
+2026-04-26 10:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 10:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 10:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 10:49:11 +01:00:    ⏰ Next check in: 13h 9m (at 11:59:00 PM)
+2026-04-26 10:49:11 +01:00: 
+2026-04-26 11:19:11 +01:00: 
+2026-04-26 11:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 11:19:11 AM
+2026-04-26 11:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 11:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 11:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 11:19:11 +01:00:    ⏰ Next check in: 12h 39m (at 11:59:00 PM)
+2026-04-26 11:19:11 +01:00: 
+2026-04-26 11:49:11 +01:00: 
+2026-04-26 11:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 11:49:11 AM
+2026-04-26 11:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 11:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 11:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 11:49:11 +01:00:    ⏰ Next check in: 12h 9m (at 11:59:00 PM)
+2026-04-26 11:49:11 +01:00: 
+2026-04-26 12:19:11 +01:00: 
+2026-04-26 12:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 12:19:11 PM
+2026-04-26 12:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 12:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 12:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 12:19:11 +01:00:    ⏰ Next check in: 11h 39m (at 11:59:00 PM)
+2026-04-26 12:19:11 +01:00: 
+2026-04-26 12:49:11 +01:00: 
+2026-04-26 12:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 12:49:11 PM
+2026-04-26 12:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 12:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 12:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 12:49:11 +01:00:    ⏰ Next check in: 11h 9m (at 11:59:00 PM)
+2026-04-26 12:49:11 +01:00: 
+2026-04-26 13:19:11 +01:00: 
+2026-04-26 13:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 1:19:11 PM
+2026-04-26 13:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 13:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 13:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 13:19:11 +01:00:    ⏰ Next check in: 10h 39m (at 11:59:00 PM)
+2026-04-26 13:19:11 +01:00: 
+2026-04-26 13:49:11 +01:00: 
+2026-04-26 13:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 1:49:11 PM
+2026-04-26 13:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 13:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 13:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 13:49:11 +01:00:    ⏰ Next check in: 10h 9m (at 11:59:00 PM)
+2026-04-26 13:49:11 +01:00: 
+2026-04-26 14:19:11 +01:00: 
+2026-04-26 14:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 2:19:11 PM
+2026-04-26 14:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 14:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 14:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 14:19:11 +01:00:    ⏰ Next check in: 9h 39m (at 11:59:00 PM)
+2026-04-26 14:19:11 +01:00: 
+2026-04-26 14:49:11 +01:00: 
+2026-04-26 14:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 2:49:11 PM
+2026-04-26 14:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 14:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 14:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 14:49:11 +01:00:    ⏰ Next check in: 9h 9m (at 11:59:00 PM)
+2026-04-26 14:49:11 +01:00: 
+2026-04-26 15:19:11 +01:00: 
+2026-04-26 15:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 3:19:11 PM
+2026-04-26 15:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 15:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 15:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 15:19:11 +01:00:    ⏰ Next check in: 8h 39m (at 11:59:00 PM)
+2026-04-26 15:19:11 +01:00: 
+2026-04-26 15:49:11 +01:00: 
+2026-04-26 15:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 3:49:11 PM
+2026-04-26 15:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 15:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 15:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 15:49:11 +01:00:    ⏰ Next check in: 8h 9m (at 11:59:00 PM)
+2026-04-26 15:49:11 +01:00: 
+2026-04-26 16:19:11 +01:00: 
+2026-04-26 16:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 4:19:11 PM
+2026-04-26 16:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 16:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 16:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 16:19:11 +01:00:    ⏰ Next check in: 7h 39m (at 11:59:00 PM)
+2026-04-26 16:19:11 +01:00: 
+2026-04-26 16:49:11 +01:00: 
+2026-04-26 16:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 4:49:11 PM
+2026-04-26 16:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 16:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 16:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 16:49:11 +01:00:    ⏰ Next check in: 7h 9m (at 11:59:00 PM)
+2026-04-26 16:49:11 +01:00: 
+2026-04-26 17:19:11 +01:00: 
+2026-04-26 17:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 5:19:11 PM
+2026-04-26 17:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 17:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 17:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 17:19:11 +01:00:    ⏰ Next check in: 6h 39m (at 11:59:00 PM)
+2026-04-26 17:19:11 +01:00: 
+2026-04-26 17:49:11 +01:00: 
+2026-04-26 17:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 5:49:11 PM
+2026-04-26 17:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 17:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 17:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 17:49:11 +01:00:    ⏰ Next check in: 6h 9m (at 11:59:00 PM)
+2026-04-26 17:49:11 +01:00: 
+2026-04-26 18:19:11 +01:00: 
+2026-04-26 18:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 6:19:11 PM
+2026-04-26 18:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 18:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 18:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 18:19:11 +01:00:    ⏰ Next check in: 5h 39m (at 11:59:00 PM)
+2026-04-26 18:19:11 +01:00: 
+2026-04-26 18:49:11 +01:00: 
+2026-04-26 18:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 6:49:11 PM
+2026-04-26 18:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 18:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 18:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 18:49:11 +01:00:    ⏰ Next check in: 5h 9m (at 11:59:00 PM)
+2026-04-26 18:49:11 +01:00: 
+2026-04-26 19:19:11 +01:00: 
+2026-04-26 19:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 7:19:11 PM
+2026-04-26 19:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 19:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 19:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 19:19:11 +01:00:    ⏰ Next check in: 4h 39m (at 11:59:00 PM)
+2026-04-26 19:19:11 +01:00: 
+2026-04-26 19:49:11 +01:00: 
+2026-04-26 19:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 7:49:11 PM
+2026-04-26 19:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 19:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 19:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 19:49:11 +01:00:    ⏰ Next check in: 4h 9m (at 11:59:00 PM)
+2026-04-26 19:49:11 +01:00: 
+2026-04-26 20:19:11 +01:00: 
+2026-04-26 20:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 8:19:11 PM
+2026-04-26 20:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 20:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 20:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 20:19:11 +01:00:    ⏰ Next check in: 3h 39m (at 11:59:00 PM)
+2026-04-26 20:19:11 +01:00: 
+2026-04-26 20:49:11 +01:00: 
+2026-04-26 20:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 8:49:11 PM
+2026-04-26 20:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 20:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 20:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 20:49:11 +01:00:    ⏰ Next check in: 3h 9m (at 11:59:00 PM)
+2026-04-26 20:49:11 +01:00: 
+2026-04-26 21:19:11 +01:00: 
+2026-04-26 21:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 9:19:11 PM
+2026-04-26 21:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 21:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 21:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 21:19:11 +01:00:    ⏰ Next check in: 2h 39m (at 11:59:00 PM)
+2026-04-26 21:19:11 +01:00: 
+2026-04-26 21:49:11 +01:00: 
+2026-04-26 21:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 9:49:11 PM
+2026-04-26 21:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 21:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 21:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 21:49:11 +01:00:    ⏰ Next check in: 2h 9m (at 11:59:00 PM)
+2026-04-26 21:49:11 +01:00: 
+2026-04-26 22:19:11 +01:00: 
+2026-04-26 22:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 10:19:11 PM
+2026-04-26 22:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 22:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 22:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 22:19:11 +01:00:    ⏰ Next check in: 1h 39m (at 11:59:00 PM)
+2026-04-26 22:19:11 +01:00: 
+2026-04-26 22:49:11 +01:00: 
+2026-04-26 22:49:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 10:49:11 PM
+2026-04-26 22:49:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 22:49:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 22:49:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 22:49:11 +01:00:    ⏰ Next check in: 1h 9m (at 11:59:00 PM)
+2026-04-26 22:49:11 +01:00: 
+2026-04-26 23:19:11 +01:00: 
+2026-04-26 23:19:11 +01:00: 💚 [HEARTBEAT] 4/26/2026, 11:19:11 PM
+2026-04-26 23:19:11 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 23:19:11 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 23:19:11 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 23:19:11 +01:00:    ⏰ Next check in: 0h 39m (at 11:59:00 PM)
+2026-04-26 23:19:11 +01:00: 
+2026-04-26 23:49:12 +01:00: 
+2026-04-26 23:49:12 +01:00: 💚 [HEARTBEAT] 4/26/2026, 11:49:11 PM
+2026-04-26 23:49:12 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-26 23:49:12 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-26 23:49:12 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-26 23:49:12 +01:00:    ⏰ Next check in: 0h 9m (at 11:59:00 PM)
+2026-04-26 23:49:12 +01:00: 
+2026-04-26 23:51:16 +01:00: ◇ injected env (18) from .env.local // tip: ◈ secrets for agents [www.dotenvx.com]
+2026-04-26 23:51:16 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-26 23:51:16 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-26 23:51:16 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-26 23:51:16 +01:00: 
+2026-04-26 23:51:16 +01:00: Configuration:
+2026-04-26 23:51:16 +01:00:   - Speed Limit: 120 km/h
+2026-04-26 23:51:16 +01:00:   - Duration Threshold: 60 seconds
+2026-04-26 23:51:16 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-26 23:51:16 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-26 23:51:16 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-26 23:51:16 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-26 23:51:16 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-26 23:51:16 +01:00:   - API URL: http://localhost:3000
+2026-04-26 23:51:16 +01:00: 
+2026-04-26 23:51:16 +01:00: ⚠️  API Usage Compliance:
+2026-04-26 23:51:16 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-26 23:51:16 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-26 23:51:16 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-26 23:51:16 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-26 23:51:16 +01:00: 
+2026-04-26 23:51:16 +01:00: ✓ Using credentials from .env.local
+2026-04-26 23:51:16 +01:00: ✓ Auto-refresh enabled
+2026-04-26 23:51:16 +01:00: 
+2026-04-26 23:51:16 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-26 23:51:24 +01:00: ✓ Next.js server is ready!
+2026-04-26 23:51:24 +01:00: 
+2026-04-26 23:51:24 +01:00: 📨 Checking failed email queue for immediate resend...
+2026-04-26 23:51:46 +01:00: 📨 Failed-email retry complete: retried=1, sent=0, failed=1
+2026-04-26 23:51:46 +01:00: ✅ Yesterday's report already sent.
+2026-04-26 23:51:46 +01:00:    Report file: overspeed_daily_report_2026-04-25.xlsx
+2026-04-26 23:51:46 +01:00: 
+2026-04-26 23:51:46 +01:00: 📅 Schedule Information:
+2026-04-26 23:51:46 +01:00:   - Next check: 4/26/2026, 11:59:00 PM (in 0h 7m)
+2026-04-26 23:51:46 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-26 23:51:46 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-26 23:51:46 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-26 23:51:46 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-26 23:51:46 +01:00: 
+2026-04-26 23:51:46 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-26 23:51:46 +01:00: 
+2026-04-26 23:51:46 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-26 23:51:46 +01:00: 
+2026-04-26 23:51:46 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-26 23:51:46 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-26 23:51:46 +01:00: 
+2026-04-26 23:59:00 +01:00: 
+2026-04-26 23:59:00 +01:00: 🔔 [CRON TRIGGER] 4/26/2026, 11:59:00 PM - Scheduled check triggered!
+2026-04-26 23:59:00 +01:00: 
+2026-04-26 23:59:00 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-26 23:59:00 +01:00: ║  🕐 SCHEDULED CHECK: 23:59 (Daily Report - 23:59 Start)  ║
+2026-04-26 23:59:00 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-26 23:59:00 +01:00: [2026-04-26T22:59:00.068Z] Starting automated overspeed check...
+2026-04-26 23:59:00 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-26 23:59:00 +01:00: 
+2026-04-26 23:59:03 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-26 23:59:04 +01:00: ✓ Token refreshed successfully
+2026-04-26 23:59:04 +01:00: 🔄 Retrying with new token...
+2026-04-27 00:21:46 +01:00: 
+2026-04-27 00:21:46 +01:00: 💚 [HEARTBEAT] 4/27/2026, 12:21:46 AM
+2026-04-27 00:21:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 00:21:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 00:21:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 00:21:46 +01:00:    ⏰ Next check in: 23h 37m (at 11:59:00 PM)
+2026-04-27 00:21:46 +01:00: 
+2026-04-27 00:51:46 +01:00: 
+2026-04-27 00:51:46 +01:00: 💚 [HEARTBEAT] 4/27/2026, 12:51:46 AM
+2026-04-27 00:51:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 00:51:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 00:51:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 00:51:46 +01:00:    ⏰ Next check in: 23h 7m (at 11:59:00 PM)
+2026-04-27 00:51:46 +01:00: 
+2026-04-27 01:04:38 +01:00: ✓ Check complete: 6 violations found
+2026-04-27 01:04:38 +01:00:   Report saved: overspeed_daily_report_2026-04-26.xlsx
+2026-04-27 01:04:38 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-27 01:04:38 +01:00: 
+2026-04-27 01:21:46 +01:00: 
+2026-04-27 01:21:46 +01:00: 💚 [HEARTBEAT] 4/27/2026, 1:21:46 AM
+2026-04-27 01:21:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 01:21:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 01:21:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 01:21:46 +01:00:    ⏰ Next check in: 22h 37m (at 11:59:00 PM)
+2026-04-27 01:21:46 +01:00: 
+2026-04-27 01:51:52 +01:00: 
+2026-04-27 01:51:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 1:51:52 AM
+2026-04-27 01:51:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 01:51:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 01:51:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 01:51:52 +01:00:    ⏰ Next check in: 22h 7m (at 11:59:00 PM)
+2026-04-27 01:51:52 +01:00: 
+2026-04-27 02:21:52 +01:00: 
+2026-04-27 02:21:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 2:21:52 AM
+2026-04-27 02:21:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 02:21:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 02:21:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 02:21:52 +01:00:    ⏰ Next check in: 21h 37m (at 11:59:00 PM)
+2026-04-27 02:21:52 +01:00: 
+2026-04-27 02:51:52 +01:00: 
+2026-04-27 02:51:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 2:51:52 AM
+2026-04-27 02:51:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 02:51:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 02:51:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 02:51:52 +01:00:    ⏰ Next check in: 21h 7m (at 11:59:00 PM)
+2026-04-27 02:51:52 +01:00: 
+2026-04-27 03:21:52 +01:00: 
+2026-04-27 03:21:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 3:21:52 AM
+2026-04-27 03:21:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 03:21:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 03:21:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 03:21:52 +01:00:    ⏰ Next check in: 20h 37m (at 11:59:00 PM)
+2026-04-27 03:21:52 +01:00: 
+2026-04-27 03:51:52 +01:00: 
+2026-04-27 03:51:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 3:51:52 AM
+2026-04-27 03:51:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 03:51:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 03:51:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 03:51:52 +01:00:    ⏰ Next check in: 20h 7m (at 11:59:00 PM)
+2026-04-27 03:51:52 +01:00: 
+2026-04-27 04:21:52 +01:00: 
+2026-04-27 04:21:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 4:21:52 AM
+2026-04-27 04:21:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 04:21:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 04:21:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 04:21:52 +01:00:    ⏰ Next check in: 19h 37m (at 11:59:00 PM)
+2026-04-27 04:21:52 +01:00: 
+2026-04-27 04:51:52 +01:00: 
+2026-04-27 04:51:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 4:51:52 AM
+2026-04-27 04:51:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 04:51:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 04:51:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 04:51:52 +01:00:    ⏰ Next check in: 19h 7m (at 11:59:00 PM)
+2026-04-27 04:51:52 +01:00: 
+2026-04-27 05:21:52 +01:00: 
+2026-04-27 05:21:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 5:21:52 AM
+2026-04-27 05:21:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 05:21:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 05:21:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 05:21:52 +01:00:    ⏰ Next check in: 18h 37m (at 11:59:00 PM)
+2026-04-27 05:21:52 +01:00: 
+2026-04-27 05:51:52 +01:00: 
+2026-04-27 05:51:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 5:51:52 AM
+2026-04-27 05:51:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 05:51:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 05:51:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 05:51:52 +01:00:    ⏰ Next check in: 18h 7m (at 11:59:00 PM)
+2026-04-27 05:51:52 +01:00: 
+2026-04-27 06:21:52 +01:00: 
+2026-04-27 06:21:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 6:21:52 AM
+2026-04-27 06:21:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 06:21:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 06:21:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 06:21:52 +01:00:    ⏰ Next check in: 17h 37m (at 11:59:00 PM)
+2026-04-27 06:21:52 +01:00: 
+2026-04-27 06:51:52 +01:00: 
+2026-04-27 06:51:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 6:51:52 AM
+2026-04-27 06:51:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 06:51:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 06:51:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 06:51:52 +01:00:    ⏰ Next check in: 17h 7m (at 11:59:00 PM)
+2026-04-27 06:51:52 +01:00: 
+2026-04-27 07:21:52 +01:00: 
+2026-04-27 07:21:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 7:21:52 AM
+2026-04-27 07:21:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 07:21:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 07:21:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 07:21:52 +01:00:    ⏰ Next check in: 16h 37m (at 11:59:00 PM)
+2026-04-27 07:21:52 +01:00: 
+2026-04-27 07:51:52 +01:00: 
+2026-04-27 07:51:52 +01:00: 💚 [HEARTBEAT] 4/27/2026, 7:51:52 AM
+2026-04-27 07:51:52 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 07:51:52 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 07:51:52 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 07:51:52 +01:00:    ⏰ Next check in: 16h 7m (at 11:59:00 PM)
+2026-04-27 07:51:52 +01:00: 
+2026-04-27 22:19:35 +01:00: ◇ injected env (18) from .env.local // tip: ◈ encrypted .env [www.dotenvx.com]
+2026-04-27 22:19:35 +01:00: ╔══════════════════════════════════════════════════════════╗
+2026-04-27 22:19:35 +01:00: ║   Mantrac Automated Overspeed Monitoring Service        ║
+2026-04-27 22:19:35 +01:00: ╚══════════════════════════════════════════════════════════╝
+2026-04-27 22:19:35 +01:00: 
+2026-04-27 22:19:35 +01:00: Configuration:
+2026-04-27 22:19:35 +01:00:   - Speed Limit: 120 km/h
+2026-04-27 22:19:35 +01:00:   - Duration Threshold: 60 seconds
+2026-04-27 22:19:35 +01:00:   - Check Interval: Once daily at 23:59 (11:59 PM)
+2026-04-27 22:19:35 +01:00:   - Catch-up Check: Runs immediately if today's report was missed
+2026-04-27 22:19:35 +01:00:   - Email Reports: Sent around 00:30 AM (~40 min after check starts)
+2026-04-27 22:19:35 +01:00:   - Data Coverage: Complete day 00:00:00 to 23:59:59
+2026-04-27 22:19:35 +01:00:   - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)
+2026-04-27 22:19:35 +01:00:   - API URL: http://localhost:3000
+2026-04-27 22:19:35 +01:00: 
+2026-04-27 22:19:35 +01:00: ⚠️  API Usage Compliance:
+2026-04-27 22:19:35 +01:00:   - Daily API limit: ~2,720 calls
+2026-04-27 22:19:35 +01:00:   - Automated usage: ~257 calls/day (1 check)
+2026-04-27 22:19:35 +01:00:   - Available for manual reports: ~2,463 calls/day (90% buffer)
+2026-04-27 22:19:35 +01:00:   - All violations logged to overspeed_logs.txt as backup
+2026-04-27 22:19:35 +01:00: 
+2026-04-27 22:19:35 +01:00: ✓ Using credentials from .env.local
+2026-04-27 22:19:35 +01:00: ✓ Auto-refresh enabled
+2026-04-27 22:19:35 +01:00: 
+2026-04-27 22:19:35 +01:00: ⏳ Waiting for Next.js server to be ready...
+2026-04-27 22:19:45 +01:00: ✓ Next.js server is ready!
+2026-04-27 22:19:45 +01:00: 
+2026-04-27 22:19:45 +01:00: 📨 Checking failed email queue for immediate resend...
+2026-04-27 22:19:46 +01:00: 📨 No failed emails pending
+2026-04-27 22:19:46 +01:00: ✅ Yesterday's report already sent.
+2026-04-27 22:19:46 +01:00:    Report file: overspeed_daily_report_2026-04-26.xlsx
+2026-04-27 22:19:46 +01:00: 
+2026-04-27 22:19:46 +01:00: 📅 Schedule Information:
+2026-04-27 22:19:46 +01:00:   - Next check: 4/27/2026, 11:59:00 PM (in 1h 39m)
+2026-04-27 22:19:46 +01:00:   - Check starts at: 23:59 (11:59 PM) daily
+2026-04-27 22:19:46 +01:00:   - Email sent around: 00:30-00:40 AM - ~40 min after check starts
+2026-04-27 22:19:46 +01:00:   - Report will include: ALL violations from 00:00:00 to 23:59:59
+2026-04-27 22:19:46 +01:00:   - Backup logs: overspeed_reports/overspeed_logs.txt
+2026-04-27 22:19:46 +01:00: 
+2026-04-27 22:19:46 +01:00: ✅ Service started successfully. Press Ctrl+C to stop.
+2026-04-27 22:19:46 +01:00: 
+2026-04-27 22:19:46 +01:00: ⏳ Waiting for scheduled time (23:59)...
+2026-04-27 22:19:46 +01:00: 
+2026-04-27 22:19:46 +01:00: 📋 Cron job scheduled: SUCCESS
+2026-04-27 22:19:46 +01:00: 📋 Cron pattern: 59 23 * * * (59 23 * * * = Every day at 23:59)
+2026-04-27 22:19:46 +01:00: 
+2026-04-27 22:49:46 +01:00: 
+2026-04-27 22:49:46 +01:00: 💚 [HEARTBEAT] 4/27/2026, 10:49:46 PM
+2026-04-27 22:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 22:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 22:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 22:49:46 +01:00:    ⏰ Next check in: 1h 9m (at 11:59:00 PM)
+2026-04-27 22:49:46 +01:00: 
+2026-04-27 23:19:46 +01:00: 
+2026-04-27 23:19:46 +01:00: 💚 [HEARTBEAT] 4/27/2026, 11:19:46 PM
+2026-04-27 23:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 23:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 23:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 23:19:46 +01:00:    ⏰ Next check in: 0h 39m (at 11:59:00 PM)
+2026-04-27 23:19:46 +01:00: 
+2026-04-27 23:49:46 +01:00: 
+2026-04-27 23:49:46 +01:00: 💚 [HEARTBEAT] 4/27/2026, 11:49:46 PM
+2026-04-27 23:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-27 23:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-27 23:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-27 23:49:46 +01:00:    ⏰ Next check in: 0h 9m (at 11:59:00 PM)
+2026-04-27 23:49:46 +01:00: 
+2026-04-27 23:59:00 +01:00: 
+2026-04-27 23:59:00 +01:00: 🔔 [CRON TRIGGER] 4/27/2026, 11:59:00 PM - Scheduled check triggered!
+2026-04-27 23:59:00 +01:00: 
+2026-04-27 23:59:00 +01:00: ╔════════════════════════════════════════════════════════════╗
+2026-04-27 23:59:00 +01:00: ║  🕐 SCHEDULED CHECK: 23:59 (Daily Report - 23:59 Start)  ║
+2026-04-27 23:59:00 +01:00: ╚════════════════════════════════════════════════════════════╝
+2026-04-27 23:59:00 +01:00: [2026-04-27T22:59:00.064Z] Starting automated overspeed check...
+2026-04-27 23:59:00 +01:00: 📧 Email will be sent in ~40 minutes (processing time)
+2026-04-27 23:59:00 +01:00: 
+2026-04-27 23:59:09 +01:00: 🔄 Token expired, attempting to refresh...
+2026-04-27 23:59:21 +01:00: ✓ Token refreshed successfully
+2026-04-27 23:59:21 +01:00: 🔄 Retrying with new token...
+2026-04-28 00:19:46 +01:00: 
+2026-04-28 00:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 12:19:46 AM
+2026-04-28 00:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 00:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 00:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 00:19:46 +01:00:    ⏰ Next check in: 23h 39m (at 11:59:00 PM)
+2026-04-28 00:19:46 +01:00: 
+2026-04-28 00:49:46 +01:00: 
+2026-04-28 00:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 12:49:46 AM
+2026-04-28 00:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 00:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 00:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 00:49:46 +01:00:    ⏰ Next check in: 23h 9m (at 11:59:00 PM)
+2026-04-28 00:49:46 +01:00: 
+2026-04-28 01:06:40 +01:00: ✓ Check complete: No violations found
+2026-04-28 01:06:40 +01:00: ✅ Check complete. Next check tomorrow at 23:59...
+2026-04-28 01:06:40 +01:00: 
+2026-04-28 01:19:46 +01:00: 
+2026-04-28 01:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 1:19:46 AM
+2026-04-28 01:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 01:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 01:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 01:19:46 +01:00:    ⏰ Next check in: 22h 39m (at 11:59:00 PM)
+2026-04-28 01:19:46 +01:00: 
+2026-04-28 01:49:46 +01:00: 
+2026-04-28 01:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 1:49:46 AM
+2026-04-28 01:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 01:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 01:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 01:49:46 +01:00:    ⏰ Next check in: 22h 9m (at 11:59:00 PM)
+2026-04-28 01:49:46 +01:00: 
+2026-04-28 02:19:46 +01:00: 
+2026-04-28 02:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 2:19:46 AM
+2026-04-28 02:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 02:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 02:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 02:19:46 +01:00:    ⏰ Next check in: 21h 39m (at 11:59:00 PM)
+2026-04-28 02:19:46 +01:00: 
+2026-04-28 02:49:46 +01:00: 
+2026-04-28 02:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 2:49:46 AM
+2026-04-28 02:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 02:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 02:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 02:49:46 +01:00:    ⏰ Next check in: 21h 9m (at 11:59:00 PM)
+2026-04-28 02:49:46 +01:00: 
+2026-04-28 03:19:46 +01:00: 
+2026-04-28 03:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 3:19:46 AM
+2026-04-28 03:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 03:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 03:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 03:19:46 +01:00:    ⏰ Next check in: 20h 39m (at 11:59:00 PM)
+2026-04-28 03:19:46 +01:00: 
+2026-04-28 03:49:46 +01:00: 
+2026-04-28 03:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 3:49:46 AM
+2026-04-28 03:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 03:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 03:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 03:49:46 +01:00:    ⏰ Next check in: 20h 9m (at 11:59:00 PM)
+2026-04-28 03:49:46 +01:00: 
+2026-04-28 04:19:46 +01:00: 
+2026-04-28 04:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 4:19:46 AM
+2026-04-28 04:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 04:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 04:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 04:19:46 +01:00:    ⏰ Next check in: 19h 39m (at 11:59:00 PM)
+2026-04-28 04:19:46 +01:00: 
+2026-04-28 04:49:46 +01:00: 
+2026-04-28 04:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 4:49:46 AM
+2026-04-28 04:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 04:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 04:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 04:49:46 +01:00:    ⏰ Next check in: 19h 9m (at 11:59:00 PM)
+2026-04-28 04:49:46 +01:00: 
+2026-04-28 05:19:46 +01:00: 
+2026-04-28 05:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 5:19:46 AM
+2026-04-28 05:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 05:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 05:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 05:19:46 +01:00:    ⏰ Next check in: 18h 39m (at 11:59:00 PM)
+2026-04-28 05:19:46 +01:00: 
+2026-04-28 05:49:46 +01:00: 
+2026-04-28 05:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 5:49:46 AM
+2026-04-28 05:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 05:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 05:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 05:49:46 +01:00:    ⏰ Next check in: 18h 9m (at 11:59:00 PM)
+2026-04-28 05:49:46 +01:00: 
+2026-04-28 06:19:46 +01:00: 
+2026-04-28 06:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 6:19:46 AM
+2026-04-28 06:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 06:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 06:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 06:19:46 +01:00:    ⏰ Next check in: 17h 39m (at 11:59:00 PM)
+2026-04-28 06:19:46 +01:00: 
+2026-04-28 06:49:46 +01:00: 
+2026-04-28 06:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 6:49:46 AM
+2026-04-28 06:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 06:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 06:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 06:49:46 +01:00:    ⏰ Next check in: 17h 9m (at 11:59:00 PM)
+2026-04-28 06:49:46 +01:00: 
+2026-04-28 07:19:46 +01:00: 
+2026-04-28 07:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 7:19:46 AM
+2026-04-28 07:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 07:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 07:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 07:19:46 +01:00:    ⏰ Next check in: 16h 39m (at 11:59:00 PM)
+2026-04-28 07:19:46 +01:00: 
+2026-04-28 07:49:46 +01:00: 
+2026-04-28 07:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 7:49:46 AM
+2026-04-28 07:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 07:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 07:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 07:49:46 +01:00:    ⏰ Next check in: 16h 9m (at 11:59:00 PM)
+2026-04-28 07:49:46 +01:00: 
+2026-04-28 08:19:46 +01:00: 
+2026-04-28 08:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 8:19:46 AM
+2026-04-28 08:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 08:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 08:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 08:19:46 +01:00:    ⏰ Next check in: 15h 39m (at 11:59:00 PM)
+2026-04-28 08:19:46 +01:00: 
+2026-04-28 08:49:46 +01:00: 
+2026-04-28 08:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 8:49:46 AM
+2026-04-28 08:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 08:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 08:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 08:49:46 +01:00:    ⏰ Next check in: 15h 9m (at 11:59:00 PM)
+2026-04-28 08:49:46 +01:00: 
+2026-04-28 09:19:46 +01:00: 
+2026-04-28 09:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 9:19:46 AM
+2026-04-28 09:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 09:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 09:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 09:19:46 +01:00:    ⏰ Next check in: 14h 39m (at 11:59:00 PM)
+2026-04-28 09:19:46 +01:00: 
+2026-04-28 09:49:46 +01:00: 
+2026-04-28 09:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 9:49:46 AM
+2026-04-28 09:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 09:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 09:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 09:49:46 +01:00:    ⏰ Next check in: 14h 9m (at 11:59:00 PM)
+2026-04-28 09:49:46 +01:00: 
+2026-04-28 10:19:46 +01:00: 
+2026-04-28 10:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 10:19:46 AM
+2026-04-28 10:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 10:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 10:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 10:19:46 +01:00:    ⏰ Next check in: 13h 39m (at 11:59:00 PM)
+2026-04-28 10:19:46 +01:00: 
+2026-04-28 10:49:46 +01:00: 
+2026-04-28 10:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 10:49:46 AM
+2026-04-28 10:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 10:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 10:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 10:49:46 +01:00:    ⏰ Next check in: 13h 9m (at 11:59:00 PM)
+2026-04-28 10:49:46 +01:00: 
+2026-04-28 11:19:46 +01:00: 
+2026-04-28 11:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 11:19:46 AM
+2026-04-28 11:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 11:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 11:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 11:19:46 +01:00:    ⏰ Next check in: 12h 39m (at 11:59:00 PM)
+2026-04-28 11:19:46 +01:00: 
+2026-04-28 11:49:46 +01:00: 
+2026-04-28 11:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 11:49:46 AM
+2026-04-28 11:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 11:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 11:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 11:49:46 +01:00:    ⏰ Next check in: 12h 9m (at 11:59:00 PM)
+2026-04-28 11:49:46 +01:00: 
+2026-04-28 12:19:46 +01:00: 
+2026-04-28 12:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 12:19:46 PM
+2026-04-28 12:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 12:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 12:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 12:19:46 +01:00:    ⏰ Next check in: 11h 39m (at 11:59:00 PM)
+2026-04-28 12:19:46 +01:00: 
+2026-04-28 12:49:46 +01:00: 
+2026-04-28 12:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 12:49:46 PM
+2026-04-28 12:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 12:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 12:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 12:49:46 +01:00:    ⏰ Next check in: 11h 9m (at 11:59:00 PM)
+2026-04-28 12:49:46 +01:00: 
+2026-04-28 13:19:46 +01:00: 
+2026-04-28 13:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 1:19:46 PM
+2026-04-28 13:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 13:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 13:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 13:19:46 +01:00:    ⏰ Next check in: 10h 39m (at 11:59:00 PM)
+2026-04-28 13:19:46 +01:00: 
+2026-04-28 13:49:46 +01:00: 
+2026-04-28 13:49:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 1:49:46 PM
+2026-04-28 13:49:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 13:49:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 13:49:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 13:49:46 +01:00:    ⏰ Next check in: 10h 9m (at 11:59:00 PM)
+2026-04-28 13:49:46 +01:00: 
+2026-04-28 14:19:46 +01:00: 
+2026-04-28 14:19:46 +01:00: 💚 [HEARTBEAT] 4/28/2026, 2:19:46 PM
+2026-04-28 14:19:46 +01:00:    🟢 Monitoring Service: RUNNING
+2026-04-28 14:19:46 +01:00:    🟢 UP Next.js Server: HEALTHY
+2026-04-28 14:19:46 +01:00:    🟢 ACTIVE Cron Job: HEALTHY
+2026-04-28 14:19:46 +01:00:    ⏰ Next check in: 9h 39m (at 11:59:00 PM)
+2026-04-28 14:19:46 +01:00: 

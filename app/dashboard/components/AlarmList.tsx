@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getAuthToken, getUserData } from "@/lib/auth";
 import { buildHereReverseGeocodeUrl } from "@/lib/config";
+import { apiCallWithAutoRefresh } from "@/lib/utils";
 
 // Address cell component
 function AddressCell({ lat, lon }: { lat: number; lon: number }) {
@@ -154,7 +155,7 @@ export default function AlarmList() {
 
       if (!token || !userData) return;
 
-      const response = await fetch("/api/devices", {
+      const data = await apiCallWithAutoRefresh("/api/devices", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -162,8 +163,6 @@ export default function AlarmList() {
           token: token,
         }),
       });
-
-      const data = await response.json();
 
       if (data.status === 0 && data.groups) {
         setGroups(data.groups);
@@ -219,7 +218,7 @@ export default function AlarmList() {
 
       console.log('Fetching alarms for devices:', deviceIds);
 
-      const response = await fetch("/api/alarms", {
+      const data: AlarmResponse = await apiCallWithAutoRefresh("/api/alarms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -231,14 +230,6 @@ export default function AlarmList() {
           token: token,
         }),
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.cause || errorData.error || `Server error: ${response.status}`);
-        return;
-      }
-
-      const data: AlarmResponse = await response.json();
 
       if (data.status === 0) {
         setAlarms(data.alarmrecords || []);
@@ -359,7 +350,7 @@ export default function AlarmList() {
       <div className="bg-white rounded shadow-sm p-4">
         <h3 className="text-sm font-semibold text-gray-900 mb-3">Filters</h3>
         <div className="flex flex-col sm:flex-row sm:items-end gap-3 mb-3">
-          <div className="w-full sm:w-1/4 min-w-[200px]">
+          <div className="w-full sm:w-1/4 min-w-50">
             <label className="block text-xs font-medium text-gray-700 mb-1.5">Search by Name or IMEI</label>
             <div className="flex gap-2">
               <input

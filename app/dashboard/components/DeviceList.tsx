@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAuthToken, getUserData } from "@/lib/auth";
+import { apiCallWithAutoRefresh } from "@/lib/utils";
 
 interface Device {
   deviceid: string;
@@ -103,24 +104,13 @@ export default function DeviceList() {
         tokenLength: requestBody.token.length
       });
 
-      const response = await fetch("/api/devices", {
+      const data: DeviceListResponse = await apiCallWithAutoRefresh("/api/devices", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
       });
-
-      console.log('DeviceList - Response status:', response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('DeviceList - Error response:', errorData);
-        setError(errorData.cause || errorData.error || `Server error: ${response.status}`);
-        return;
-      }
-
-      const data: DeviceListResponse = await response.json();
 
       console.log('DeviceList - Response data:', {
         status: data.status,

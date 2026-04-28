@@ -4,7 +4,7 @@ import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { md5Hash, getBrowserInfo } from "@/lib/utils";
-import { saveAuthToken } from "@/lib/auth";
+import { saveAuthToken, saveCredentialsForAutoRefresh } from "@/lib/auth";
 import { buildGPS51LoginUrl } from "@/lib/config";
 
 function LoginForm() {
@@ -56,6 +56,9 @@ function LoginForm() {
       if (data.status === 0 && data.token) {
         // Save auth token and user data
         saveAuthToken(data.token, data);
+        
+        // Save credentials for automatic token refresh
+        saveCredentialsForAutoRefresh(username, hashedPassword);
         
         // Redirect to dashboard
         router.push("/dashboard");

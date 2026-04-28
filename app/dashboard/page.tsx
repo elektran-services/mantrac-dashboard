@@ -96,15 +96,26 @@ export default function DashboardPage() {
         }
       }
       
-      // Fetch alarms
-      const alarmsResponse = await fetch('/api/alarms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, token }),
-      });
-      
-      const alarmsData = await alarmsResponse.json();
-      const alertsCount = alarmsData.status === 0 && alarmsData.alarms ? alarmsData.alarms.length : 0;
+      // Fetch alarms with valid payload expected by /api/alarms
+      let alertsCount = 0;
+      if (deviceIds.length > 0 && token) {
+        const today = new Date().toISOString().split('T')[0];
+        const alarmsResponse = await fetch('/api/alarms', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            devices: deviceIds,
+            startday: today,
+            endday: today,
+            offset: 1,
+            needalarm: "5",
+            token,
+          }),
+        });
+        
+        const alarmsData = await alarmsResponse.json();
+        alertsCount = alarmsData.status === 0 && alarmsData.alarmrecords ? alarmsData.alarmrecords.length : 0;
+      }
       
       setDashboardStats({
         totalVehicles,

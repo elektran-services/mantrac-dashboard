@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getAuthToken, getUserData } from "@/lib/auth";
 import { buildHereReverseGeocodeUrl } from "@/lib/config";
+import { apiCallWithAutoRefresh } from "@/lib/utils";
 
 interface PositionRecord {
   positionlastid: number;
@@ -88,7 +89,8 @@ export default function LastPosition() {
         return;
       }
 
-      const response = await fetch("/api/devices", {
+      // Use apiCallWithAutoRefresh for automatic token refresh
+      const data = await apiCallWithAutoRefresh("/api/devices", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,8 +100,6 @@ export default function LastPosition() {
           token: token,
         }),
       });
-
-      const data = await response.json();
       
       if (data.status === 0 && data.groups) {
         const allDevices: Device[] = [];
@@ -119,6 +119,7 @@ export default function LastPosition() {
         setError(data.cause || "Failed to fetch devices");
       }
     } catch (err) {
+      // Error is already handled by apiCallWithAutoRefresh
       setError("Failed to fetch devices");
       console.error("Error fetching devices:", err);
     } finally {
@@ -182,7 +183,7 @@ export default function LastPosition() {
         return;
       }
 
-      const response = await fetch("/api/lastposition", {
+      const data: LastPositionResponse = await apiCallWithAutoRefresh("/api/lastposition", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -193,8 +194,6 @@ export default function LastPosition() {
           lastquerypositiontime: lastQueryTime,
         }),
       });
-
-      const data: LastPositionResponse = await response.json();
       
       if (data.status === 0) {
         setPositions(data.records || []);
