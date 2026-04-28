@@ -13,12 +13,15 @@
  *   pm2 startup                            # Generate startup script (auto-start on boot)
  */
 
+const MANTRAC_PORT = Number(process.env.MANTRAC_PORT || 3001);
+const INTERNAL_API_URL = process.env.NEXT_PUBLIC_API_URL || `http://127.0.0.1:${MANTRAC_PORT}`;
+
 module.exports = {
   apps: [
     {
       name: 'nextjs-server',
-      script: 'node_modules/next/dist/bin/next',
-      args: 'dev',
+      script: 'npm',
+      args: 'start',
       cwd: './',
       instances: 1,
       exec_mode: 'fork',
@@ -26,8 +29,9 @@ module.exports = {
       watch: false,
       max_memory_restart: '500M',
       env: {
-        NODE_ENV: 'development',
-        PORT: 3000
+        NODE_ENV: 'production',
+        PORT: MANTRAC_PORT,
+        NEXT_PUBLIC_API_URL: INTERNAL_API_URL,
       },
       error_file: './logs/nextjs-error.log',
       out_file: './logs/nextjs-out.log',
@@ -47,7 +51,8 @@ module.exports = {
       watch: false,
       max_memory_restart: '200M',
       env: {
-        NODE_ENV: 'development'
+        NODE_ENV: 'production',
+        NEXT_PUBLIC_API_URL: INTERNAL_API_URL,
       },
       error_file: './logs/monitoring-error.log',
       out_file: './logs/monitoring-out.log',
@@ -55,10 +60,7 @@ module.exports = {
       merge_logs: true,
       min_uptime: '30s',
       max_restarts: 10,
-      restart_delay: 5000,
-      // Wait for Next.js server to be ready before starting
-      wait_ready: true,
-      listen_timeout: 30000
+      restart_delay: 5000
     }
   ]
 };
