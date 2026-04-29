@@ -14,6 +14,7 @@ import MileageReport from "./components/MileageReport";
 import OfflineReport from "./components/OfflineReport";
 import ParkingReport from "./components/ParkingReport";
 import OverspeedReport from "./components/OverspeedReport";
+import SavedReports from "./components/SavedReports";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -193,6 +194,11 @@ export default function DashboardPage() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     )},
+    { id: "saved-reports", label: "Saved reports", icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+    )},
     { id: "alerts", label: "Alerts", icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -205,6 +211,10 @@ export default function DashboardPage() {
       </svg>
     )},
   ];
+
+  const menuHeaderLabel =
+    menuItems.find((item) => item.id === activeMenu)?.label ??
+    activeMenu.replace(/-/g, " ");
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -309,7 +319,7 @@ export default function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <h1 className="text-xl font-semibold text-gray-900 capitalize">{activeMenu}</h1>
+          <h1 className="text-xl font-semibold text-gray-900">{menuHeaderLabel}</h1>
           <div className="flex items-center gap-4">
             <button className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 relative">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -419,7 +429,7 @@ export default function DashboardPage() {
             </>
           )}
 
-          {activeMenu !== "dashboard" && activeMenu !== "alerts" && activeMenu !== "reports" && activeMenu !== "lastposition" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "overspeed" && activeMenu !== "settings" && (
+          {activeMenu !== "dashboard" && activeMenu !== "alerts" && activeMenu !== "reports" && activeMenu !== "lastposition" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "overspeed" && activeMenu !== "saved-reports" && activeMenu !== "settings" && (
             <div className="bg-white rounded-lg shadow-sm p-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -459,6 +469,10 @@ export default function DashboardPage() {
 
           {activeMenu === "overspeed" && (
             <OverspeedReport />
+          )}
+
+          {activeMenu === "saved-reports" && (
+            <SavedReports />
           )}
 
           {activeMenu === "settings" && (

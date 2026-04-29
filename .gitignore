@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated report exports (retained on disk up to 365 days; do not commit binaries)
+/generated_reports/*
+!/generated_reports/.gitkeep

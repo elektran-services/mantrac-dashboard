@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildGPS51Url } from '@/lib/config';
 import { MONITORING_CONFIG } from '@/lib/config';
+import {
+  GENERATED_REPORTS_DIR,
+  ensureGeneratedReportsDir,
+  purgeExpiredGeneratedReports,
+} from '@/lib/generatedReportsStorage';
 import ExcelJS from 'exceljs';
 import fs from 'fs';
 import path from 'path';
@@ -19,6 +24,7 @@ interface FailedEmailEntry {
   lastError: string;
 }
 
+/** Logs and email queue only; generated .xlsx files go to generated_reports/ */
 const REPORTS_DIR = path.join(process.cwd(), 'overspeed_reports');
 const SENT_FILES_DIR = path.join(process.cwd(), 'sent file');
 const FAILED_EMAIL_QUEUE_FILE = path.join(REPORTS_DIR, 'failed_email_queue.json');
@@ -574,11 +580,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
-    const reportsDir = REPORTS_DIR;
-
-    // Ensure reports directory exists
-    ensureDir(reportsDir);
+    ensureDir(REPORTS_DIR);
+    ensureGeneratedReportsDir();
+    purgeExpiredGeneratedReports();
     ensureDir(SENT_FILES_DIR);
 
     // Attempt resend of previously failed emails before processing current report
@@ -667,7 +671,7 @@ export async function POST(request: NextRequest) {
 
       // Save Excel file with date in filename (YYYY-MM-DD format)
       const excelFilename = `overspeed_daily_report_${dateStr}.xlsx`;
-      const excelPath = path.join(reportsDir, excelFilename);
+      const excelPath = path.join(GENERATED_REPORTS_DIR, excelFilename);
       await workbook.xlsx.writeFile(excelPath);
 
       console.log(`[Monitor] Excel report saved: ${excelPath}`);
@@ -695,7 +699,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Log to overspeed_logs.txt
-      const logPath = path.join(reportsDir, 'overspeed_logs.txt');
+      const logPath = path.join(REPORTS_DIR, 'overspeed_logs.txt');
       const logEntry = `[${now.toISOString()}] DAILY REPORT (${dateStr}): ${allViolations.length} violations detected. Report: ${excelFilename}. Email ${emailSent ? 'sent' : 'failed'}.\n`;
       fs.appendFileSync(logPath, logEntry);
 
@@ -730,7 +734,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Log to overspeed_logs.txt
-      const logPath = path.join(reportsDir, 'overspeed_logs.txt');
+      const logPath = path.join(REPORTS_DIR, 'overspeed_logs.txt');
       const logEntry = `[${now.toISOString()}] DAILY REPORT (${dateStr}): No violations detected. Email ${emailSent ? 'sent' : 'failed'}.\\n`;
       fs.appendFileSync(logPath, logEntry);
 

@@ -4,10 +4,13 @@ require('dotenv').config({ path: '.env.local' });
 async function testEmail() {
   console.log('🔧 Testing SMTP Configuration...\n');
 
+  const smtpPort = parseInt(process.env.SMTP_PORT || '465', 10);
+  const smtpSecure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : smtpPort === 465;
+
   const config = {
     host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
+    port: smtpPort,
+    secure: smtpSecure,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS?.replace(/"/g, '') // Remove quotes if present

@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import ExcelJS from 'exceljs';
 import fs from 'fs';
 import path from 'path';
+import { purgeExpiredGeneratedReports } from '@/lib/generatedReportsStorage';
 
 export async function GET(request: NextRequest) {
   try {
@@ -76,8 +77,8 @@ export async function GET(request: NextRequest) {
       fgColor: { argb: 'FFFFC107' }
     };
 
-    // Save the test file
-    const reportsDir = path.join(process.cwd(), 'overspeed_reports');
+    // Save the test file (same retention folder as automated daily reports)
+    const reportsDir = path.join(process.cwd(), 'generated_reports');
     if (!fs.existsSync(reportsDir)) {
       fs.mkdirSync(reportsDir, { recursive: true });
     }
@@ -87,6 +88,7 @@ export async function GET(request: NextRequest) {
     const filePath = path.join(reportsDir, filename);
 
     await workbook.xlsx.writeFile(filePath);
+    purgeExpiredGeneratedReports();
     console.log('[Test Email] Test Excel file created:', filePath);
 
     // Create email transporter

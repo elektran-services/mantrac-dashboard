@@ -314,7 +314,7 @@ async function startService() {
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toISOString().split('T')[0]; // YYYY-MM-DD format
-  const reportsDir = path.join(process.cwd(), 'overspeed_reports');
+  const reportsDir = path.join(process.cwd(), 'generated_reports');
   const yesterdayReportFile = path.join(reportsDir, `overspeed_daily_report_${yesterdayStr}.xlsx`);
   
   const reportExists = fs.existsSync(yesterdayReportFile);
@@ -353,6 +353,7 @@ async function startService() {
   console.log(`  - Check starts at: 23:59 (11:59 PM) daily`);
   console.log(`  - Email sent around: 00:30-00:40 AM - ~40 min after check starts`);
   console.log(`  - Report will include: ALL violations from 00:00:00 to 23:59:59`);
+  console.log(`  - Generated reports: generated_reports/ (365-day retention)\n`);
   console.log(`  - Backup logs: overspeed_reports/overspeed_logs.txt\n`);
 
   // Schedule recurring checks (no initial check to conserve API calls)
