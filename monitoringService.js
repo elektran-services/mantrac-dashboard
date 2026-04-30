@@ -251,6 +251,41 @@ async function waitForServer(maxAttempts = 20, delayMs = 1000) {
   return false;
 }
 
+/**
+ * For queued violation emails with a missing .xlsx (moved path or never written), run a full
+ * monitor for that calendar day so generated_reports/ has the file before POST /failed-emails retries.
+ */
+async function ensureViolationReportsForFailedQueue() {
+  const queuePath = path.join(process.cwd(), 'overspeed_reports', 'failed_email_queue.json');
+  if (!fs.existsSync(queuePath)) return;
+
+  let queue;
+  try {
+    queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
+  } catch {
+    return;
+  }
+  if (!Array.isArray(queue)) return;
+
+  const generatedDir = path.join(process.cwd(), 'generated_reports');
+  const resolveViolationPath = (entry) => {
+    if (entry.type !== 'violations' || !entry.dateStr) return true;
+    if (entry.filePath && fs.existsSync(entry.filePath)) return true;
+    const name = entry.filename || `overspeed_daily_report_${entry.dateStr}.xlsx`;
+    return fs.existsSync(path.join(generatedDir, name));
+  };
+
+  const seen = new Set();
+  for (const entry of queue) {
+    if (entry.type !== 'violations' || !entry.dateStr) continue;
+    if (resolveViolationPath(entry)) continue;
+    if (seen.has(entry.dateStr)) continue;
+    seen.add(entry.dateStr);
+    console.log(`📄 Missing report file for queued email (${entry.dateStr}). Regenerating via monitor before resend...`);
+    await runOverspeedCheck(entry.dateStr);
+  }
+}
+
 async function retryFailedEmailsOnStartup() {
   try {
     console.log('📨 Checking failed email queue for immediate resend...');
@@ -306,22 +341,24 @@ async function startService() {
   // Wait for Next.js server to be ready (up to 20 seconds)
   await waitForServer(20, 1000);
 
-  // Automatically retry any queued failed emails immediately on startup
+  // Ensure Excel exists for any queued violation emails, then retry SMTP
+  await ensureViolationReportsForFailedQueue();
   await retryFailedEmailsOnStartup();
 
-  // Check if yesterday's report was sent (catch-up logic)
+  // Catch-up if previous calendar day has no completion marker and no daily Excel
   let now = new Date();
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toISOString().split('T')[0]; // YYYY-MM-DD format
   const reportsDir = path.join(process.cwd(), 'generated_reports');
-  const yesterdayReportFile = path.join(reportsDir, `overspeed_daily_report_${yesterdayStr}.xlsx`);
-  
-  const reportExists = fs.existsSync(yesterdayReportFile);
-  
-  if (!reportExists) {
+  const yesterdayXlsx = path.join(reportsDir, `overspeed_daily_report_${yesterdayStr}.xlsx`);
+  const yesterdayMarker = path.join(reportsDir, `daily_complete_${yesterdayStr}.marker`);
+  const reportComplete =
+    fs.existsSync(yesterdayXlsx) || fs.existsSync(yesterdayMarker);
+
+  if (!reportComplete) {
     console.log('⚠️  MISSED REPORT DETECTED!');
-    console.log(`   Yesterday's report (${yesterdayStr}) was not sent.`);
+    console.log(`   Previous day (${yesterdayStr}) has no saved report or completion marker.`);
     console.log(`   Running immediate catch-up check for ${yesterdayStr}...\n`);
     
     // Run immediate check for missed report (yesterday's data)
@@ -329,8 +366,12 @@ async function startService() {
     
     console.log('\n✅ Catch-up check complete. Resuming normal schedule...\n');
   } else {
-    console.log('✅ Yesterday\'s report already sent.');
-    console.log(`   Report file: overspeed_daily_report_${yesterdayStr}.xlsx\n`);
+    console.log('✅ Previous calendar day already completed (Excel and/or completion marker).');
+    if (fs.existsSync(yesterdayXlsx)) {
+      console.log(`   Report file: overspeed_daily_report_${yesterdayStr}.xlsx\n`);
+    } else {
+      console.log(`   (No-violation day: daily_complete_${yesterdayStr}.marker)\n`);
+    }
   }
 
   // Calculate next scheduled check time (23:59 today or tomorrow)

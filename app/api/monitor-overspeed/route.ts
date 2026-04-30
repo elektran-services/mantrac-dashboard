@@ -5,6 +5,8 @@ import {
   GENERATED_REPORTS_DIR,
   ensureGeneratedReportsDir,
   purgeExpiredGeneratedReports,
+  writeDailyCompleteMarker,
+  resolveViolationReportPath,
 } from '@/lib/generatedReportsStorage';
 import ExcelJS from 'exceljs';
 import fs from 'fs';
@@ -325,10 +327,17 @@ async function processFailedEmailQueue() {
 
     try {
       let sent = false;
-      if (entry.type === 'violations' && entry.filePath && entry.filename && typeof entry.violationsCount === 'number') {
-        sent = await sendEmailWithAttachment(entry.filePath, entry.filename, entry.violationsCount, entry.reportDateDisplay);
+      if (entry.type === 'violations' && typeof entry.violationsCount === 'number') {
+        const resolved = resolveViolationReportPath(entry.dateStr, entry.filename, entry.filePath);
+        if (!resolved) {
+          console.log(`[Email] Keep in queue (report file not found yet): ${entry.dateStr}`);
+          remaining.push(entry);
+          continue;
+        }
+        const attachName = entry.filename || path.basename(resolved);
+        sent = await sendEmailWithAttachment(resolved, attachName, entry.violationsCount, entry.reportDateDisplay);
         if (sent) {
-          archiveSentFile(entry.filePath);
+          archiveSentFile(resolved);
         }
       } else if (entry.type === 'no_violations' && typeof entry.deviceCount === 'number') {
         sent = await sendNoViolationsEmail(entry.reportDateDisplay, entry.deviceCount);
@@ -703,6 +712,8 @@ export async function POST(request: NextRequest) {
       const logEntry = `[${now.toISOString()}] DAILY REPORT (${dateStr}): ${allViolations.length} violations detected. Report: ${excelFilename}. Email ${emailSent ? 'sent' : 'failed'}.\n`;
       fs.appendFileSync(logPath, logEntry);
 
+      writeDailyCompleteMarker(dateStr);
+
       return NextResponse.json({
         status: 0,
         cause: 'OK',
@@ -735,8 +746,10 @@ export async function POST(request: NextRequest) {
 
       // Log to overspeed_logs.txt
       const logPath = path.join(REPORTS_DIR, 'overspeed_logs.txt');
-      const logEntry = `[${now.toISOString()}] DAILY REPORT (${dateStr}): No violations detected. Email ${emailSent ? 'sent' : 'failed'}.\\n`;
+      const logEntry = `[${now.toISOString()}] DAILY REPORT (${dateStr}): No violations detected. Email ${emailSent ? 'sent' : 'failed'}.\n`;
       fs.appendFileSync(logPath, logEntry);
+
+      writeDailyCompleteMarker(dateStr);
 
       return NextResponse.json({
         status: 0,

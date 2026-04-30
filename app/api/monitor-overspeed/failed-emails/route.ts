@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { resolveViolationReportPath } from '@/lib/generatedReportsStorage';
 import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
@@ -98,10 +99,12 @@ async function resendQueueEntry(entry: FailedEmailEntry) {
 
   const recipients = getRecipients();
 
-  if (entry.type === 'violations' && entry.filePath && entry.filename && typeof entry.violationsCount === 'number') {
-    if (!fs.existsSync(entry.filePath)) {
-      return { sent: false, error: `Report file not found: ${entry.filePath}` };
+  if (entry.type === 'violations' && typeof entry.violationsCount === 'number') {
+    const resolved = resolveViolationReportPath(entry.dateStr, entry.filename, entry.filePath);
+    if (!resolved) {
+      return { sent: false, error: `Report file not found for ${entry.dateStr}` };
     }
+    const attachName = entry.filename || path.basename(resolved);
 
     await sendMailWithFallback({
       from: process.env.EMAIL_FROM || process.env.SMTP_USER,
@@ -112,9 +115,9 @@ async function resendQueueEntry(entry: FailedEmailEntry) {
         <p><strong>Report date:</strong> ${entry.reportDateDisplay}</p>
         <p><strong>Violations:</strong> ${entry.violationsCount}</p>
       `,
-      attachments: [{ filename: entry.filename, path: entry.filePath }],
+      attachments: [{ filename: attachName, path: resolved }],
     });
-    archiveSentFile(entry.filePath);
+    archiveSentFile(resolved);
     return { sent: true };
   }
 
