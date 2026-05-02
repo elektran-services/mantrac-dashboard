@@ -3,6 +3,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* System stacks (avoid next/font Google fetch + Turbopack prerender useContext issues) */
+  --font-geist-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
   --primary-yellow: #FFC107;
   --primary-yellow-dark: #FFA000;
   --primary-yellow-light: #FFD54F;

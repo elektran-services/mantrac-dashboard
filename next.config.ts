@@ -9,7 +9,12 @@ loadEnv({ path: path.resolve(process.cwd(), ".env.production") });
 loadEnv({ path: path.resolve(process.cwd(), ".env.local"), override: true });
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Pin Turbopack workspace root when a parent folder also has a lockfile (avoids wrong resolution).
+  turbopack: {
+    root: path.resolve(process.cwd()),
+  },
+  // Heavy native-ish deps: keep them external for faster, more reliable server bundles.
+  serverExternalPackages: ["exceljs", "unzipper", "fstream"],
 };
 
 export default nextConfig;
