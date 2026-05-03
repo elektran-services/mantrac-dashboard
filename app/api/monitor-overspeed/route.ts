@@ -630,28 +630,49 @@ export async function POST(request: NextRequest) {
       summaryCell.alignment = { horizontal: 'center', vertical: 'middle' };
       worksheet.getRow(2).height = 20;
 
-      // Set column headers (now on row 3)
+      // Column keys + widths only (do NOT use `header` here — ExcelJS writes header row at row 1
+      // by default and clashes with our merged title/summary rows, corrupting the sheet title).
       worksheet.columns = [
-        { header: 'Device ID', key: 'deviceid', width: 20 },
-        { header: 'Device Name', key: 'devicename', width: 25 },
-        { header: 'Start Time', key: 'begintime', width: 20 },
-        { header: 'End Time', key: 'endtime', width: 20 },
-        { header: 'Max Speed (km/h)', key: 'maxspeed', width: 15 },
-        { header: 'Avg Speed (km/h)', key: 'avgspeed', width: 15 },
-        { header: 'Speed Limit (km/h)', key: 'speedlimit', width: 15 },
-        { header: 'Overspeed (km/h)', key: 'overspeed', width: 15 },
-        { header: 'Duration (min)', key: 'duration', width: 15 },
-        { header: 'Overspeed Duration (min)', key: 'overspeedduration', width: 20 },
-        { header: 'Distance (km)', key: 'distance', width: 15 },
-        { header: 'Start Lat', key: 'startlat', width: 12 },
-        { header: 'Start Lon', key: 'startlon', width: 12 },
-        { header: 'End Lat', key: 'endlat', width: 12 },
-        { header: 'End Lon', key: 'endlon', width: 12 },
+        { key: 'deviceid', width: 20 },
+        { key: 'devicename', width: 25 },
+        { key: 'begintime', width: 20 },
+        { key: 'endtime', width: 20 },
+        { key: 'maxspeed', width: 15 },
+        { key: 'avgspeed', width: 15 },
+        { key: 'speedlimit', width: 15 },
+        { key: 'overspeed', width: 15 },
+        { key: 'duration', width: 15 },
+        { key: 'overspeedduration', width: 20 },
+        { key: 'distance', width: 15 },
+        { key: 'startlat', width: 12 },
+        { key: 'startlon', width: 12 },
+        { key: 'endlat', width: 12 },
+        { key: 'endlon', width: 12 },
       ];
 
-      // Style header row (now row 3)
-      worksheet.getRow(3).font = { bold: true };
-      worksheet.getRow(3).fill = {
+      const headerLabels = [
+        'Device ID',
+        'Device Name',
+        'Start Time',
+        'End Time',
+        'Max Speed (km/h)',
+        'Avg Speed (km/h)',
+        'Speed Limit (km/h)',
+        'Overspeed (km/h)',
+        'Duration (min)',
+        'Overspeed Duration (min)',
+        'Distance (km)',
+        'Start Lat',
+        'Start Lon',
+        'End Lat',
+        'End Lon',
+      ];
+      const headerRow = worksheet.getRow(3);
+      headerLabels.forEach((label, i) => {
+        headerRow.getCell(i + 1).value = label;
+      });
+      headerRow.font = { bold: true };
+      headerRow.fill = {
         type: 'pattern',
         pattern: 'solid',
         fgColor: { argb: 'FFFFC107' }
