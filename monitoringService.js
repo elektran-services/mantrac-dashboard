@@ -1,16 +1,15 @@
 /**
- * Automated Overspeed Monitoring Service
- * Runs every 5 minutes to check for overspeed violations
+ * Fleet monitoring service: overspeed (23:59), trips export (01:30), mileage alerts + monthly snapshot (12:00).
  */
 
-// Load environment variables from .env.local
-require('dotenv').config({ path: '.env.local' });
+const path = require('path');
+require('dotenv').config({ path: path.join(process.cwd(), '.env.production') });
+require('dotenv').config({ path: path.join(process.cwd(), '.env.local'), override: true });
 
 const cron = require('node-cron');
 const fetch = require('node-fetch');
 const readline = require('readline');
 const fs = require('fs');
-const path = require('path');
 
 // Configuration
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -21,6 +20,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 // Check starts at 23:59 and completes ~40 minutes later (email sent around 00:30-00:40 next day)
 // This ensures ALL violations from 00:00:00 to 23:59:59 are captured in the daily report
 const CHECK_INTERVAL = '59 23 * * *'; // Once daily at 23:59 (11:59 PM)
+/** After midnight: export previous calendar day to trips/ (staggered from overspeed to reduce GPS51 contention). */
+const TRIPS_DAILY_CRON = '30 1 * * *'; // 01:30 — ~1.5h after typical overspeed run completes
+/** Daily mileage threshold scan + end-of-month full fleet snapshot (local server time). */
+const MILEAGE_CRON = '0 12 * * *';
 
 let credentials = {
   token: process.env.MONITOR_TOKEN || '',
@@ -222,6 +225,148 @@ async function runOverspeedCheck(reportDate = null) {
   console.log(`✅ Check complete. Next check tomorrow at 23:59...\n`);
 }
 
+async function runTripsDailyExport(reportDate = null) {
+  const now = new Date();
+  const timestamp = now.toISOString();
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+  if (reportDate) {
+    console.log(`\n[TripsDaily] ${timeStr} — export for calendar day ${reportDate} (${timestamp})`);
+  } else {
+    console.log(`\n[TripsDaily] ${timeStr} — scheduled export (${timestamp})`);
+  }
+
+  try {
+    const requestBody = {
+      token: credentials.token,
+      username: credentials.username,
+    };
+    if (reportDate) {
+      requestBody.reportDate = reportDate;
+    }
+
+    let response = await fetch(`${API_URL}/api/trips-daily`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error(`[TripsDaily] Non-JSON response (${response.status}): ${text.substring(0, 200)}`);
+      return;
+    }
+
+    let data = await response.json();
+
+    if (isTokenExpired(data)) {
+      const refreshed = await refreshToken();
+      if (refreshed) {
+        const retryBody = { token: credentials.token, username: credentials.username };
+        if (reportDate) retryBody.reportDate = reportDate;
+        response = await fetch(`${API_URL}/api/trips-daily`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(retryBody),
+        });
+        const ct2 = response.headers.get('content-type');
+        if (!ct2 || !ct2.includes('application/json')) {
+          const text = await response.text();
+          console.error(`[TripsDaily] Non-JSON after retry (${response.status}): ${text.substring(0, 200)}`);
+          return;
+        }
+        data = await response.json();
+      } else {
+        console.error('[TripsDaily] Token refresh failed; skipping export.');
+        return;
+      }
+    }
+
+    if (data.status === 0) {
+      console.log(
+        `[TripsDaily] OK — file=${data.reportFile || 'n/a'} tripRows=${data.tripRows ?? '?'} devices=${data.deviceCount ?? '?'}`
+      );
+    } else {
+      console.error(`[TripsDaily] Failed: ${data.cause || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error(`[TripsDaily] Error: ${error.message}`);
+  }
+}
+
+function isLastDayOfMonth(d) {
+  const next = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+  return next.getDate() === 1;
+}
+
+async function runMileageScheduled(mode, reportDate = null) {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  console.log(`\n[MileageScheduled] ${timeStr} — mode=${mode}${reportDate ? ` reportDate=${reportDate}` : ''}`);
+
+  try {
+    const requestBody = {
+      token: credentials.token,
+      username: credentials.username,
+      mode,
+    };
+    if (reportDate) {
+      requestBody.reportDate = reportDate;
+    }
+
+    let response = await fetch(`${API_URL}/api/mileage-scheduled`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+      timeout: 2 * 60 * 60 * 1000,
+    });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error(`[MileageScheduled] Non-JSON (${response.status}): ${text.substring(0, 200)}`);
+      return;
+    }
+
+    let data = await response.json();
+
+    if (isTokenExpired(data)) {
+      const refreshed = await refreshToken();
+      if (refreshed) {
+        const retryBody = { token: credentials.token, username: credentials.username, mode };
+        if (reportDate) retryBody.reportDate = reportDate;
+        response = await fetch(`${API_URL}/api/mileage-scheduled`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(retryBody),
+          timeout: 2 * 60 * 60 * 1000,
+        });
+        const ct2 = response.headers.get('content-type');
+        if (!ct2 || !ct2.includes('application/json')) {
+          const text = await response.text();
+          console.error(`[MileageScheduled] Non-JSON after retry (${response.status}): ${text.substring(0, 200)}`);
+          return;
+        }
+        data = await response.json();
+      } else {
+        console.error('[MileageScheduled] Token refresh failed; skipping.');
+        return;
+      }
+    }
+
+    if (data.status === 0) {
+      console.log(
+        `[MileageScheduled] OK mode=${mode} file=${data.reportFile || 'none'} emailSent=${data.emailSent ?? 'n/a'} qualifying=${data.qualifyingCount ?? 'n/a'}`
+      );
+    } else {
+      console.error(`[MileageScheduled] Failed: ${data.cause || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error(`[MileageScheduled] Error: ${error.message}`);
+  }
+}
+
 async function waitForServer(maxAttempts = 20, delayMs = 1000) {
   console.log('⏳ Waiting for Next.js server to be ready...');
   
@@ -318,21 +463,22 @@ async function retryFailedEmailsOnStartup() {
 
 async function startService() {
   console.log('╔══════════════════════════════════════════════════════════╗');
-  console.log('║   Mantrac Automated Overspeed Monitoring Service        ║');
+  console.log('║   Mantrac Fleet Monitoring (overspeed + trips export)   ║');
   console.log('╚══════════════════════════════════════════════════════════╝\n');
   console.log('Configuration:');
   console.log(`  - Speed Limit: 120 km/h`);
   console.log(`  - Duration Threshold: 60 seconds`);
-  console.log(`  - Check Interval: Once daily at 23:59 (11:59 PM)`);
-  console.log(`  - Catch-up Check: Runs immediately if today's report was missed`);
-  console.log(`  - Email Reports: Sent around 00:30 AM (~40 min after check starts)`);
+  console.log(`  - Overspeed check: Once daily at 23:59 (11:59 PM)`);
+  console.log(`  - Trips Excel export: Once daily at 01:30 — previous day → trips/ (no email)`);
+  console.log(`  - Mileage: Daily at 12:00 — vehicles in completed 4000 km odometer segment → Excel+email; monthly full snapshot last day of month`);
+  console.log(`  - Catch-up: Runs on startup if prior day artifacts are missing`);
+  console.log(`  - Email Reports: Overspeed only, sent around 00:30 AM (~40 min after 23:59 start)`);
   console.log(`  - Data Coverage: Complete day 00:00:00 to 23:59:59`);
   console.log(`  - Rate Limit: 8 requests/minute (GPS51 limit: 10/min)`);
   console.log(`  - API URL: ${API_URL}`);
   console.log(`\n⚠️  API Usage Compliance:`);
   console.log(`  - Daily API limit: ~2,720 calls`);
-  console.log(`  - Automated usage: ~257 calls/day (1 check)`);
-  console.log(`  - Available for manual reports: ~2,463 calls/day (90% buffer)`);
+  console.log(`  - Automated usage: ~257 overspeed + ~256 trips ≈ 513 calls/day (plus manual)`);
   console.log(`  - All violations logged to overspeed_logs.txt as backup\n`);
 
   // Prompt for credentials
@@ -374,6 +520,16 @@ async function startService() {
     }
   }
 
+  const tripsDir = path.join(process.cwd(), 'trips');
+  const yesterdayTripsXlsx = path.join(tripsDir, `trips_daily_report_${yesterdayStr}.xlsx`);
+  if (!fs.existsSync(yesterdayTripsXlsx)) {
+    console.log(`⚠️  Missing trips export for ${yesterdayStr}. Running trips catch-up…\n`);
+    await runTripsDailyExport(yesterdayStr);
+    console.log('\n✅ Trips catch-up finished.\n');
+  } else {
+    console.log(`✅ Trips export present: trips_daily_report_${yesterdayStr}.xlsx\n`);
+  }
+
   // Calculate next scheduled check time (23:59 today or tomorrow)
   // Update 'now' to get fresh timestamp after potential catch-up check
   now = new Date();
@@ -394,7 +550,8 @@ async function startService() {
   console.log(`  - Check starts at: 23:59 (11:59 PM) daily`);
   console.log(`  - Email sent around: 00:30-00:40 AM - ~40 min after check starts`);
   console.log(`  - Report will include: ALL violations from 00:00:00 to 23:59:59`);
-  console.log(`  - Generated reports: generated_reports/ (365-day retention)\n`);
+  console.log(`  - Generated reports: generated_reports/ (365-day retention)`);
+  console.log(`  - Trip exports: trips/ (365-day retention, list/download in dashboard)\n`);
   console.log(`  - Backup logs: overspeed_reports/overspeed_logs.txt\n`);
 
   // Schedule recurring checks (no initial check to conserve API calls)
@@ -405,70 +562,143 @@ async function startService() {
   let lastHeartbeat = new Date();
   let lastCronCheck = new Date();
   let cronJobActive = true;
-  
+
+  /** Last time each cron callback started (local time string for logs). */
+  const lastCronRunAt = {
+    overspeed: null,
+    trips: null,
+    mileage: null,
+  };
+
+  function logCronRegistry() {
+    console.log('📅 Registered cron jobs (server local time):');
+    console.log(`   1) Overspeed   ${CHECK_INTERVAL}  → 23:59 daily`);
+    console.log(`   2) Trips       ${TRIPS_DAILY_CRON}  → 01:30 daily (previous day → trips/)`);
+    console.log(`   3) Mileage     ${MILEAGE_CRON}  → 12:00 daily (+ monthly on last calendar day)`);
+    console.log('   Each job logs when it starts ([CRON …]) and when work finishes.\n');
+  }
+  logCronRegistry();
+
   // Schedule with error handling and trigger confirmation
   let cronJob = cron.schedule(CHECK_INTERVAL, async () => {
-    console.log(`\n🔔 [CRON TRIGGER] ${new Date().toLocaleString()} - Scheduled check triggered!`);
+    const t = new Date().toLocaleString();
+    lastCronRunAt.overspeed = t;
+    console.log(`\n🔔 [CRON overspeed] START ${t} — pattern ${CHECK_INTERVAL}`);
     cronJobActive = true;
     lastCronCheck = new Date();
     try {
       await runOverspeedCheck();
+      console.log(`✅ [CRON overspeed] END ${new Date().toLocaleString()}`);
     } catch (error) {
-      console.error(`\n❌ [CRON ERROR] ${new Date().toLocaleString()}`);
-      console.error('Error during scheduled check:', error);
+      console.error(`\n❌ [CRON overspeed] ERROR ${new Date().toLocaleString()}`);
+      console.error(error);
       console.error('Stack:', error.stack);
     }
   });
-  
-  // Verify cron job was scheduled
-  console.log(`📋 Cron job scheduled: ${cronJob ? 'SUCCESS' : 'FAILED'}`);
-  console.log(`📋 Cron pattern: ${CHECK_INTERVAL} (59 23 * * * = Every day at 23:59)\n`);
 
-  // Heartbeat: Every 30 minutes - monitor service health and cron job
+  console.log(`📋 Overspeed cron: ${cronJob ? 'SUCCESS' : 'FAILED'} — ${CHECK_INTERVAL}`);
+
+  const tripsCronJob = cron.schedule(TRIPS_DAILY_CRON, async () => {
+    const t = new Date().toLocaleString();
+    lastCronRunAt.trips = t;
+    console.log(`\n🔔 [CRON trips] START ${t} — pattern ${TRIPS_DAILY_CRON}`);
+    try {
+      const y = new Date();
+      y.setDate(y.getDate() - 1);
+      const yStr = y.toISOString().split('T')[0];
+      await runTripsDailyExport(yStr);
+      console.log(`✅ [CRON trips] END ${new Date().toLocaleString()}`);
+    } catch (error) {
+      console.error(`❌ [CRON trips] ERROR ${new Date().toLocaleString()}`, error);
+    }
+  });
+  console.log(`📋 Trips daily cron: ${tripsCronJob ? 'SUCCESS' : 'FAILED'} — ${TRIPS_DAILY_CRON}`);
+
+  const mileageCronJob = cron.schedule(MILEAGE_CRON, async () => {
+    const t = new Date().toLocaleString();
+    lastCronRunAt.mileage = t;
+    console.log(`\n🔔 [CRON mileage] START ${t} — pattern ${MILEAGE_CRON}`);
+    try {
+      await runMileageScheduled('daily');
+      const now = new Date();
+      if (isLastDayOfMonth(now)) {
+        console.log(`   [CRON mileage] Last day of month → running monthly snapshot…`);
+        await runMileageScheduled('monthly');
+      }
+      console.log(`✅ [CRON mileage] END ${new Date().toLocaleString()}`);
+    } catch (error) {
+      console.error(`❌ [CRON mileage] ERROR ${new Date().toLocaleString()}`, error);
+    }
+  });
+  console.log(`📋 Mileage cron: ${mileageCronJob ? 'SUCCESS' : 'FAILED'} — ${MILEAGE_CRON}\n`);
+
+  /** Next wall-clock run from `from` (local): hour (0–23), minute (0–59). */
+  function msUntilNextLocalWallClock(from, hour, minute) {
+    const target = new Date(from.getFullYear(), from.getMonth(), from.getDate(), hour, minute, 0, 0);
+    if (target <= from) {
+      target.setDate(target.getDate() + 1);
+    }
+    return target - from;
+  }
+
+  function formatCountdown(ms) {
+    const h = Math.floor(ms / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    return `${h}h ${m}m`;
+  }
+
+  // Heartbeat: Every 30 minutes — server health + all scheduled crons
   setInterval(async () => {
     const currentTime = new Date();
     lastHeartbeat = currentTime;
-    
-    // Calculate next check time
-    const nextCheckTime = new Date(currentTime);
-    nextCheckTime.setHours(23, 59, 0, 0);
-    
-    // If past 23:59 today, next check is tomorrow
+
+    // Overspeed next 23:59
+    const nextOverspeed = new Date(currentTime);
+    nextOverspeed.setHours(23, 59, 0, 0);
     if (currentTime.getHours() === 23 && currentTime.getMinutes() >= 59) {
-      nextCheckTime.setDate(nextCheckTime.getDate() + 1);
+      nextOverspeed.setDate(nextOverspeed.getDate() + 1);
     }
-    
-    const msUntilCheck = nextCheckTime - currentTime;
-    const hoursRemaining = Math.floor(msUntilCheck / (1000 * 60 * 60));
-    const minutesRemaining = Math.floor((msUntilCheck % (1000 * 60 * 60)) / (1000 * 60));
-    
-    // Check if cron job is still running
+    const msOverspeed = nextOverspeed - currentTime;
+
+    // Must match TRIPS_DAILY_CRON (30 1 * * *) and MILEAGE_CRON (0 12 * * *)
+    const msTrips = msUntilNextLocalWallClock(currentTime, 1, 30);
+    const msMileage = msUntilNextLocalWallClock(currentTime, 12, 0);
+
+    const overspeedReg = Boolean(cronJob);
+    const tripsReg = Boolean(tripsCronJob);
+    const mileageReg = Boolean(mileageCronJob);
     const cronStatus = cronJobActive && cronJob ? '🟢 ACTIVE' : '🔴 INACTIVE';
     const cronHealth = cronJobActive && cronJob ? 'HEALTHY' : '⚠️ FAILED';
-    
-    // CHECK IF NEXT.JS SERVER IS ACTUALLY REACHABLE
+
     let nextjsStatus = '🔴 DOWN';
     let nextjsHealth = 'UNREACHABLE';
     try {
-      const response = await fetch(`${API_URL}/dashboard`, { 
+      const response = await fetch(`${API_URL}/dashboard`, {
         method: 'GET',
-        signal: AbortSignal.timeout(5000)
+        signal: AbortSignal.timeout(5000),
       });
       if (response.ok || response.status === 401 || response.status === 403) {
         nextjsStatus = '🟢 UP';
         nextjsHealth = 'HEALTHY';
       }
     } catch (error) {
-      // Next.js server is down or unreachable
       nextjsStatus = '🔴 DOWN';
       nextjsHealth = 'UNREACHABLE';
     }
-    
-    console.log(`\n💚 [HEARTBEAT] ${currentTime.toLocaleString()}`);
+
+    console.log(`\n💚 [HEARTBEAT] ${currentTime.toLocaleString()} (every 30m)`);
     console.log(`   🟢 Monitoring Service: RUNNING`);
     console.log(`   ${nextjsStatus} Next.js Server: ${nextjsHealth}`);
-    console.log(`   ${cronStatus} Cron Job: ${cronHealth}`);
-    console.log(`   ⏰ Next check in: ${hoursRemaining}h ${minutesRemaining}m (at ${nextCheckTime.toLocaleTimeString()})`);
+    console.log(`   📅 Scheduled crons (local server time):`);
+    console.log(
+      `      • Overspeed  ${CHECK_INTERVAL}  registered=${overspeedReg ? 'yes' : 'NO'}  ${cronStatus} ${cronHealth}  next in ${formatCountdown(msOverspeed)} (at ${nextOverspeed.toLocaleTimeString()})  last START=${lastCronRunAt.overspeed || '—'}`
+    );
+    console.log(
+      `      • Trips      ${TRIPS_DAILY_CRON}  registered=${tripsReg ? 'yes' : 'NO'}  next in ${formatCountdown(msTrips)} (at 01:30)  last START=${lastCronRunAt.trips || '—'}`
+    );
+    console.log(
+      `      • Mileage    ${MILEAGE_CRON}  registered=${mileageReg ? 'yes' : 'NO'}  next in ${formatCountdown(msMileage)} (at 12:00)  last START=${lastCronRunAt.mileage || '—'}`
+    );
     
     // CRITICAL WARNING if Next.js is down
     if (nextjsHealth === 'UNREACHABLE') {
@@ -488,13 +718,16 @@ async function startService() {
         
         // Recreate cron job
         cronJob = cron.schedule(CHECK_INTERVAL, async () => {
-          console.log(`\n🔔 [CRON TRIGGER] ${new Date().toLocaleString()} - Scheduled check triggered!`);
+          const t = new Date().toLocaleString();
+          lastCronRunAt.overspeed = t;
+          console.log(`\n🔔 [CRON overspeed] START ${t} — pattern ${CHECK_INTERVAL}`);
           cronJobActive = true;
           lastCronCheck = new Date();
           try {
             await runOverspeedCheck();
+            console.log(`✅ [CRON overspeed] END ${new Date().toLocaleString()}`);
           } catch (error) {
-            console.error(`\n❌ [CRON ERROR] ${new Date().toLocaleString()}`);
+            console.error(`\n❌ [CRON overspeed] ERROR ${new Date().toLocaleString()}`);
             console.error('Error during scheduled check:', error);
             console.error('Stack:', error.stack);
           }
