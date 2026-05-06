@@ -44,3 +44,13 @@ next-env.d.ts
 # generated report exports (retained on disk up to 365 days; do not commit binaries)
 /generated_reports/*
 !/generated_reports/.gitkeep
+
+# daily all-device trip exports
+/trips/*
+!/trips/.gitkeep
+
+# scheduled mileage reports
+/mileage_report/*
+!/mileage_report/.gitkeep
+/mileage_overall_report/*
+!/mileage_overall_report/.gitkeep

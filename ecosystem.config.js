@@ -13,14 +13,19 @@
  *   pm2 startup                            # Generate startup script (auto-start on boot)
  */
 
+const path = require('path');
+
 const MANTRAC_PORT = Number(process.env.MANTRAC_PORT || 3001);
 const INTERNAL_API_URL = process.env.NEXT_PUBLIC_API_URL || `http://127.0.0.1:${MANTRAC_PORT}`;
+
+/** Run Next directly — on Windows, `script: 'npm'` makes PM2 feed npm.cmd to Node and you get SyntaxError on `::`. */
+const nextBin = path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
 
 module.exports = {
   apps: [
     {
       name: 'nextjs-server',
-      script: 'npm',
+      script: nextBin,
       args: 'start',
       cwd: './',
       instances: 1,

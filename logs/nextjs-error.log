@@ -321,3 +321,203 @@
 2026-04-27 22:45:06 +01:00:   }
 2026-04-27 22:45:06 +01:00: }
 2026-04-27 23:59:09 +01:00: [Monitor] Failed to fetch devices: global_error_token_expire
+2026-05-03 23:34:14 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:14 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:14 +01:00: ^
+2026-05-03 23:34:14 +01:00: 
+2026-05-03 23:34:14 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:14 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:14 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:14 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:14 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:14 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:14 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:14 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:14 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:14 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:14 +01:00: 
+2026-05-03 23:34:14 +01:00: Node.js v22.19.0
+2026-05-03 23:34:18 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:18 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:18 +01:00: ^
+2026-05-03 23:34:18 +01:00: 
+2026-05-03 23:34:18 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:18 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:18 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:18 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:18 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:18 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:18 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:18 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:18 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:18 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:18 +01:00: 
+2026-05-03 23:34:18 +01:00: Node.js v22.19.0
+2026-05-03 23:34:22 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:22 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:22 +01:00: ^
+2026-05-03 23:34:22 +01:00: 
+2026-05-03 23:34:22 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:22 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:22 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:22 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:22 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:22 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:22 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:22 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:22 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:22 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:22 +01:00: 
+2026-05-03 23:34:22 +01:00: Node.js v22.19.0
+2026-05-03 23:34:27 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:27 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:27 +01:00: ^
+2026-05-03 23:34:27 +01:00: 
+2026-05-03 23:34:27 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:27 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:27 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:27 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:27 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:27 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:27 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:27 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:27 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:27 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:27 +01:00: 
+2026-05-03 23:34:27 +01:00: Node.js v22.19.0
+2026-05-03 23:34:31 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:31 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:31 +01:00: ^
+2026-05-03 23:34:31 +01:00: 
+2026-05-03 23:34:31 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:31 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:31 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:31 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:31 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:31 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:31 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:31 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:31 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:31 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:31 +01:00: 
+2026-05-03 23:34:31 +01:00: Node.js v22.19.0
+2026-05-03 23:34:35 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:35 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:35 +01:00: ^
+2026-05-03 23:34:35 +01:00: 
+2026-05-03 23:34:35 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:35 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:35 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:35 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:35 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:35 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:35 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:35 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:35 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:35 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:35 +01:00: 
+2026-05-03 23:34:35 +01:00: Node.js v22.19.0
+2026-05-03 23:34:39 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:39 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:39 +01:00: ^
+2026-05-03 23:34:39 +01:00: 
+2026-05-03 23:34:39 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:39 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:39 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:39 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:39 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:39 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:39 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:39 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:39 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:39 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:39 +01:00: 
+2026-05-03 23:34:39 +01:00: Node.js v22.19.0
+2026-05-03 23:34:43 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:43 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:43 +01:00: ^
+2026-05-03 23:34:43 +01:00: 
+2026-05-03 23:34:43 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:43 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:43 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:43 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:43 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:43 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:43 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:43 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:43 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:43 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:43 +01:00: 
+2026-05-03 23:34:43 +01:00: Node.js v22.19.0
+2026-05-03 23:34:47 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:47 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:47 +01:00: ^
+2026-05-03 23:34:47 +01:00: 
+2026-05-03 23:34:47 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:47 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:47 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:47 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:47 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:47 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:47 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:47 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:47 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:47 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:47 +01:00: 
+2026-05-03 23:34:47 +01:00: Node.js v22.19.0
+2026-05-03 23:34:51 +01:00: C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+2026-05-03 23:34:51 +01:00: :: Created by npm, please don't edit manually.
+2026-05-03 23:34:51 +01:00: ^
+2026-05-03 23:34:51 +01:00: 
+2026-05-03 23:34:51 +01:00: SyntaxError: Unexpected token ':'
+2026-05-03 23:34:51 +01:00:     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+2026-05-03 23:34:51 +01:00:     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+2026-05-03 23:34:51 +01:00:     at Object..js (node:internal/modules/cjs/loader:1839:10)
+2026-05-03 23:34:51 +01:00:     at Module.load (node:internal/modules/cjs/loader:1441:32)
+2026-05-03 23:34:51 +01:00:     at Function._load (node:internal/modules/cjs/loader:1263:12)
+2026-05-03 23:34:51 +01:00:     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2026-05-03 23:34:51 +01:00:     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+2026-05-03 23:34:51 +01:00:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+2026-05-03 23:34:51 +01:00:     at node:internal/main/run_main_module:36:49
+2026-05-03 23:34:51 +01:00: 
+2026-05-03 23:34:51 +01:00: Node.js v22.19.0
+2026-05-03 23:44:23 +01:00: [Monitor] Failed to fetch devices: global_error_token_expire
+2026-05-04 00:01:19 +01:00: [Monitor] Failed to fetch devices: global_error_token_expire
+2026-05-04 00:01:21 +01:00: [Monitor] Failed to fetch devices: ip limit:102.89.23.152
+2026-05-04 00:02:12 +01:00: LastPosition API - Missing required fields
+2026-05-04 05:47:39 +01:00: LastPosition API - Missing required fields
+2026-05-04 07:53:06 +01:00: [Monitor] Failed to fetch devices: global_error_token_expire
+2026-05-04 08:02:12 +01:00: [Monitor] Failed to connect to GPS51 API after retries: TypeError: fetch failed
+2026-05-04 08:02:12 +01:00:     at ignore-listed frames {
+2026-05-04 08:02:12 +01:00:   [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted address: api.gps51.com:443, timeout: 10000ms)
+2026-05-04 08:02:12 +01:00:       at ignore-listed frames {
+2026-05-04 08:02:12 +01:00:     code: 'UND_ERR_CONNECT_TIMEOUT'
+2026-05-04 08:02:12 +01:00:   }
+2026-05-04 08:02:12 +01:00: }
+2026-05-04 08:27:33 +01:00: [Monitor] IP WHITELIST ERROR: 105.112.24.7 is not whitelisted in GPS51 API
+2026-05-04 08:47:18 +01:00: [Monitor] IP WHITELIST ERROR: 105.112.24.7 is not whitelisted in GPS51 API
+2026-05-05 15:05:38 +01:00: [Monitor] IP WHITELIST ERROR: 105.112.179.253 is not whitelisted in GPS51 API
+2026-05-05 15:23:32 +01:00: [Monitor] Failed to fetch devices: global_error_token_expire
+2026-05-05 15:55:43 +01:00: [Monitor] Failed to fetch devices: global_error_token_expire
+2026-05-05 17:15:58 +01:00: [Email] Failed to send email: Error: getaddrinfo ENOTFOUND mail.safetrack.com.ng
+2026-05-05 17:15:58 +01:00:     at ignore-listed frames {
+2026-05-05 17:15:58 +01:00:   errno: -3008,
+2026-05-05 17:15:58 +01:00:   code: 'EDNS',
+2026-05-05 17:15:58 +01:00:   syscall: 'getaddrinfo',
+2026-05-05 17:15:58 +01:00:   hostname: 'mail.safetrack.com.ng',
+2026-05-05 17:15:58 +01:00:   command: 'CONN'
+2026-05-05 17:15:58 +01:00: }
+2026-05-05 17:16:37 +01:00: [TripsDaily] Failed to connect to GPS51: TypeError: fetch failed
+2026-05-05 17:16:37 +01:00:     at ignore-listed frames {
+2026-05-05 17:16:37 +01:00:   [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted address: api.gps51.com:443, timeout: 10000ms)
+2026-05-05 17:16:37 +01:00:       at ignore-listed frames {
+2026-05-05 17:16:37 +01:00:     code: 'UND_ERR_CONNECT_TIMEOUT'
+2026-05-05 17:16:37 +01:00:   }
+2026-05-05 17:16:37 +01:00: }
+2026-05-06 11:29:30 +01:00: [Monitor] Failed to fetch devices: global_error_token_expire
+2026-05-06 14:43:11 +01:00: [MileageScheduled] [Error: EBUSY: resource busy or locked, open 'C:\Users\ELEKTRAN\Documents\SAFETRACK_CHINESE\dashboards\mantrac\mantrac-dashboard\mileage_overall_report\mileage_overall_2026-05.xlsx'] {
+2026-05-06 14:43:11 +01:00:   errno: -4082,
+2026-05-06 14:43:11 +01:00:   code: 'EBUSY',
+2026-05-06 14:43:11 +01:00:   syscall: 'open',
+2026-05-06 14:43:11 +01:00:   path: 'C:\\Users\\ELEKTRAN\\Documents\\SAFETRACK_CHINESE\\dashboards\\mantrac\\mantrac-dashboard\\mileage_overall_report\\mileage_overall_2026-05.xlsx'
+2026-05-06 14:43:11 +01:00: }

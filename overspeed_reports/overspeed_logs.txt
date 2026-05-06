@@ -105,4 +105,5 @@
 [2026-04-25T14:07:17.096Z] DAILY REPORT (2026-04-24): 6 violations detected today. Report: overspeed_daily_report_2026-04-24.xlsx. Email sent.
 [2026-04-26T06:55:04.179Z] DAILY REPORT (2026-04-25): 1 violations detected. Report: overspeed_daily_report_2026-04-25.xlsx. Email failed.
 [2026-04-26T22:59:04.970Z] DAILY REPORT (2026-04-26): 6 violations detected. Report: overspeed_daily_report_2026-04-26.xlsx. Email failed.
-[2026-04-27T22:59:21.768Z] DAILY REPORT (2026-04-27): No violations detected. Email sent.\n
+[2026-04-27T22:59:21.768Z] DAILY REPORT (2026-04-27): No violations detected. Email sent.\n[2026-05-05T14:55:45.206Z] DAILY REPORT (2026-05-04): No violations detected. Email failed.
+[2026-05-06T10:29:33.750Z] DAILY REPORT (2026-05-05): 6 violations detected. Report: overspeed_daily_report_2026-05-05.xlsx. Email sent.
