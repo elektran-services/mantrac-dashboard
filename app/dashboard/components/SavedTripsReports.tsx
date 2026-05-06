@@ -126,7 +126,7 @@ export default function SavedTripsReports() {
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Saved trip exports</h2>
+            <h2 className="text-xl font-bold text-gray-900">Trips Report</h2>
             <p className="text-sm text-gray-600 mt-1">
               Daily all-device trip Excel files from GPS51 trip queries. Kept for{" "}
               <span className="font-medium text-gray-800">{retentionDays} days</span>, then removed automatically. These

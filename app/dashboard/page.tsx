@@ -6,14 +6,10 @@ import Image from "next/image";
 import { getUserData, clearAuth, getAuthToken } from "@/lib/auth";
 import CustomSelect from "@/app/components/CustomSelect";
 import { buildGPS51Url } from "@/lib/config";
-import DeviceList from "./components/DeviceList";
 import AlarmList from "./components/AlarmList";
-import TripReport from "./components/TripReport";
-import LastPosition from "./components/LastPosition";
-import MileageReport from "./components/MileageReport";
+import SavedMileageReports from "./components/SavedMileageReports";
 import OfflineReport from "./components/OfflineReport";
 import ParkingReport from "./components/ParkingReport";
-import OverspeedReport from "./components/OverspeedReport";
 import SavedReports from "./components/SavedReports";
 import SavedTripsReports from "./components/SavedTripsReports";
 
@@ -22,12 +18,27 @@ export default function DashboardPage() {
   const [userData, setUserData] = useState<any>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState("dashboard");
-  const [dashboardStats, setDashboardStats] = useState({
-    totalVehicles: 0,
-    activeVehicles: 0,
-    alerts: 0,
-    todayDistance: 0,
-    loading: true
+  type Bucket = { count: number; latestReportDate: string | null };
+  const [reportStats, setReportStats] = useState<{
+    overspeed: Bucket;
+    trips: Bucket;
+    mileageDaily: Bucket;
+    mileageMonthly: Bucket;
+    offline: Bucket;
+    parking: Bucket;
+    generatedAt: string | null;
+    loading: boolean;
+    error: string | null;
+  }>({
+    overspeed: { count: 0, latestReportDate: null },
+    trips: { count: 0, latestReportDate: null },
+    mileageDaily: { count: 0, latestReportDate: null },
+    mileageMonthly: { count: 0, latestReportDate: null },
+    offline: { count: 0, latestReportDate: null },
+    parking: { count: 0, latestReportDate: null },
+    generatedAt: null,
+    loading: true,
+    error: null,
   });
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -38,97 +49,61 @@ export default function DashboardPage() {
       router.push("/");
     } else {
       setUserData(data);
-      fetchDashboardStats(data.username);
+      fetchReportStats();
     }
   }, [router]);
 
   // Handler for refresh button
   const handleRefresh = () => {
-    if (userData && userData.username) {
-      setDashboardStats(prev => ({ ...prev, loading: true }));
-      fetchDashboardStats(userData.username);
-    }
+    setReportStats((prev) => ({ ...prev, loading: true, error: null }));
+    fetchReportStats();
   };
 
-  const fetchDashboardStats = async (username: string) => {
+  const fetchReportStats = async () => {
     try {
       const token = getAuthToken();
-      
-      // Fetch devices
-      const devicesResponse = await fetch('/api/devices', {
+      if (!token) {
+        setReportStats((prev) => ({ ...prev, loading: false, error: 'Not logged in' }));
+        return;
+      }
+
+      const res = await fetch('/api/dashboard-stats', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, token }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ token }),
       });
-      
-      const devicesData = await devicesResponse.json();
-      
-      let totalVehicles = 0;
-      let deviceIds: string[] = [];
-      
-      if (devicesData.status === 0 && devicesData.groups) {
-        devicesData.groups.forEach((group: any) => {
-          if (group.devices) {
-            totalVehicles += group.devices.length;
-            deviceIds.push(...group.devices.map((d: any) => d.deviceid));
-          }
-        });
+
+      const data = await res.json();
+      if (!res.ok || data.status !== 0) {
+        setReportStats((prev) => ({
+          ...prev,
+          loading: false,
+          error: data.cause || 'Failed to load report stats',
+        }));
+        return;
       }
-      
-      // Fetch lastposition for all devices to check ACC status
-      let activeVehicles = 0;
-      if (deviceIds.length > 0) {
-        const positionResponse = await fetch('/api/lastposition', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            username, 
-            deviceids: deviceIds,
-            lastquerypositiontime: 0 
-          }),
-        });
-        
-        const positionData = await positionResponse.json();
-        
-        if (positionData.status === 0 && positionData.records) {
-          // Count devices with ACC ON
-          activeVehicles = positionData.records.filter((record: any) => {
-            return record.strstatusen && record.strstatusen.includes('ACC ON');
-          }).length;
-        }
-      }
-      
-      // Fetch alarms with valid payload expected by /api/alarms
-      let alertsCount = 0;
-      if (deviceIds.length > 0 && token) {
-        const today = new Date().toISOString().split('T')[0];
-        const alarmsResponse = await fetch('/api/alarms', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            devices: deviceIds,
-            startday: today,
-            endday: today,
-            offset: 1,
-            needalarm: "5",
-            token,
-          }),
-        });
-        
-        const alarmsData = await alarmsResponse.json();
-        alertsCount = alarmsData.status === 0 && alarmsData.alarmrecords ? alarmsData.alarmrecords.length : 0;
-      }
-      
-      setDashboardStats({
-        totalVehicles,
-        activeVehicles,
-        alerts: alertsCount,
-        todayDistance: 0,
-        loading: false
+
+      setReportStats({
+        overspeed: data.overspeed,
+        trips: data.trips,
+        mileageDaily: data.mileageDaily,
+        mileageMonthly: data.mileageMonthly,
+        offline: data.offline,
+        parking: data.parking,
+        generatedAt: data.generatedAt ?? null,
+        loading: false,
+        error: null,
       });
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
-      setDashboardStats(prev => ({ ...prev, loading: false }));
+      setReportStats((prev) => ({
+        ...prev,
+        loading: false,
+        error: 'Could not load saved report counts',
+      }));
     }
   };
 
@@ -164,16 +139,6 @@ export default function DashboardPage() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
     )},
-    { id: "lastposition", label: "Last Position", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-      </svg>
-    )},
-    { id: "reports", label: "Trip Report", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    )},
     { id: "mileage", label: "Mileage Report", icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -190,17 +155,12 @@ export default function DashboardPage() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     )},
-    { id: "overspeed", label: "Overspeed Report", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    )},
-    { id: "saved-reports", label: "Saved reports", icon: (
+    { id: "saved-reports", label: "Overspeed Report", icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
     )},
-    { id: "saved-trips-reports", label: "Saved trip exports", icon: (
+    { id: "saved-trips-reports", label: "Trips Report", icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
@@ -351,91 +311,195 @@ export default function DashboardPage() {
         <main className="flex-1 overflow-y-auto p-3 lg:p-6">
           {activeMenu === "dashboard" && (
             <>
-              <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2.5">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-1">Welcome back, {userData.nickname}!</h2>
-                  <p className="text-sm text-gray-600">Here's what's happening with your fleet today.</p>
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">Welcome back, {userData.nickname}</h2>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-0.5 max-w-xl">
+                    Saved reports on this server. Counts reflect files in each folder (after retention rules). Open a card to list and download.
+                  </p>
+                  {reportStats.generatedAt && !reportStats.loading && (
+                    <p className="text-xs text-gray-400 mt-2">
+                      Last refreshed {new Date(reportStats.generatedAt).toLocaleString()}
+                    </p>
+                  )}
                 </div>
                 <button
-                  className="p-2 rounded-lg bg-[#FFC107] text-gray-900 hover:bg-yellow-400 flex items-center gap-1 border border-yellow-300 shadow-sm"
+                  type="button"
+                  className="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFC107] text-gray-900 font-medium hover:bg-yellow-400 border border-yellow-500/30 shadow-sm disabled:opacity-50"
                   onClick={handleRefresh}
-                  title="Refresh dashboard stats"
-                  aria-label="Refresh dashboard stats"
-                  disabled={dashboardStats.loading}
+                  title="Refresh counts from disk"
+                  aria-label="Refresh counts from disk"
+                  disabled={reportStats.loading}
                 >
-                  <svg className={`w-5 h-5 ${dashboardStats.loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-5 h-5 ${reportStats.loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.93 4.93a10 10 0 0114.14 0m0 0V1m0 3.93H17M19.07 19.07a10 10 0 01-14.14 0m0 0V23m0-3.93H7" />
                   </svg>
-                  <span className="sr-only">Refresh</span>
-                  <span className="hidden sm:inline text-sm font-medium">Refresh</span>
+                  Refresh
                 </button>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="bg-white rounded-lg shadow-sm p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <h3 className="text-xs font-medium text-gray-600 mb-1">Total Vehicles</h3>
-                  {dashboardStats.loading ? (
-                    <div className="animate-pulse h-7 bg-gray-200 rounded w-16"></div>
-                  ) : (
-                    <p className="text-xl font-bold text-gray-900">{dashboardStats.totalVehicles}</p>
-                  )}
-                </div>
+              {reportStats.error && (
+                <div className="mb-4 rounded-xl border border-red-200 bg-red-50 text-red-800 text-sm px-4 py-3">{reportStats.error}</div>
+              )}
 
-                <div className="bg-white rounded-lg shadow-sm p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+              {/* Report inventory — compact (~40% smaller footprint vs prior row) */}
+              <div className="grid grid-cols-3 gap-2 w-full max-w-7xl">
+                {[
+                  {
+                    menu: "saved-reports" as const,
+                    title: "Overspeed Report",
+                    desc: "Daily violation Excel files",
+                    folder: "generated_reports/",
+                    bucket: reportStats.overspeed,
+                    icon: "speed" as const,
+                    accent: "from-amber-500/15 to-orange-500/10 border-amber-200/80",
+                    iconBg: "bg-amber-100 text-amber-700",
+                  },
+                  {
+                    menu: "saved-trips-reports" as const,
+                    title: "Trips Report",
+                    desc: "Daily trip exports",
+                    folder: "trips/",
+                    bucket: reportStats.trips,
+                    icon: "doc" as const,
+                    accent: "from-sky-500/15 to-blue-500/10 border-sky-200/80",
+                    iconBg: "bg-sky-100 text-sky-700",
+                  },
+                  {
+                    menu: "mileage" as const,
+                    title: "Mileage Report",
+                    desc: "Daily threshold + monthly fleet snapshot",
+                    folder: "mileage_report/ · mileage_overall_report/",
+                    folderTooltip: "mileage_report/ · mileage_overall_report/",
+                    bucket: reportStats.mileageDaily,
+                    secondary: reportStats.mileageMonthly,
+                    icon: "chart" as const,
+                    accent: "from-emerald-500/15 to-teal-500/10 border-emerald-200/80",
+                    iconBg: "bg-emerald-100 text-emerald-700",
+                  },
+                  {
+                    menu: "offline" as const,
+                    title: "Offline Devices",
+                    desc: "Daily offline snapshots",
+                    folder: "offline_reports/",
+                    bucket: reportStats.offline,
+                    icon: "signal" as const,
+                    accent: "from-slate-500/15 to-gray-500/10 border-slate-200/80",
+                    iconBg: "bg-slate-100 text-slate-700",
+                  },
+                  {
+                    menu: "parking" as const,
+                    title: "Parking Report",
+                    desc: "Daily parking / idle exports",
+                    folder: "parking_reports/",
+                    bucket: reportStats.parking,
+                    icon: "pin" as const,
+                    accent: "from-violet-500/15 to-purple-500/10 border-violet-200/80",
+                    iconBg: "bg-violet-100 text-violet-700",
+                  },
+                ].map((card) => (
+                  <button
+                    key={card.menu + card.title}
+                    type="button"
+                    onClick={() => setActiveMenu(card.menu)}
+                    className={`text-left w-full flex flex-col min-h-[12rem] sm:min-h-[13.5rem] rounded-md border bg-gradient-to-br ${card.accent} p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_3px_8px_rgba(15,23,42,0.05)] ring-1 ring-black/5 hover:shadow-[0_2px_6px_rgba(0,0,0,0.05),0_8px_20px_rgba(15,23,42,0.08)] hover:-translate-y-px active:translate-y-0 active:shadow-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFC107] focus-visible:ring-offset-1 group`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-md ${card.iconBg} flex items-center justify-center shrink-0 shadow-sm`}>
+                        {card.icon === "speed" && (
+                          <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                        )}
+                        {card.icon === "doc" && (
+                          <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        )}
+                        {card.icon === "chart" && (
+                          <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        )}
+                        {card.icon === "signal" && (
+                          <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3" />
+                          </svg>
+                        )}
+                        {card.icon === "pin" && (
+                          <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="text-[12px] font-semibold text-gray-600 group-hover:text-gray-900 transition-colors">Open →</span>
                     </div>
-                    {!dashboardStats.loading && dashboardStats.totalVehicles > 0 && (
-                      <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                        {((dashboardStats.activeVehicles / dashboardStats.totalVehicles) * 100).toFixed(0)}%
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-xs font-medium text-gray-600 mb-1">Active Now</h3>
-                  {dashboardStats.loading ? (
-                    <div className="animate-pulse h-7 bg-gray-200 rounded w-16"></div>
-                  ) : (
-                    <p className="text-xl font-bold text-gray-900">{dashboardStats.activeVehicles}</p>
-                  )}
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
+                    <h3 className="mt-1.5 text-[14px] sm:text-[17px] font-bold text-gray-900 leading-tight line-clamp-1">{card.title}</h3>
+                    <p className="text-[11px] sm:text-xs text-gray-600 mt-0.5 line-clamp-1">{card.desc}</p>
+                    <p
+                      className="text-[11px] font-mono text-gray-500 mt-0.5 truncate"
+                      title={"folderTooltip" in card && card.folderTooltip ? card.folderTooltip : card.folder}
+                    >
+                      {card.folder}
+                    </p>
+                    <div className="mt-auto pt-2">
+                      {reportStats.loading ? (
+                        <div className="animate-pulse h-4 bg-white/70 rounded w-12" />
+                      ) : "secondary" in card && card.secondary ? (
+                        <div className="grid grid-cols-2 gap-1.5">
+                          <div>
+                            <p className="text-[11px] font-medium text-gray-600">Daily files</p>
+                            <p className="text-[19px] sm:text-[22px] font-bold text-gray-900 tabular-nums mt-0 leading-none">{card.bucket.count}</p>
+                            <p className="text-[11px] text-gray-500 mt-0.5 truncate">
+                              Latest {card.bucket.latestReportDate ? card.bucket.latestReportDate.slice(0, 10) : "—"}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] font-medium text-gray-600">Monthly files</p>
+                            <p className="text-[19px] sm:text-[22px] font-bold text-gray-900 tabular-nums mt-0 leading-none">{card.secondary.count}</p>
+                            <p className="text-[11px] text-gray-500 mt-0.5 truncate">
+                              Latest {card.secondary.latestReportDate ? card.secondary.latestReportDate.slice(0, 7) : "—"}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-end gap-1">
+                          <span className="text-[19px] sm:text-[22px] font-bold text-gray-900 tabular-nums leading-none">{card.bucket.count}</span>
+                          <span className="text-[11px] text-gray-500 font-medium pb-px uppercase tracking-wide">saved files</span>
+                        </div>
+                      )}
+                      {!reportStats.loading && !("secondary" in card && card.secondary) && (
+                        <p className="text-[11px] text-gray-500 mt-0.5">
+                          Latest {card.bucket.latestReportDate ? card.bucket.latestReportDate.slice(0, 10) : "—"}
+                        </p>
+                      )}
                     </div>
-                  </div>
-                  <h3 className="text-xs font-medium text-gray-600 mb-1">Parked Vehicles</h3>
-                  {dashboardStats.loading ? (
-                    <div className="animate-pulse h-7 bg-gray-200 rounded w-16"></div>
-                  ) : (
-                    <p className="text-xl font-bold text-gray-900">{dashboardStats.totalVehicles - dashboardStats.activeVehicles}</p>
-                  )}
-                </div>
+                  </button>
+                ))}
               </div>
 
-              {/* Device List Component */}
-              <div className="mt-6">
-                <DeviceList />
+              <div className="mt-4 max-w-7xl w-full rounded-lg border border-gray-200 bg-white p-3 sm:p-4 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_4px_14px_rgba(15,23,42,0.06)] ring-1 ring-black/5">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-900">Live alerts &amp; devices</h3>
+                    <p className="text-[10px] sm:text-xs text-gray-600 mt-0.5">
+                      GPS51-powered views are still available from the sidebar when you need real-time data.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveMenu("alerts")}
+                    className="shrink-0 px-4 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-white hover:bg-gray-800 shadow-md"
+                  >
+                    Open Alerts
+                  </button>
+                </div>
               </div>
             </>
           )}
 
-          {activeMenu !== "dashboard" && activeMenu !== "alerts" && activeMenu !== "reports" && activeMenu !== "lastposition" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "overspeed" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
+          {activeMenu !== "dashboard" && activeMenu !== "alerts" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
             <div className="bg-white rounded-lg shadow-sm p-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -453,16 +517,8 @@ export default function DashboardPage() {
             <AlarmList />
           )}
 
-          {activeMenu === "reports" && (
-            <TripReport />
-          )}
-
-          {activeMenu === "lastposition" && (
-            <LastPosition />
-          )}
-
           {activeMenu === "mileage" && (
-            <MileageReport />
+            <SavedMileageReports />
           )}
 
           {activeMenu === "offline" && (
@@ -471,10 +527,6 @@ export default function DashboardPage() {
 
           {activeMenu === "parking" && (
             <ParkingReport />
-          )}
-
-          {activeMenu === "overspeed" && (
-            <OverspeedReport />
           )}
 
           {activeMenu === "saved-reports" && (

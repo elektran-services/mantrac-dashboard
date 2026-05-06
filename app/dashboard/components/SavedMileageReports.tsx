@@ -10,10 +10,15 @@ type ReportFile = {
   reportDate: string | null;
 };
 
-async function fetchReportsList(filters: { date?: string; from?: string; to?: string }) {
+type MileageCategory = "daily" | "monthly";
+
+async function fetchMileageReportsList(
+  category: MileageCategory,
+  filters: { date?: string; from?: string; to?: string }
+) {
   const token = getAuthToken();
   if (!token) throw new Error("Not logged in.");
-  const res = await fetch("/api/generated-reports", {
+  const res = await fetch("/api/mileage-reports", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,6 +26,7 @@ async function fetchReportsList(filters: { date?: string; from?: string; to?: st
     },
     body: JSON.stringify({
       token,
+      category,
       ...(filters.date?.trim() ? { date: filters.date.trim() } : {}),
       ...(filters.from?.trim() ? { from: filters.from.trim() } : {}),
       ...(filters.to?.trim() ? { to: filters.to.trim() } : {}),
@@ -28,12 +34,13 @@ async function fetchReportsList(filters: { date?: string; from?: string; to?: st
   });
   const data = await res.json();
   if (!res.ok || data.status !== 0) {
-    throw new Error(data.cause || "Failed to load reports");
+    throw new Error(data.cause || "Failed to load mileage reports");
   }
   return data as { files: ReportFile[]; retentionDays?: number };
 }
 
-export default function SavedReports() {
+export default function SavedMileageReports() {
+  const [activeTab, setActiveTab] = useState<MileageCategory>("daily");
   const [date, setDate] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -47,11 +54,9 @@ export default function SavedReports() {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchReportsList({ date, from, to });
+      const data = await fetchMileageReportsList(activeTab, { date, from, to });
       setFiles(data.files || []);
-      if (typeof data.retentionDays === "number") {
-        setRetentionDays(data.retentionDays);
-      }
+      if (typeof data.retentionDays === "number") setRetentionDays(data.retentionDays);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Request failed");
       setFiles([]);
@@ -66,12 +71,10 @@ export default function SavedReports() {
       setLoading(true);
       setError(null);
       try {
-        const data = await fetchReportsList({});
+        const data = await fetchMileageReportsList(activeTab, {});
         if (!cancelled) {
           setFiles(data.files || []);
-          if (typeof data.retentionDays === "number") {
-            setRetentionDays(data.retentionDays);
-          }
+          if (typeof data.retentionDays === "number") setRetentionDays(data.retentionDays);
         }
       } catch (e) {
         if (!cancelled) {
@@ -85,7 +88,7 @@ export default function SavedReports() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeTab]);
 
   const handleDownload = async (filename: string) => {
     const token = getAuthToken();
@@ -93,10 +96,8 @@ export default function SavedReports() {
     setDownloading(filename);
     setError(null);
     try {
-      const url = `/api/generated-reports/download?file=${encodeURIComponent(filename)}`;
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const url = `/api/mileage-reports/download?category=${activeTab}&file=${encodeURIComponent(filename)}`;
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         setError(err.cause || `Download failed (${res.status})`);
@@ -124,20 +125,44 @@ export default function SavedReports() {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">Overspeed Report</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              Download generated Excel reports. Files are kept for{" "}
-              <span className="font-medium text-gray-800">{retentionDays} days</span>, then removed
-              automatically.
-            </p>
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Mileage Report</h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Download saved mileage reports from local storage. Files are kept for{" "}
+            <span className="font-medium text-gray-800">{retentionDays} days</span>.
+          </p>
+        </div>
+
+        <div className="border-b border-gray-200 mb-4">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab("daily")}
+              className={`px-4 py-2 text-sm font-medium rounded-t-lg ${
+                activeTab === "daily"
+                  ? "bg-[#FFC107] text-gray-900"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Daily Mileage Reports
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("monthly")}
+              className={`px-4 py-2 text-sm font-medium rounded-t-lg ${
+                activeTab === "monthly"
+                  ? "bg-[#FFC107] text-gray-900"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Monthly Mileage Reports
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Exact date (YYYY-MM-DD)</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Exact date</label>
             <input
               type="date"
               value={date}
@@ -170,28 +195,15 @@ export default function SavedReports() {
               disabled={loading}
               className="px-4 py-2 rounded-lg bg-[#FFC107] text-gray-900 font-medium text-sm hover:bg-yellow-400 disabled:opacity-50"
             >
-              {loading ? "Loading…" : "Apply filters"}
+              {loading ? "Loading..." : "Apply filters"}
             </button>
             <button
               type="button"
-              onClick={async () => {
+              onClick={() => {
                 setDate("");
                 setFrom("");
                 setTo("");
-                setLoading(true);
-                setError(null);
-                try {
-                  const data = await fetchReportsList({});
-                  setFiles(data.files || []);
-                  if (typeof data.retentionDays === "number") {
-                    setRetentionDays(data.retentionDays);
-                  }
-                } catch (e) {
-                  setError(e instanceof Error ? e.message : "Request failed");
-                  setFiles([]);
-                } finally {
-                  setLoading(false);
-                }
+                applyFilters();
               }}
               className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm hover:bg-gray-50"
             >
@@ -201,9 +213,7 @@ export default function SavedReports() {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-800 text-sm border border-red-200">
-            {error}
-          </div>
+          <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-800 text-sm border border-red-200">{error}</div>
         )}
 
         <div className="rounded-lg border border-gray-200 overflow-hidden">
@@ -221,7 +231,7 @@ export default function SavedReports() {
               {files.length === 0 && !loading ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                    No reports match your filters.
+                    No mileage reports match your filters.
                   </td>
                 </tr>
               ) : (
@@ -230,9 +240,7 @@ export default function SavedReports() {
                     <td className="px-4 py-3 text-gray-900 font-mono text-xs break-all">{f.filename}</td>
                     <td className="px-4 py-3 text-gray-700">{f.reportDate || "—"}</td>
                     <td className="px-4 py-3 text-gray-700">{formatSize(f.size)}</td>
-                    <td className="px-4 py-3 text-gray-600 text-xs">
-                      {new Date(f.modifiedAt).toLocaleString()}
-                    </td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">{new Date(f.modifiedAt).toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <button
                         type="button"
@@ -240,7 +248,7 @@ export default function SavedReports() {
                         disabled={downloading === f.filename}
                         className="text-[#FFC107] hover:text-yellow-600 font-medium text-xs disabled:opacity-50"
                       >
-                        {downloading === f.filename ? "…" : "Download"}
+                        {downloading === f.filename ? "..." : "Download"}
                       </button>
                     </td>
                   </tr>

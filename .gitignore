@@ -54,3 +54,15 @@ next-env.d.ts
 !/mileage_report/.gitkeep
 /mileage_overall_report/*
 !/mileage_overall_report/.gitkeep
+
+# offline / parking report exports (keep folder, not binaries)
+/offline_reports/*
+!/offline_reports/.gitkeep
+/parking_reports/*
+!/parking_reports/.gitkeep
+
+# runtime logs
+/logs/
+
+# Excel lock files
+~$*

@@ -1,5 +1,5 @@
 /**
- * Fleet monitoring service: overspeed (23:59), trips export (01:30), mileage alerts + monthly snapshot (12:00).
+ * Fleet monitoring service: overspeed (23:59), trips export (01:30), mileage (12:00), offline (10:00), parking (15:00).
  */
 
 const path = require('path');
@@ -24,6 +24,10 @@ const CHECK_INTERVAL = '59 23 * * *'; // Once daily at 23:59 (11:59 PM)
 const TRIPS_DAILY_CRON = '30 1 * * *'; // 01:30 — ~1.5h after typical overspeed run completes
 /** Daily mileage threshold scan + end-of-month full fleet snapshot (local server time). */
 const MILEAGE_CRON = '0 12 * * *';
+/** Daily offline snapshot export (local server time). */
+const OFFLINE_CRON = '0 10 * * *';
+/** Daily parking report — previous calendar day, ≥5 min stops (local server time). */
+const PARKING_CRON = '0 15 * * *';
 
 let credentials = {
   token: process.env.MONITOR_TOKEN || '',
@@ -367,6 +371,135 @@ async function runMileageScheduled(mode, reportDate = null) {
   }
 }
 
+async function runOfflineScheduled(reportDate = null) {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  console.log(`\n[OfflineScheduled] ${timeStr}${reportDate ? ` reportDate=${reportDate}` : ''}`);
+
+  try {
+    const requestBody = {
+      token: credentials.token,
+      username: credentials.username,
+      offlinehours: 0,
+    };
+    if (reportDate) {
+      requestBody.reportDate = reportDate;
+    }
+
+    let response = await fetch(`${API_URL}/api/offline-scheduled`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+      timeout: 60 * 60 * 1000,
+    });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error(`[OfflineScheduled] Non-JSON (${response.status}): ${text.substring(0, 200)}`);
+      return;
+    }
+
+    let data = await response.json();
+    if (isTokenExpired(data)) {
+      const refreshed = await refreshToken();
+      if (!refreshed) {
+        console.error('[OfflineScheduled] Token refresh failed; skipping.');
+        return;
+      }
+      const retryBody = { token: credentials.token, username: credentials.username, offlinehours: 0 };
+      if (reportDate) retryBody.reportDate = reportDate;
+      response = await fetch(`${API_URL}/api/offline-scheduled`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(retryBody),
+        timeout: 60 * 60 * 1000,
+      });
+      const ct2 = response.headers.get('content-type');
+      if (!ct2 || !ct2.includes('application/json')) {
+        const text = await response.text();
+        console.error(`[OfflineScheduled] Non-JSON after retry (${response.status}): ${text.substring(0, 200)}`);
+        return;
+      }
+      data = await response.json();
+    }
+
+    if (data.status === 0) {
+      console.log(
+        `[OfflineScheduled] OK file=${data.reportFile || 'n/a'} offline=${data.offlineCount ?? '?'} devices=${data.deviceCount ?? '?'}`
+      );
+    } else {
+      console.error(`[OfflineScheduled] Failed: ${data.cause || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error(`[OfflineScheduled] Error: ${error.message}`);
+  }
+}
+
+async function runParkingScheduled(reportDate = null) {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  console.log(`\n[ParkingScheduled] ${timeStr}${reportDate ? ` reportDate=${reportDate}` : ''}`);
+
+  try {
+    const requestBody = {
+      token: credentials.token,
+      username: credentials.username,
+    };
+    if (reportDate) {
+      requestBody.reportDate = reportDate;
+    }
+
+    let response = await fetch(`${API_URL}/api/parking-scheduled`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+      timeout: 60 * 60 * 1000,
+    });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error(`[ParkingScheduled] Non-JSON (${response.status}): ${text.substring(0, 200)}`);
+      return;
+    }
+
+    let data = await response.json();
+    if (isTokenExpired(data)) {
+      const refreshed = await refreshToken();
+      if (!refreshed) {
+        console.error('[ParkingScheduled] Token refresh failed; skipping.');
+        return;
+      }
+      const retryBody = { token: credentials.token, username: credentials.username };
+      if (reportDate) retryBody.reportDate = reportDate;
+      response = await fetch(`${API_URL}/api/parking-scheduled`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(retryBody),
+        timeout: 60 * 60 * 1000,
+      });
+      const ct2 = response.headers.get('content-type');
+      if (!ct2 || !ct2.includes('application/json')) {
+        const text = await response.text();
+        console.error(`[ParkingScheduled] Non-JSON after retry (${response.status}): ${text.substring(0, 200)}`);
+        return;
+      }
+      data = await response.json();
+    }
+
+    if (data.status === 0) {
+      console.log(
+        `[ParkingScheduled] OK file=${data.reportFile || 'n/a'} rows=${data.rowCount ?? '?'} devices=${data.deviceCount ?? '?'}`
+      );
+    } else {
+      console.error(`[ParkingScheduled] Failed: ${data.cause || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error(`[ParkingScheduled] Error: ${error.message}`);
+  }
+}
+
 async function waitForServer(maxAttempts = 20, delayMs = 1000) {
   console.log('⏳ Waiting for Next.js server to be ready...');
   
@@ -471,6 +604,7 @@ async function startService() {
   console.log(`  - Overspeed check: Once daily at 23:59 (11:59 PM)`);
   console.log(`  - Trips Excel export: Once daily at 01:30 — previous day → trips/ (no email)`);
   console.log(`  - Mileage: Daily at 12:00 — vehicles in completed 4000 km odometer segment → Excel+email; monthly full snapshot last day of month`);
+  console.log(`  - Offline: Daily at 10:00 — offline snapshot Excel saved to offline_reports/`);
   console.log(`  - Catch-up: Runs on startup if prior day artifacts are missing`);
   console.log(`  - Email Reports: Overspeed only, sent around 00:30 AM (~40 min after 23:59 start)`);
   console.log(`  - Data Coverage: Complete day 00:00:00 to 23:59:59`);
@@ -568,13 +702,17 @@ async function startService() {
     overspeed: null,
     trips: null,
     mileage: null,
+    offline: null,
+    parking: null,
   };
 
   function logCronRegistry() {
     console.log('📅 Registered cron jobs (server local time):');
     console.log(`   1) Overspeed   ${CHECK_INTERVAL}  → 23:59 daily`);
     console.log(`   2) Trips       ${TRIPS_DAILY_CRON}  → 01:30 daily (previous day → trips/)`);
-    console.log(`   3) Mileage     ${MILEAGE_CRON}  → 12:00 daily (+ monthly on last calendar day)`);
+    console.log(`   3) Offline     ${OFFLINE_CRON}  → 10:00 daily (offline_reports/)`);
+    console.log(`   4) Mileage     ${MILEAGE_CRON}  → 12:00 daily (+ monthly on last calendar day)`);
+    console.log(`   5) Parking     ${PARKING_CRON}  → 15:00 daily (parking_reports/, previous day)`);
     console.log('   Each job logs when it starts ([CRON …]) and when work finishes.\n');
   }
   logCronRegistry();
@@ -632,6 +770,32 @@ async function startService() {
   });
   console.log(`📋 Mileage cron: ${mileageCronJob ? 'SUCCESS' : 'FAILED'} — ${MILEAGE_CRON}\n`);
 
+  const offlineCronJob = cron.schedule(OFFLINE_CRON, async () => {
+    const t = new Date().toLocaleString();
+    lastCronRunAt.offline = t;
+    console.log(`\n🔔 [CRON offline] START ${t} — pattern ${OFFLINE_CRON}`);
+    try {
+      await runOfflineScheduled();
+      console.log(`✅ [CRON offline] END ${new Date().toLocaleString()}`);
+    } catch (error) {
+      console.error(`❌ [CRON offline] ERROR ${new Date().toLocaleString()}`, error);
+    }
+  });
+  console.log(`📋 Offline cron: ${offlineCronJob ? 'SUCCESS' : 'FAILED'} — ${OFFLINE_CRON}`);
+
+  const parkingCronJob = cron.schedule(PARKING_CRON, async () => {
+    const t = new Date().toLocaleString();
+    lastCronRunAt.parking = t;
+    console.log(`\n🔔 [CRON parking] START ${t} — pattern ${PARKING_CRON}`);
+    try {
+      await runParkingScheduled();
+      console.log(`✅ [CRON parking] END ${new Date().toLocaleString()}`);
+    } catch (error) {
+      console.error(`❌ [CRON parking] ERROR ${new Date().toLocaleString()}`, error);
+    }
+  });
+  console.log(`📋 Parking cron: ${parkingCronJob ? 'SUCCESS' : 'FAILED'} — ${PARKING_CRON}`);
+
   /** Next wall-clock run from `from` (local): hour (0–23), minute (0–59). */
   function msUntilNextLocalWallClock(from, hour, minute) {
     const target = new Date(from.getFullYear(), from.getMonth(), from.getDate(), hour, minute, 0, 0);
@@ -660,13 +824,17 @@ async function startService() {
     }
     const msOverspeed = nextOverspeed - currentTime;
 
-    // Must match TRIPS_DAILY_CRON (30 1 * * *) and MILEAGE_CRON (0 12 * * *)
+    // Must match TRIPS_DAILY_CRON, OFFLINE_CRON, MILEAGE_CRON, PARKING_CRON
     const msTrips = msUntilNextLocalWallClock(currentTime, 1, 30);
+    const msOffline = msUntilNextLocalWallClock(currentTime, 10, 0);
     const msMileage = msUntilNextLocalWallClock(currentTime, 12, 0);
+    const msParking = msUntilNextLocalWallClock(currentTime, 15, 0);
 
     const overspeedReg = Boolean(cronJob);
     const tripsReg = Boolean(tripsCronJob);
+    const offlineReg = Boolean(offlineCronJob);
     const mileageReg = Boolean(mileageCronJob);
+    const parkingReg = Boolean(parkingCronJob);
     const cronStatus = cronJobActive && cronJob ? '🟢 ACTIVE' : '🔴 INACTIVE';
     const cronHealth = cronJobActive && cronJob ? 'HEALTHY' : '⚠️ FAILED';
 
@@ -697,7 +865,13 @@ async function startService() {
       `      • Trips      ${TRIPS_DAILY_CRON}  registered=${tripsReg ? 'yes' : 'NO'}  next in ${formatCountdown(msTrips)} (at 01:30)  last START=${lastCronRunAt.trips || '—'}`
     );
     console.log(
+      `      • Offline    ${OFFLINE_CRON}  registered=${offlineReg ? 'yes' : 'NO'}  next in ${formatCountdown(msOffline)} (at 10:00)  last START=${lastCronRunAt.offline || '—'}`
+    );
+    console.log(
       `      • Mileage    ${MILEAGE_CRON}  registered=${mileageReg ? 'yes' : 'NO'}  next in ${formatCountdown(msMileage)} (at 12:00)  last START=${lastCronRunAt.mileage || '—'}`
+    );
+    console.log(
+      `      • Parking    ${PARKING_CRON}  registered=${parkingReg ? 'yes' : 'NO'}  next in ${formatCountdown(msParking)} (at 15:00)  last START=${lastCronRunAt.parking || '—'}`
     );
     
     // CRITICAL WARNING if Next.js is down
