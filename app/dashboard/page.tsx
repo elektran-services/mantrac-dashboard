@@ -6,7 +6,6 @@ import Image from "next/image";
 import { getUserData, clearAuth, getAuthToken } from "@/lib/auth";
 import CustomSelect from "@/app/components/CustomSelect";
 import { buildGPS51Url } from "@/lib/config";
-import AlarmList from "./components/AlarmList";
 import SavedMileageReports from "./components/SavedMileageReports";
 import OfflineReport from "./components/OfflineReport";
 import ParkingReport from "./components/ParkingReport";
@@ -165,11 +164,6 @@ export default function DashboardPage() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
     )},
-    { id: "alerts", label: "Alerts", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-      </svg>
-    )},
     { id: "settings", label: "Settings", icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -287,12 +281,6 @@ export default function DashboardPage() {
           </button>
           <h1 className="text-xl font-semibold text-gray-900">{menuHeaderLabel}</h1>
           <div className="flex items-center gap-4">
-            <button className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 relative">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-[#FFC107] flex items-center justify-center shrink-0">
                 <span className="text-gray-900 font-semibold text-xs">
@@ -478,28 +466,10 @@ export default function DashboardPage() {
                   </button>
                 ))}
               </div>
-
-              <div className="mt-4 max-w-7xl w-full rounded-lg border border-gray-200 bg-white p-3 sm:p-4 shadow-[0_1px_2px_rgba(0,0,0,0.05),0_4px_14px_rgba(15,23,42,0.06)] ring-1 ring-black/5">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
-                  <div>
-                    <h3 className="text-xs font-bold text-gray-900">Live alerts &amp; devices</h3>
-                    <p className="text-[10px] sm:text-xs text-gray-600 mt-0.5">
-                      GPS51-powered views are still available from the sidebar when you need real-time data.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setActiveMenu("alerts")}
-                    className="shrink-0 px-4 py-2 rounded-lg text-xs font-semibold bg-gray-900 text-white hover:bg-gray-800 shadow-md"
-                  >
-                    Open Alerts
-                  </button>
-                </div>
-              </div>
             </>
           )}
 
-          {activeMenu !== "dashboard" && activeMenu !== "alerts" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
+          {activeMenu !== "dashboard" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
             <div className="bg-white rounded-lg shadow-sm p-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -511,10 +481,6 @@ export default function DashboardPage() {
                 <p className="text-sm text-gray-600">This section is under development.</p>
               </div>
             </div>
-          )}
-
-          {activeMenu === "alerts" && (
-            <AlarmList />
           )}
 
           {activeMenu === "mileage" && (
@@ -707,9 +673,8 @@ function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Main Settings Card */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <div className="p-6 border-b border-gray-200">
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="mb-6">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#FFC107]/10">
               <svg className="w-6 h-6 text-[#FFC107]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -717,47 +682,42 @@ function SettingsPage() {
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Overspeed Settings</h2>
-              <p className="text-sm text-gray-600 mt-0.5">Set maximum speed limits and configure overspeed alarm parameters for your fleet devices.</p>
+              <h2 className="text-xl font-bold text-gray-900">Overspeed Settings</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Set maximum speed limits and configure overspeed alarm parameters for your fleet devices.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="border-b border-gray-200">
-          <div className="flex">
+        <div className="border-b border-gray-200 mb-4">
+          <div className="flex gap-2">
             <button
+              type="button"
               onClick={() => setActiveTab("single")}
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+              className={`px-4 py-2 text-sm font-medium rounded-t-lg ${
                 activeTab === "single"
-                  ? "border-[#FFC107] text-[#FFC107]"
-                  : "border-transparent text-gray-800 hover:text-gray-900 hover:border-gray-300"
+                  ? "bg-[#FFC107] text-gray-900"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
               Single Device
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab("batch")}
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+              className={`px-4 py-2 text-sm font-medium rounded-t-lg ${
                 activeTab === "batch"
-                  ? "border-[#FFC107] text-[#FFC107]"
-                  : "border-transparent text-gray-800 hover:text-gray-900 hover:border-gray-300"
+                  ? "bg-[#FFC107] text-gray-900"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 12H9m6 0H9m6 8H9m6 0H9m6-4h-6m6 0h-6" />
-              </svg>
               Batch Settings
             </button>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-6">
-          {result && (
+        {result && (
             <div className={`mb-6 p-4 rounded-lg flex items-start gap-3 ${
               result.type === "success" 
                 ? "bg-green-50 text-green-800 border border-green-200" 
@@ -884,7 +844,7 @@ function SettingsPage() {
                     <button
                       type="button"
                       onClick={selectAllDevices}
-                      className="text-xs text-gray-700 hover:text-gray-900 font-medium"
+                      className="text-xs font-semibold text-[#FFC107] hover:text-yellow-700"
                     >
                       Select All
                     </button>
@@ -908,7 +868,7 @@ function SettingsPage() {
                         type="checkbox"
                         checked={selectedDevices.includes(device.deviceid)}
                         onChange={() => toggleDeviceSelection(device.deviceid)}
-                        className="w-4 h-4 text-[#FFC107] border-gray-300 rounded focus:ring-[#FFC107]"
+                        className="w-4 h-4 shrink-0 rounded border-gray-300 accent-[#FFC107] focus:ring-2 focus:ring-[#FFC107] focus:ring-offset-0"
                       />
                       <span className="ml-3 text-sm text-gray-900">
                         {device.alias || device.deviceid}
@@ -981,7 +941,6 @@ function SettingsPage() {
               </div>
             </form>
           )}
-        </div>
       </div>
     </div>
   );
