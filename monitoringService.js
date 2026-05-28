@@ -113,6 +113,7 @@ function isTokenExpired(data) {
   return (
     cause.includes('token_expire') ||
     cause.includes('global_error_token_expire') ||
+    cause.includes('global_error_not_find_token') ||
     cause === 'please login'
   );
 }
