@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       filename: file.filename,
       reportDate: file.reportDate,
       query,
-      fields: [...source.fields],
+      fields: source.fields,
     });
     for (const hit of hits) {
       if (matches.length >= MAX_MATCHES) {

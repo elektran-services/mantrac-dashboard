@@ -22,7 +22,7 @@ function cellText(value: unknown): string {
   return String(value).trim();
 }
 
-function columnIndex(headers: string[], labels: string[]): number {
+function columnIndex(headers: string[], labels: readonly string[]): number {
   return headers.findIndex((header) => labels.some((label) => header.includes(label)));
 }
 
@@ -31,7 +31,7 @@ export async function searchExcelDevices(options: {
   filename: string;
   reportDate: string | null;
   query: string;
-  fields: { key: string; labels: string[] }[];
+  fields: readonly { key: string; labels: readonly string[] }[];
 }): Promise<ExcelDeviceHit[]> {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(options.filePath);
