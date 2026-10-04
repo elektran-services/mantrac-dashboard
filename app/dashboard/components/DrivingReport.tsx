@@ -55,6 +55,7 @@ export default function DrivingReport() {
   const [startTime, setStartTime] = useState('00:00');
   const [endDate, setEndDate] = useState('');
   const [endTime, setEndTime] = useState('23:59');
+  const [earliestReportDate, setEarliestReportDate] = useState<string | null>(null);
   const [latestReportDate, setLatestReportDate] = useState<string | null>(null);
   const [fileCount, setFileCount] = useState(0);
   const [drives, setDrives] = useState<DriveRow[]>([]);
@@ -74,6 +75,7 @@ export default function DrivingReport() {
         if (cancelled) return;
         setDevices(data.devices || []);
         setFileCount(data.fileCount || 0);
+        setEarliestReportDate(data.earliestReportDate ?? null);
         setLatestReportDate(data.latestReportDate ?? null);
         if (data.latestReportDate) {
           setStartDate(data.latestReportDate);
@@ -131,6 +133,22 @@ export default function DrivingReport() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDay = (iso: string) => {
+    const [year, month, day] = iso.split('-').map(Number);
+    if (!year || !month || !day) return iso;
+    return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+  };
+
+  const coverageText = (days: number, earliest: string | null, latest: string | null) => {
+    if (days <= 0 || !latest) return 'No trip records yet.';
+    if (!earliest || earliest === latest) return `Records for ${formatDay(latest)}.`;
+    return `Records from ${formatDay(earliest)} to ${formatDay(latest)}.`;
   };
 
   const formatDuration = (minutes: number) => {
@@ -201,10 +219,7 @@ export default function DrivingReport() {
         <div>
           <h2 className="text-xl font-bold text-gray-900">Driving Report</h2>
           <p className="text-sm text-gray-600 mt-0.5">
-            Built from saved daily trip files. Generating this report does not call GPS51.
-            {fileCount > 0 && latestReportDate
-              ? ` ${fileCount} saved day${fileCount === 1 ? '' : 's'}, latest ${latestReportDate}.`
-              : ''}
+            {coverageText(fileCount, earliestReportDate, latestReportDate)}
           </p>
         </div>
         <button

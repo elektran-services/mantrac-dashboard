@@ -360,6 +360,16 @@ export default function DashboardPage() {
                     iconBg: "bg-sky-100 text-sky-700",
                   },
                   {
+                    menu: "driving" as const,
+                    title: "Driving Report",
+                    desc: "Movement from saved daily trip files",
+                    folder: "trips/",
+                    bucket: reportStats.trips,
+                    icon: "route" as const,
+                    accent: "from-indigo-500/15 to-blue-500/10 border-indigo-200/80",
+                    iconBg: "bg-indigo-100 text-indigo-700",
+                  },
+                  {
                     menu: "mileage" as const,
                     title: "Mileage Report",
                     desc: "Daily threshold + monthly fleet snapshot",
@@ -408,6 +418,11 @@ export default function DashboardPage() {
                         {card.icon === "doc" && (
                           <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        )}
+                        {card.icon === "route" && (
+                          <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                           </svg>
                         )}
                         {card.icon === "chart" && (
