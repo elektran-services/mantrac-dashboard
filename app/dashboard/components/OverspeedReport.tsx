@@ -27,6 +27,7 @@ interface OverspeedRecord {
   overspeed: number;
   duration: number;
   overspeedduration: number;
+  overspeedcrossings: number;
   distance: number;
   startaddress?: string;
   endaddress?: string;
@@ -370,6 +371,8 @@ export default function OverspeedReport() {
         'Start Time',
         'End Time',
         'Duration',
+        'Over Limit',
+        'Crossings',
         'Max Speed (km/h)',
         'Avg Speed (km/h)',
         'Speed Limit (km/h)',
@@ -389,6 +392,8 @@ export default function OverspeedReport() {
           formatDateTime(record.begintime),
           formatDateTime(record.endtime),
           formatDuration(record.duration),
+          formatDuration(record.overspeedduration),
+          String(record.overspeedcrossings ?? 0),
           record.maxspeed.toFixed(1),
           record.avgspeed.toFixed(1),
           record.speedlimit.toString(),
@@ -646,6 +651,8 @@ export default function OverspeedReport() {
                   )}
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Time</th>
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Duration</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Over Limit</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Crossings</th>
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Max Speed</th>
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Overspeed</th>
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-700">Distance</th>
@@ -669,7 +676,15 @@ export default function OverspeedReport() {
                     </td>
                     <td className="px-3 py-2">
                       <div className="text-xs text-gray-900">{formatDuration(record.duration)}</div>
-                      <div className="text-xs text-gray-500">~{formatDuration(record.overspeedduration)} over</div>
+                      <div className="text-xs text-gray-500">Trip total</div>
+                    </td>
+                    <td className="px-3 py-2">
+                      <div className="text-xs font-medium text-red-700">{formatDuration(record.overspeedduration)}</div>
+                      <div className="text-xs text-gray-500">Above {record.speedlimit} km/h</div>
+                    </td>
+                    <td className="px-3 py-2">
+                      <div className="text-xs font-medium text-gray-900">{record.overspeedcrossings ?? 0}</div>
+                      <div className="text-xs text-gray-500">Times crossed</div>
                     </td>
                     <td className="px-3 py-2">
                       <div className="text-xs font-medium text-gray-900">{record.maxspeed.toFixed(1)} km/h</div>

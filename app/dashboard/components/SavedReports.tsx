@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAuthToken } from "@/lib/auth";
+import SavedFileSearch from "./SavedFileSearch";
 
 type ReportFile = {
   filename: string;
@@ -134,6 +135,15 @@ export default function SavedReports() {
             </p>
           </div>
         </div>
+
+        <SavedFileSearch
+          source="overspeed"
+          date={date}
+          from={from}
+          to={to}
+          downloading={downloading}
+          onDownload={handleDownload}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           <div>

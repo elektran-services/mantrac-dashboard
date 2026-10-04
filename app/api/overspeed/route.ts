@@ -1,5 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildGPS51Url, buildHereReverseGeocodeUrl } from '@/lib/config';
+import {
+  buildTripOverspeedViolation,
+  fetchDeviceTracks,
+  gpsSpeedToKmh,
+  toEpochMs,
+  type TripOverspeedViolation,
+} from '@/lib/overspeedAnalysis';
+
+type OverspeedRecord = TripOverspeedViolation & {
+  startaddress: string;
+  endaddress: string;
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -81,52 +93,38 @@ export async function POST(request: NextRequest) {
     });
 
     // Extract overspeed violations from totaltrips
-    const overspeedRecords: any[] = [];
+    const overspeedRecords: OverspeedRecord[] = [];
 
     if (data.totaltrips && Array.isArray(data.totaltrips) && data.totaltrips.length > 0) {
-      for (const trip of data.totaltrips) {
-        // Filter trips by date range - API returns all trips, we need to filter
-        if (trip.starttime < requestedStartTime || trip.starttime > requestedEndTime) {
-          continue; // Skip trips outside the requested date range
-        }
-        // Speed in API response is in meters per hour
-        // Convert to km/h by dividing by 1000
-        const maxSpeedKmh = trip.maxspeed ? trip.maxspeed / 1000 : 0;
-        const avgSpeedKmh = trip.averagespeed ? trip.averagespeed / 1000 : 0;
+      const tripsInRange = data.totaltrips.filter((trip: { starttime: number }) => {
+        const tripStartMs = toEpochMs(Number(trip.starttime));
+        return tripStartMs >= requestedStartTime && tripStartMs <= requestedEndTime;
+      });
 
-        console.log(`Trip ${trip.starttime}: maxspeed=${maxSpeedKmh} km/h, avgspeed=${avgSpeedKmh} km/h, limit=${speedLimit} km/h`);
+      const candidateTrips = tripsInRange.filter((trip: { maxspeed?: number }) => {
+        const maxSpeedKmh = trip.maxspeed ? gpsSpeedToKmh(Number(trip.maxspeed)) : 0;
+        return maxSpeedKmh > speedLimit;
+      });
 
-        // Check if max speed exceeds the limit
-        if (maxSpeedKmh > speedLimit) {
-          // Calculate overspeed duration
-          const tripDuration = trip.triptime || (trip.endtime - trip.starttime);
-          let overspeedDuration = 0;
-          
-          if (avgSpeedKmh > speedLimit) {
-            // Average speed also exceeded, likely overspeeding for most of the trip
-            overspeedDuration = Math.floor(tripDuration * 0.7);
-          } else {
-            // Only max speed exceeded, likely brief overspeed
-            overspeedDuration = Math.floor(tripDuration * 0.2);
-          }
+      const dayTracks =
+        candidateTrips.length > 0
+          ? await fetchDeviceTracks(token, deviceid, begintime, endtime, 8, 60000)
+          : [];
 
+      for (const trip of candidateTrips) {
+        const violation = buildTripOverspeedViolation(
+          data.deviceid,
+          undefined,
+          trip,
+          speedLimit,
+          dayTracks
+        );
+
+        if (violation) {
           overspeedRecords.push({
-            deviceid: data.deviceid,
-            begintime: trip.starttime,
-            endtime: trip.endtime,
-            startlat: trip.slat,
-            startlon: trip.slon,
-            endlat: trip.elat,
-            endlon: trip.elon,
-            maxspeed: maxSpeedKmh,
-            avgspeed: avgSpeedKmh,
-            speedlimit: speedLimit,
-            overspeed: maxSpeedKmh - speedLimit,
-            duration: tripDuration,
-            overspeedduration: overspeedDuration,
-            distance: trip.tripdistance ? trip.tripdistance / 1000 : 0,
+            ...violation,
             startaddress: '',
-            endaddress: ''
+            endaddress: '',
           });
         }
       }

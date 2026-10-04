@@ -604,7 +604,7 @@ async function startService() {
   console.log(`  - Duration Threshold: 60 seconds`);
   console.log(`  - Overspeed check: Once daily at 23:59 (11:59 PM)`);
   console.log(`  - Trips Excel export: Once daily at 01:30 — previous day → trips/ (no email)`);
-  console.log(`  - Mileage: Daily at 12:00 — vehicles in completed 4000 km odometer segment → Excel+email; monthly full snapshot last day of month`);
+  console.log(`  - Mileage: Daily at 12:00 — vehicles at or above the Settings threshold (default 4000 km) → Excel+email; monthly full snapshot last day of month`);
   console.log(`  - Offline: Daily at 10:00 — offline snapshot Excel saved to offline_reports/`);
   console.log(`  - Catch-up: Runs on startup if prior day artifacts are missing`);
   console.log(`  - Email Reports: Overspeed only, sent around 00:30 AM (~40 min after 23:59 start)`);

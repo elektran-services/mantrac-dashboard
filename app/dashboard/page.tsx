@@ -11,6 +11,7 @@ import OfflineReport from "./components/OfflineReport";
 import ParkingReport from "./components/ParkingReport";
 import SavedReports from "./components/SavedReports";
 import SavedTripsReports from "./components/SavedTripsReports";
+import DrivingReport from "./components/DrivingReport";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -152,6 +153,11 @@ export default function DashboardPage() {
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    )},
+    { id: "driving", label: "Driving Report", icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
       </svg>
     )},
     { id: "saved-reports", label: "Overspeed Report", icon: (
@@ -469,7 +475,7 @@ export default function DashboardPage() {
             </>
           )}
 
-          {activeMenu !== "dashboard" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
+          {activeMenu !== "dashboard" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "driving" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
             <div className="bg-white rounded-lg shadow-sm p-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -493,6 +499,10 @@ export default function DashboardPage() {
 
           {activeMenu === "parking" && (
             <ParkingReport />
+          )}
+
+          {activeMenu === "driving" && (
+            <DrivingReport />
           )}
 
           {activeMenu === "saved-reports" && (
@@ -523,10 +533,70 @@ function SettingsPage() {
   const [speedLimit2, setSpeedLimit2] = useState("35");
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [mileageThreshold, setMileageThreshold] = useState("4000");
+  const [mileageSaving, setMileageSaving] = useState(false);
+  const [mileageMessage, setMileageMessage] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   useEffect(() => {
     fetchDevices();
+    fetchMileageThreshold();
   }, []);
+
+  const fetchMileageThreshold = async () => {
+    try {
+      const token = getAuthToken();
+      if (!token) return;
+      const response = await fetch("/api/mileage-settings", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+      if (response.ok && data.status === 0 && Number.isFinite(Number(data.thresholdKm))) {
+        setMileageThreshold(String(data.thresholdKm));
+      }
+    } catch (error) {
+      console.error("Error loading mileage threshold:", error);
+    }
+  };
+
+  const handleMileageThresholdSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const value = Number(mileageThreshold);
+    if (!Number.isFinite(value) || value < 1) {
+      setMileageMessage({ type: "error", message: "Enter a threshold of at least 1 km." });
+      return;
+    }
+    setMileageSaving(true);
+    setMileageMessage(null);
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        setMileageMessage({ type: "error", message: "Authentication required. Please log in again." });
+        return;
+      }
+      const response = await fetch("/api/mileage-settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ token, thresholdKm: value }),
+      });
+      const data = await response.json();
+      if (!response.ok || data.status !== 0) {
+        setMileageMessage({ type: "error", message: data.cause || "Failed to save threshold" });
+        return;
+      }
+      setMileageThreshold(String(data.thresholdKm));
+      setMileageMessage({
+        type: "success",
+        message: `Mileage threshold saved at ${data.thresholdKm} km. The next daily and monthly run will use it. Existing files are unchanged.`,
+      });
+    } catch (error: any) {
+      setMileageMessage({ type: "error", message: error.message || "Failed to save threshold" });
+    } finally {
+      setMileageSaving(false);
+    }
+  };
 
   const fetchDevices = async () => {
     try {
@@ -673,6 +743,39 @@ function SettingsPage() {
 
   return (
     <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <h2 className="text-xl font-bold text-gray-900">Mileage threshold</h2>
+        <p className="text-sm text-gray-600 mt-1">
+          Vehicles at or above this odometer are included in the daily mileage file. The monthly snapshot uses the same number. The next scheduled run picks up a saved change. Existing Excel files stay as they are.
+        </p>
+        <form onSubmit={handleMileageThresholdSave} className="mt-4 flex flex-col sm:flex-row sm:items-end gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">Threshold (km)</label>
+            <input
+              type="number"
+              min="1"
+              max="1000000"
+              value={mileageThreshold}
+              onChange={(e) => setMileageThreshold(e.target.value)}
+              className="w-40 px-3 py-2 rounded-lg focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107] text-gray-900 bg-white border border-gray-200"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={mileageSaving}
+            className="px-6 py-2.5 bg-[#FFC107] hover:bg-yellow-400 text-gray-900 rounded-lg transition-colors font-medium disabled:opacity-50"
+          >
+            {mileageSaving ? "Saving..." : "Save threshold"}
+          </button>
+        </form>
+        {mileageMessage && (
+          <p className={`mt-3 text-sm ${mileageMessage.type === "success" ? "text-green-800" : "text-red-700"}`}>
+            {mileageMessage.message}
+          </p>
+        )}
+      </div>
+
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="mb-6">
           <div className="flex items-center gap-3">

@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { buildGPS51Url } from '@/lib/config';
 import { MONITORING_CONFIG } from '@/lib/config';
 import {
+  buildTripOverspeedViolation,
+  fetchDeviceTracks,
+  gpsSpeedToKmh,
+  toEpochMs,
+  type TrackPoint,
+} from '@/lib/overspeedAnalysis';
+import {
   GENERATED_REPORTS_DIR,
   ensureGeneratedReportsDir,
   purgeExpiredGeneratedReports,
@@ -304,13 +311,6 @@ async function fetchWithRetry(url: string, options: any, retries = 3, timeout = 
   throw new Error('All retry attempts failed');
 }
 
-// GPS51 may return epoch timestamps in either seconds or milliseconds.
-// Normalize to milliseconds so date filtering remains correct.
-function toEpochMs(value: number) {
-  if (!Number.isFinite(value)) return 0;
-  return value < 1e12 ? value * 1000 : value;
-}
-
 async function processFailedEmailQueue() {
   const queue = loadFailedEmailQueue();
   if (queue.length === 0) return;
@@ -530,56 +530,52 @@ export async function POST(request: NextRequest) {
         const tripsData = await tripsResponse.json();
 
         if (tripsData.status === 0 && tripsData.totaltrips) {
-          for (const trip of tripsData.totaltrips) {
-            // CRITICAL: Only include trips that occurred TODAY
-            // Convert trip timestamps (seconds or milliseconds) to Date objects
+          const todaysTrips = tripsData.totaltrips.filter((trip: { starttime: number }) => {
             const tripStartMs = toEpochMs(Number(trip.starttime));
-            const tripEndMs = toEpochMs(Number(trip.endtime));
             const tripStartDate = new Date(tripStartMs);
-            const tripEndDate = new Date(tripEndMs);
-            
-            // Check if trip is within today's date range
-            const isTripToday = tripStartDate >= startOfDay && tripStartDate <= endOfDay;
-            
-            // Skip trips from other days
-            if (!isTripToday) {
-              continue;
-            }
-            
-            const maxSpeedKmh = trip.maxspeed ? trip.maxspeed / 1000 : 0;
-            const avgSpeedKmh = trip.averagespeed ? trip.averagespeed / 1000 : 0;
-            const tripDuration = Number(trip.triptime) || (tripEndMs - tripStartMs);
+            return tripStartDate >= startOfDay && tripStartDate <= endOfDay;
+          });
 
-            // Check if exceeds limit and duration threshold
-            if (maxSpeedKmh > MONITORING_CONFIG.OVERSPEED_LIMIT_KMH) {
-              let overspeedDuration = 0;
-              
-              if (avgSpeedKmh > MONITORING_CONFIG.OVERSPEED_LIMIT_KMH) {
-                overspeedDuration = Math.floor(tripDuration * 0.7);
-              } else {
-                overspeedDuration = Math.floor(tripDuration * 0.2);
-              }
+          const candidateTrips = todaysTrips.filter((trip: { maxspeed?: number }) => {
+            const maxSpeedKmh = trip.maxspeed ? gpsSpeedToKmh(Number(trip.maxspeed)) : 0;
+            return maxSpeedKmh > MONITORING_CONFIG.OVERSPEED_LIMIT_KMH;
+          });
 
-              // Only include if overspeed duration exceeds threshold
-              if (overspeedDuration >= MONITORING_CONFIG.OVERSPEED_DURATION_THRESHOLD_MS) {
-                allViolations.push({
-                  deviceid: device.deviceid,
-                  devicename: device.name,
-                  begintime: tripStartMs,
-                  endtime: tripEndMs,
-                  maxspeed: maxSpeedKmh,
-                  avgspeed: avgSpeedKmh,
-                  speedlimit: MONITORING_CONFIG.OVERSPEED_LIMIT_KMH,
-                  overspeed: maxSpeedKmh - MONITORING_CONFIG.OVERSPEED_LIMIT_KMH,
-                  duration: tripDuration,
-                  overspeedduration: overspeedDuration,
-                  distance: trip.tripdistance ? trip.tripdistance / 1000 : 0,
-                  startlat: trip.slat,
-                  startlon: trip.slon,
-                  endlat: trip.elat,
-                  endlon: trip.elon,
-                });
-              }
+          if (candidateTrips.length === 0) {
+            continue;
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_DELAY_MS));
+
+          let dayTracks: TrackPoint[] = [];
+          try {
+            dayTracks = await fetchDeviceTracks(
+              token,
+              device.deviceid,
+              begintime,
+              endtime,
+              8,
+              60000
+            );
+            apiCallCount++;
+          } catch {
+            dayTracks = [];
+          }
+
+          for (const trip of candidateTrips) {
+            const violation = buildTripOverspeedViolation(
+              device.deviceid,
+              device.name,
+              trip,
+              MONITORING_CONFIG.OVERSPEED_LIMIT_KMH,
+              dayTracks
+            );
+
+            if (
+              violation &&
+              violation.overspeedduration >= MONITORING_CONFIG.OVERSPEED_DURATION_THRESHOLD_MS
+            ) {
+              allViolations.push(violation);
             }
           }
         }
@@ -605,7 +601,7 @@ export async function POST(request: NextRequest) {
       const worksheet = workbook.addWorksheet('Daily Overspeed Report');
 
       // Add title row
-      worksheet.mergeCells('A1:O1');
+      worksheet.mergeCells('A1:P1');
       const titleCell = worksheet.getCell('A1');
       titleCell.value = `Daily Overspeed Report - ${dateStr}`;
       titleCell.font = { bold: true, size: 14, color: { argb: 'FFFFFFFF' } };
@@ -618,7 +614,7 @@ export async function POST(request: NextRequest) {
       worksheet.getRow(1).height = 25;
 
       // Add summary row
-      worksheet.mergeCells('A2:O2');
+      worksheet.mergeCells('A2:P2');
       const summaryCell = worksheet.getCell('A2');
       summaryCell.value = `Total Violations: ${allViolations.length} | Speed Limit: ${MONITORING_CONFIG.OVERSPEED_LIMIT_KMH} km/h | Duration Threshold: ${MONITORING_CONFIG.OVERSPEED_DURATION_THRESHOLD_MS / 1000}s`;
       summaryCell.font = { italic: true, size: 10 };
@@ -642,7 +638,8 @@ export async function POST(request: NextRequest) {
         { key: 'speedlimit', width: 15 },
         { key: 'overspeed', width: 15 },
         { key: 'duration', width: 15 },
-        { key: 'overspeedduration', width: 20 },
+        { key: 'overspeedduration', width: 22 },
+        { key: 'overspeedcrossings', width: 18 },
         { key: 'distance', width: 15 },
         { key: 'startlat', width: 12 },
         { key: 'startlon', width: 12 },
@@ -661,6 +658,7 @@ export async function POST(request: NextRequest) {
         'Overspeed (km/h)',
         'Duration (min)',
         'Overspeed Duration (min)',
+        'Times Over Limit',
         'Distance (km)',
         'Start Lat',
         'Start Lon',
@@ -691,6 +689,7 @@ export async function POST(request: NextRequest) {
           overspeed: violation.overspeed.toFixed(1),
           duration: (violation.duration / 60000).toFixed(1),
           overspeedduration: (violation.overspeedduration / 60000).toFixed(1),
+          overspeedcrossings: violation.overspeedcrossings ?? 0,
           distance: violation.distance.toFixed(2),
           startlat: violation.startlat.toFixed(6),
           startlon: violation.startlon.toFixed(6),

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getAuthToken } from '@/lib/auth';
+import SavedFileSearch from './SavedFileSearch';
 
 type ReportFile = {
   filename: string;
@@ -127,6 +128,15 @@ export default function OfflineReport() {
             <span className="font-medium text-gray-800">{retentionDays} days</span>.
           </p>
         </div>
+
+        <SavedFileSearch
+          source="offline"
+          date={date}
+          from={from}
+          to={to}
+          downloading={downloading}
+          onDownload={handleDownload}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           <div>

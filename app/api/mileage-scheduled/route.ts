@@ -2,13 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import ExcelJS from 'exceljs';
 import path from 'path';
 import { buildGPS51Url } from '@/lib/config';
-import {
-  computeOilChangeProgressKm,
-  currentOdometerKmFromRecords,
-  isLastDayOfMonth,
-  isAt4000KmSegmentCompletion,
-  MILEAGE_SCHEDULED_DAILY_SEGMENT_KM,
-} from '@/lib/mileageServiceMath';
+import { currentOdometerKmFromRecords, isLastDayOfMonth } from '@/lib/mileageServiceMath';
+import { ALMOST_DUE_BUFFER_KM, readServiceResets, serviceProgress } from '@/lib/mileageServiceCounter';
+import { readMileageThresholdKm } from '@/lib/mileageThreshold';
 import {
   MILEAGE_REPORT_DIR,
   MILEAGE_OVERALL_REPORT_DIR,
@@ -82,50 +78,7 @@ type MileageSnapshotRow = {
   notes: string;
 };
 
-const MAINTENANCE_THRESHOLD_KM = MILEAGE_SCHEDULED_DAILY_SEGMENT_KM;
-const ALMOST_DUE_BUFFER_KM = 500;
-
 type MaintenanceStatus = 'good' | 'almost' | 'due';
-
-function evaluateMaintenance(currentOdoKm: number | null) {
-  if (currentOdoKm == null || !Number.isFinite(currentOdoKm)) {
-    return {
-      status: 'good' as MaintenanceStatus,
-      thresholdKm: MAINTENANCE_THRESHOLD_KM,
-      kmPastThreshold: 0,
-      remainingToThreshold: MAINTENANCE_THRESHOLD_KM,
-      note: 'Good',
-    };
-  }
-
-  const remaining = MAINTENANCE_THRESHOLD_KM - currentOdoKm;
-  const past = Math.max(0, currentOdoKm - MAINTENANCE_THRESHOLD_KM);
-  if (remaining <= 0) {
-    return {
-      status: 'due' as MaintenanceStatus,
-      thresholdKm: MAINTENANCE_THRESHOLD_KM,
-      kmPastThreshold: past,
-      remainingToThreshold: remaining,
-      note: past > 0 ? `Overdue for maintenance by ${past.toFixed(0)} km` : 'Due for maintenance',
-    };
-  }
-  if (remaining <= ALMOST_DUE_BUFFER_KM) {
-    return {
-      status: 'almost' as MaintenanceStatus,
-      thresholdKm: MAINTENANCE_THRESHOLD_KM,
-      kmPastThreshold: 0,
-      remainingToThreshold: remaining,
-      note: 'Almost due for maintenance',
-    };
-  }
-  return {
-    status: 'good' as MaintenanceStatus,
-    thresholdKm: MAINTENANCE_THRESHOLD_KM,
-    kmPastThreshold: 0,
-    remainingToThreshold: remaining,
-    note: 'Good',
-  };
-}
 
 function applySheetStyling(
   ws: ExcelJS.Worksheet,
@@ -184,8 +137,8 @@ function applySheetStyling(
 /**
  * POST /api/mileage-scheduled
  * Body: { token, username, mode: 'daily' | 'monthly', reportDate?, forceMonthly?: boolean }
- * - daily: vehicles that completed the current 4000 km odometer segment → mileage_report/ + email (no reference columns in sheet).
- * - monthly: only on last calendar day of month unless forceMonthly=true; full rows with 4000 km segment columns + email.
+ * - daily: vehicles whose odometer is at or above the Settings mileage threshold → mileage_report/ + email.
+ * - monthly: only on last calendar day of month unless forceMonthly=true; full fleet snapshot using that threshold.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -220,6 +173,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const thresholdKm = readMileageThresholdKm();
+    const serviceResets = readServiceResets();
     const reportDate = body.reportDate ? new Date(body.reportDate) : new Date();
     const asOfYmd = toYmdLocal(reportDate);
     const startday = addDaysToYmd(asOfYmd, -MILEAGE_LOOKBACK_DAYS);
@@ -350,17 +305,20 @@ export async function POST(request: NextRequest) {
         mileageErrors++;
       }
 
-      const maintenance = evaluateMaintenance(currentOdoKm);
+      const progress =
+        currentOdoKm == null
+          ? null
+          : serviceProgress(currentOdoKm, thresholdKm, serviceResets[dev.deviceid]?.odometerKm ?? null);
 
       rows.push({
         deviceid: dev.deviceid,
         devicename: dev.name,
         currentOdometerKm: currentOdoKm != null ? currentOdoKm.toFixed(2) : '',
-        threshold: maintenance.thresholdKm.toFixed(0),
-        kmPastThreshold: maintenance.kmPastThreshold.toFixed(2),
-        remainingToThreshold: maintenance.remainingToThreshold.toFixed(2),
+        threshold: String(thresholdKm),
+        kmPastThreshold: progress ? progress.overdueKm.toFixed(2) : '',
+        remainingToThreshold: progress ? progress.remainingKm.toFixed(2) : '',
         lastStatisticsDay: lastStatsDay,
-        notes: notes || maintenance.note,
+        notes: notes || progress?.note || '',
       });
 
       const elapsedSec = ((Date.now() - jobStartMs) / 1000).toFixed(1);
@@ -419,7 +377,7 @@ export async function POST(request: NextRequest) {
       const qualifying = rows.filter((r) => {
         const odo = parseFloat(r.currentOdometerKm);
         if (!Number.isFinite(odo)) return false;
-        return odo >= MAINTENANCE_THRESHOLD_KM;
+        return odo >= thresholdKm;
       });
 
       if (qualifying.length === 0) {
@@ -427,7 +385,7 @@ export async function POST(request: NextRequest) {
           status: 0,
           cause: 'OK',
           mode: 'daily',
-          message: `No vehicles completed the current ${MILEAGE_SCHEDULED_DAILY_SEGMENT_KM} km odometer segment; no file or email.`,
+          message: `No vehicles at or above the ${thresholdKm} km threshold; no file or email.`,
           asOfYmd,
           deviceCount: allDevices.length,
           qualifyingCount: 0,
@@ -448,9 +406,9 @@ export async function POST(request: NextRequest) {
       purgeExpiredMileageReports();
 
       const wb = new ExcelJS.Workbook();
-      const ws = wb.addWorksheet('≥4000 km segment');
-      const title = `Vehicles at ≥${MILEAGE_SCHEDULED_DAILY_SEGMENT_KM} km in current odometer segment — ${asOfYmd}`;
-      const summary = `Listed: ${qualifying.length} of ${allDevices.length} (completed current ${MILEAGE_SCHEDULED_DAILY_SEGMENT_KM} km block; odometer = latest enddis/1000) | API errors: ${mileageErrors} | Window: ${startday} → ${endday}`;
+      const ws = wb.addWorksheet(`≥${thresholdKm} km`);
+      const title = `Vehicles at ≥${thresholdKm} km odometer — ${asOfYmd}`;
+      const summary = `Listed: ${qualifying.length} of ${allDevices.length} (odometer ≥ ${thresholdKm} km; odometer = latest enddis/1000) | API errors: ${mileageErrors} | Window: ${startday} → ${endday}`;
       applySheetStyling(
         ws,
         title,
@@ -467,13 +425,13 @@ export async function POST(request: NextRequest) {
         }
       );
 
-      const filename = `mileage_4000km_${asOfYmd}.xlsx`;
+      const filename = `mileage_daily_${asOfYmd}.xlsx`;
       const excelPath = path.join(MILEAGE_REPORT_DIR, filename);
       await wb.xlsx.writeFile(excelPath);
 
       const emailed = await sendMileageExcelEmail({
-        subject: `📊 Mileage (≥${MILEAGE_SCHEDULED_DAILY_SEGMENT_KM} km segment) — ${asOfYmd} (${qualifying.length} vehicle(s))`,
-        html: `<p><strong>${qualifying.length}</strong> vehicle(s) completed the current <strong>${MILEAGE_SCHEDULED_DAILY_SEGMENT_KM} km</strong> odometer segment (see attached Excel).</p>
+        subject: `📊 Mileage (≥${thresholdKm} km) — ${asOfYmd} (${qualifying.length} vehicle(s))`,
+        html: `<p><strong>${qualifying.length}</strong> vehicle(s) are at or above the <strong>${thresholdKm} km</strong> odometer threshold (see attached Excel).</p>
           <p>As-of: <strong>${asOfYmd}</strong>. Odometer from latest GPS51 <code>enddis</code> in the lookback window.</p>`,
         attachmentPath: excelPath,
         attachmentFilename: filename,
@@ -531,7 +489,7 @@ export async function POST(request: NextRequest) {
     const emailed = await sendMileageExcelEmail({
       subject: `📊 Monthly mileage snapshot — ${ym}`,
       html: `<p>End-of-month mileage snapshot for <strong>${ym}</strong> (${allDevices.length} device(s)).</p>
-        <p>Reference odometer uses a virtual ${MILEAGE_SCHEDULED_DAILY_SEGMENT_KM} km interval for the scheduled mileage report.</p>
+        <p>Threshold: <strong>${thresholdKm} km</strong> (from Settings).</p>
         <p>Data window: ${startday} → ${endday}.</p>`,
       attachmentPath: excelPath,
       attachmentFilename: filename,
