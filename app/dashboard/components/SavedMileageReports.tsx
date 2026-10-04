@@ -716,7 +716,7 @@ function ServiceCounterTable({
     <div className="mb-6">
       <h3 className="text-sm font-semibold text-gray-900">Service counter</h3>
       <p className="text-xs text-gray-500 mt-1 mb-2">
-        Latest saved odometer for each vehicle. Serviced marks the vehicle done at that odometer, including any overdue kilometres. Green means serviced and within the interval. This does not call GPS51.
+        Green: serviced. Amber: almost due. Red: due. Grey: not marked yet.
       </p>
       <div className="rounded-lg border border-gray-200 overflow-x-auto">
         <table className="min-w-full text-sm">
