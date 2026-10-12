@@ -153,7 +153,7 @@ export async function fetchDeviceTracks(
   deviceid: string,
   begintime: string,
   endtime: string,
-  timezone = 8,
+  timezone = 1,
   timeoutMs = 60000
 ): Promise<TrackPoint[]> {
   const apiUrl = buildGPS51Url('querytracks', token);

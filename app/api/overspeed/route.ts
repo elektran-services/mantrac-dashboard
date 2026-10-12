@@ -48,7 +48,8 @@ export async function POST(request: NextRequest) {
       deviceid,
       starttime: begintime,
       endtime: endtime,
-      timezone: 8  // Default China time zone
+      begintime,
+      timezone: 1
     };
 
     console.log('Overspeed API - Requesting trips:', requestBody);
@@ -108,7 +109,7 @@ export async function POST(request: NextRequest) {
 
       const dayTracks =
         candidateTrips.length > 0
-          ? await fetchDeviceTracks(token, deviceid, begintime, endtime, 8, 60000)
+          ? await fetchDeviceTracks(token, deviceid, begintime, endtime, 1, 60000)
           : [];
 
       for (const trip of candidateTrips) {

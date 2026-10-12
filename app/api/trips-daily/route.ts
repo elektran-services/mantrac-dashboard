@@ -10,6 +10,7 @@ import {
 
 const RATE_LIMIT_DELAY_MS = 7500;
 const QUERY_TRIPS_TIMEOUT_MS = 60000;
+const REPORT_TIMEZONE = 1;
 
 async function fetchWithRetry(
   url: string,
@@ -42,6 +43,36 @@ async function fetchWithRetry(
 function toEpochMs(value: number) {
   if (!Number.isFinite(value)) return 0;
   return value < 1e12 ? value * 1000 : value;
+}
+
+/** Calendar day in timezone +1, written so the saved-file parser can read it back. */
+function formatInTimezone1(ms: number): string {
+  const shifted = new Date(ms + REPORT_TIMEZONE * 60 * 60 * 1000);
+  const month = shifted.getUTCMonth() + 1;
+  const day = shifted.getUTCDate();
+  const year = shifted.getUTCFullYear();
+  let hour = shifted.getUTCHours();
+  const minute = String(shifted.getUTCMinutes()).padStart(2, '0');
+  const second = String(shifted.getUTCSeconds()).padStart(2, '0');
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  hour = hour % 12 || 12;
+  return `${month}/${day}/${year}, ${hour}:${minute}:${second} ${ampm}`;
+}
+
+function kmFromMeters(value: unknown): string {
+  const meters = Number(value);
+  if (!Number.isFinite(meters)) return '';
+  return (meters / 1000).toFixed(2);
+}
+
+function reportDay(reportDate?: string): string {
+  if (reportDate && /^\d{4}-\d{2}-\d{2}$/.test(reportDate)) return reportDate;
+  const shifted = new Date(Date.now() + REPORT_TIMEZONE * 60 * 60 * 1000);
+  shifted.setUTCDate(shifted.getUTCDate() - 1);
+  const year = shifted.getUTCFullYear();
+  const month = String(shifted.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(shifted.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function coordKey(lat: unknown, lon: unknown): string | null {
@@ -85,26 +116,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const reportDate = body.reportDate ? new Date(body.reportDate) : new Date();
-    const startOfDay = new Date(reportDate.getFullYear(), reportDate.getMonth(), reportDate.getDate(), 0, 0, 0);
-    const endOfDay = new Date(reportDate.getFullYear(), reportDate.getMonth(), reportDate.getDate(), 23, 59, 59);
     const now = new Date();
+    const dateStr = reportDay(body.reportDate);
+    const begintime = `${dateStr} 00:00:00`;
+    const endtime = `${dateStr} 23:59:59`;
 
-    const formatDateForAPI = (date: Date) => {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      const seconds = String(date.getSeconds()).padStart(2, '0');
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    };
-
-    const begintime = formatDateForAPI(startOfDay);
-    const endtime = formatDateForAPI(endOfDay);
-    const dateStr = begintime.split(' ')[0];
-
-    const checkType = body.reportDate ? `catch-up for ${dateStr}` : `today (${dateStr})`;
+    const checkType = body.reportDate ? `requested day ${dateStr}` : `previous day ${dateStr}`;
     console.log(`[TripsDaily] Export ${checkType}: ${begintime} to ${endtime}`);
 
     const devicesUrl = buildGPS51Url('querymonitorlist', token);
@@ -193,11 +210,81 @@ export async function POST(request: NextRequest) {
       elon: string;
       startaddr: string;
       endaddr: string;
+      startMileage: string;
+      endMileage: string;
     };
 
     const rows: TripRow[] = [];
     let processedCount = 0;
     let deviceErrors = 0;
+    const failedDevices: { deviceid: string; name: string }[] = [];
+
+    const appendTrips = (device: { deviceid: string; name: string }, tripsData: { addressmap?: Record<string, string>; totaltrips?: Record<string, unknown>[] }) => {
+      const addressmap: Record<string, string> = tripsData.addressmap || {};
+      for (const trip of tripsData.totaltrips || []) {
+        const tripStartMs = toEpochMs(Number(trip.starttime));
+        const tripEndMs = toEpochMs(Number(trip.endtime));
+        if (!tripStartMs || !tripEndMs) continue;
+
+        const maxSpeedKmh = trip.maxspeed ? Number(trip.maxspeed) / 1000 : 0;
+        const avgSpeedKmh = trip.averagespeed ? Number(trip.averagespeed) / 1000 : 0;
+        const tripTimeRaw = Number(trip.triptime);
+        const tripDurationMs =
+          Number.isFinite(tripTimeRaw) && tripTimeRaw > 0 ? tripTimeRaw : Math.max(0, tripEndMs - tripStartMs);
+        const tripMinutes = (tripDurationMs / 60000).toFixed(2);
+        const distKm = trip.tripdistance ? Number(trip.tripdistance) / 1000 : 0;
+        const parkRaw = Number(trip.parktime);
+        const parkSec = Number.isFinite(parkRaw) ? Math.round(parkRaw) : 0;
+        const sk = coordKey(trip.slat, trip.slon);
+        const ek = coordKey(trip.elat, trip.elon);
+        const slatN = Number(trip.slat);
+        const slonN = Number(trip.slon);
+        const elatN = Number(trip.elat);
+        const elonN = Number(trip.elon);
+
+        rows.push({
+          deviceid: String(device.deviceid),
+          devicename: String(device.name),
+          starttime: formatInTimezone1(tripStartMs),
+          endtime: formatInTimezone1(tripEndMs),
+          maxspeed: maxSpeedKmh.toFixed(1),
+          avgspeed: avgSpeedKmh.toFixed(1),
+          distance: distKm.toFixed(2),
+          triptimeMin: tripMinutes,
+          parktimeSec: String(parkSec),
+          slat: Number.isFinite(slatN) ? slatN.toFixed(6) : '',
+          slon: Number.isFinite(slonN) ? slonN.toFixed(6) : '',
+          elat: Number.isFinite(elatN) ? elatN.toFixed(6) : '',
+          elon: Number.isFinite(elonN) ? elonN.toFixed(6) : '',
+          startaddr: sk && addressmap[sk] ? String(addressmap[sk]) : '',
+          endaddr: ek && addressmap[ek] ? String(addressmap[ek]) : '',
+          startMileage: kmFromMeters(trip.startdistance),
+          endMileage: kmFromMeters(trip.enddistance),
+        });
+      }
+    };
+
+    const queryDevice = async (device: { deviceid: string; name: string }) => {
+      const tripsUrl = buildGPS51Url('querytrips', token);
+      const tripsResponse = await fetchWithRetry(
+        tripsUrl,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deviceid: device.deviceid,
+            begintime,
+            starttime: begintime,
+            endtime,
+            timezone: REPORT_TIMEZONE,
+          }),
+        },
+        2,
+        QUERY_TRIPS_TIMEOUT_MS,
+        true
+      );
+      return tripsResponse.json();
+    };
 
     for (const device of allDevices) {
       processedCount++;
@@ -209,86 +296,38 @@ export async function POST(request: NextRequest) {
         if (processedCount > 1) {
           await new Promise((r) => setTimeout(r, RATE_LIMIT_DELAY_MS));
         }
-
-        const tripsUrl = buildGPS51Url('querytrips', token);
-        const tripsResponse = await fetchWithRetry(
-          tripsUrl,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              deviceid: device.deviceid,
-              starttime: begintime,
-              endtime: endtime,
-              timezone: 8,
-            }),
-          },
-          0,
-          QUERY_TRIPS_TIMEOUT_MS,
-          true
-        );
-
-        const tripsData = await tripsResponse.json();
+        const tripsData = await queryDevice(device);
         if (isTokenExpiredPayload(tripsData)) {
           return NextResponse.json(
             { status: -1, cause: tripsData.cause || 'Token expired', error: 'TOKEN_EXPIRED' },
             { status: 401 }
           );
         }
-
-        if (tripsData.status !== 0 || !tripsData.totaltrips) {
+        if (tripsData.status !== 0) {
+          failedDevices.push(device);
           continue;
         }
+        appendTrips(device, tripsData);
+      } catch {
+        failedDevices.push(device);
+      }
+    }
 
-        const addressmap: Record<string, string> = tripsData.addressmap || {};
-
-        for (const trip of tripsData.totaltrips as Record<string, unknown>[]) {
-          const tripStartMs = toEpochMs(Number(trip.starttime));
-          const tripEndMs = toEpochMs(Number(trip.endtime));
-          const tripStartDate = new Date(tripStartMs);
-          if (tripStartDate < startOfDay || tripStartDate > endOfDay) {
-            continue;
-          }
-
-          const maxSpeedKmh = trip.maxspeed ? Number(trip.maxspeed) / 1000 : 0;
-          const avgSpeedKmh = trip.averagespeed ? Number(trip.averagespeed) / 1000 : 0;
-          const tripTimeRaw = Number(trip.triptime);
-          const tripDurationMs =
-            Number.isFinite(tripTimeRaw) && tripTimeRaw > 0 ? tripTimeRaw : Math.max(0, tripEndMs - tripStartMs);
-          const tripMinutes = (tripDurationMs / 60000).toFixed(2);
-
-          const distKm = trip.tripdistance ? Number(trip.tripdistance) / 1000 : 0;
-          const parkRaw = Number(trip.parktime);
-          const parkSec = Number.isFinite(parkRaw) ? Math.round(parkRaw) : 0;
-
-          const sk = coordKey(trip.slat, trip.slon);
-          const ek = coordKey(trip.elat, trip.elon);
-          const startaddr = sk && addressmap[sk] ? String(addressmap[sk]) : '';
-          const endaddr = ek && addressmap[ek] ? String(addressmap[ek]) : '';
-
-          const slatN = Number(trip.slat);
-          const slonN = Number(trip.slon);
-          const elatN = Number(trip.elat);
-          const elonN = Number(trip.elon);
-
-          rows.push({
-            deviceid: String(device.deviceid),
-            devicename: String(device.name),
-            starttime: new Date(tripStartMs).toLocaleString(),
-            endtime: new Date(tripEndMs).toLocaleString(),
-            maxspeed: maxSpeedKmh.toFixed(1),
-            avgspeed: avgSpeedKmh.toFixed(1),
-            distance: distKm.toFixed(2),
-            triptimeMin: tripMinutes,
-            parktimeSec: String(parkSec),
-            slat: Number.isFinite(slatN) ? slatN.toFixed(6) : '',
-            slon: Number.isFinite(slonN) ? slonN.toFixed(6) : '',
-            elat: Number.isFinite(elatN) ? elatN.toFixed(6) : '',
-            elon: Number.isFinite(elonN) ? elonN.toFixed(6) : '',
-            startaddr,
-            endaddr,
-          });
+    for (const device of failedDevices) {
+      try {
+        await new Promise((r) => setTimeout(r, RATE_LIMIT_DELAY_MS));
+        const tripsData = await queryDevice(device);
+        if (isTokenExpiredPayload(tripsData)) {
+          return NextResponse.json(
+            { status: -1, cause: tripsData.cause || 'Token expired', error: 'TOKEN_EXPIRED' },
+            { status: 401 }
+          );
         }
+        if (tripsData.status !== 0) {
+          deviceErrors++;
+          continue;
+        }
+        appendTrips(device, tripsData);
       } catch {
         deviceErrors++;
       }
@@ -299,7 +338,7 @@ export async function POST(request: NextRequest) {
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Daily Trips');
-    const lastCol = 'O';
+    const lastCol = 'Q';
 
     worksheet.mergeCells(`A1:${lastCol}1`);
     const titleCell = worksheet.getCell('A1');
@@ -341,6 +380,8 @@ export async function POST(request: NextRequest) {
       { key: 'elon', width: 12 },
       { key: 'startaddr', width: 36 },
       { key: 'endaddr', width: 36 },
+      { key: 'startMileage', width: 16 },
+      { key: 'endMileage', width: 16 },
     ];
 
     const headerLabels = [
@@ -359,6 +400,8 @@ export async function POST(request: NextRequest) {
       'End Lon',
       'Start Address',
       'End Address',
+      'Start mileage (km)',
+      'End mileage (km)',
     ];
     const headerRow = worksheet.getRow(3);
     headerLabels.forEach((label, i) => {

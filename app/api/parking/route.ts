@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       deviceid,
       begintime,
       endtime,
-      timezone: timezone || 8,
+      timezone: timezone || 1,
       interval: interval || 5
     };
 

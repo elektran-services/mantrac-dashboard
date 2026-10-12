@@ -78,11 +78,27 @@ export interface SavedDrive {
   endMs: number;
   durationMin: number;
   distanceKm: number;
+  startMileageKm: number | null;
+  endMileageKm: number | null;
   maxSpeedKmh: number;
   avgSpeedKmh: number;
   startAddress: string;
   endAddress: string;
+  startLat: number | null;
+  startLon: number | null;
+  endLat: number | null;
+  endLon: number | null;
   reportDate: string;
+}
+
+function headerIndex(headers: string[], labels: string[]): number {
+  return headers.findIndex((header) => labels.some((label) => header.includes(label)));
+}
+
+function numOrNull(value: string): number | null {
+  if (!value) return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
 }
 
 async function readTripFile(dateStr: string): Promise<SavedDrive[]> {
@@ -91,28 +107,62 @@ async function readTripFile(dateStr: string): Promise<SavedDrive[]> {
   const worksheet = workbook.worksheets[0];
   if (!worksheet) return [];
 
+  let headerRow = 0;
+  const headers: string[] = [];
+  worksheet.eachRow((row, rowNumber) => {
+    if (headerRow || rowNumber > 8) return;
+    const values: string[] = [];
+    for (let col = 1; col <= 20; col++) values.push(cellText(row.getCell(col).value).toLowerCase());
+    if (values.some((value) => value === 'device id' || value.startsWith('device id'))) {
+      headerRow = rowNumber;
+      headers.push(...values);
+    }
+  });
+  if (!headerRow) return [];
+
+  const idCol = headerIndex(headers, ['device id']);
+  const nameCol = headerIndex(headers, ['device name']);
+  const startCol = headerIndex(headers, ['start time']);
+  const endCol = headerIndex(headers, ['end time']);
+  const maxCol = headerIndex(headers, ['max speed']);
+  const avgCol = headerIndex(headers, ['avg speed']);
+  const distanceCol = headerIndex(headers, ['distance']);
+  const durationCol = headerIndex(headers, ['trip time']);
+  const startMileageCol = headerIndex(headers, ['start mileage']);
+  const endMileageCol = headerIndex(headers, ['end mileage']);
+  const slatCol = headerIndex(headers, ['start lat']);
+  const slonCol = headerIndex(headers, ['start lon']);
+  const elatCol = headerIndex(headers, ['end lat']);
+  const elonCol = headerIndex(headers, ['end lon']);
+  const startAddrCol = headerIndex(headers, ['start address']);
+  const endAddrCol = headerIndex(headers, ['end address']);
+  const cell = (row: ExcelJS.Row, col: number) => (col >= 0 ? cellText(row.getCell(col + 1).value) : '');
+
   const drives: SavedDrive[] = [];
   worksheet.eachRow((row, rowNumber) => {
-    if (rowNumber < 4) return;
-    const deviceid = cellText(row.getCell(1).value);
+    if (rowNumber <= headerRow) return;
+    const deviceid = cell(row, idCol);
     if (!deviceid || deviceid === 'Device ID') return;
-    const startMs = parseSavedDateTime(cellText(row.getCell(3).value));
-    const endMs = parseSavedDateTime(cellText(row.getCell(4).value));
+    const startMs = parseSavedDateTime(cell(row, startCol));
+    const endMs = parseSavedDateTime(cell(row, endCol));
     if (startMs == null || endMs == null) return;
-    const durationMin = Number(cellText(row.getCell(8).value)) || 0;
-    const distanceKm = Number(cellText(row.getCell(7).value)) || 0;
-    if (durationMin <= 0 && distanceKm <= 0) return;
     drives.push({
       deviceid,
-      devicename: cellText(row.getCell(2).value) || deviceid,
+      devicename: cell(row, nameCol) || deviceid,
       startMs,
       endMs,
-      durationMin,
-      distanceKm,
-      maxSpeedKmh: Number(cellText(row.getCell(5).value)) || 0,
-      avgSpeedKmh: Number(cellText(row.getCell(6).value)) || 0,
-      startAddress: cellText(row.getCell(14).value),
-      endAddress: cellText(row.getCell(15).value),
+      durationMin: Number(cell(row, durationCol)) || 0,
+      distanceKm: Number(cell(row, distanceCol)) || 0,
+      startMileageKm: numOrNull(cell(row, startMileageCol)),
+      endMileageKm: numOrNull(cell(row, endMileageCol)),
+      maxSpeedKmh: Number(cell(row, maxCol)) || 0,
+      avgSpeedKmh: Number(cell(row, avgCol)) || 0,
+      startAddress: cell(row, startAddrCol),
+      endAddress: cell(row, endAddrCol),
+      startLat: numOrNull(cell(row, slatCol)),
+      startLon: numOrNull(cell(row, slonCol)),
+      endLat: numOrNull(cell(row, elatCol)),
+      endLon: numOrNull(cell(row, elonCol)),
       reportDate: dateStr,
     });
   });
@@ -208,18 +258,22 @@ export async function POST(request: NextRequest) {
   const startTime = typeof body.startTime === 'string' && body.startTime ? body.startTime : '00:00';
   const endTime = typeof body.endTime === 'string' && body.endTime ? body.endTime : '23:59';
   const windowStart = new Date(`${from}T${startTime}:00`).getTime();
-  const windowEnd = new Date(`${to}T${endTime}:00`).getTime();
+  const windowEnd = new Date(`${to}T${endTime}:00`).getTime() + 59999;
 
   const savedSet = new Set(savedDates);
   const missingDates = dates.filter((dateStr) => !savedSet.has(dateStr));
   const drives: SavedDrive[] = [];
+  const seen = new Set<string>();
 
   for (const dateStr of dates) {
     if (!savedSet.has(dateStr)) continue;
     const rows = await readTripFile(dateStr);
     for (const drive of rows) {
       if (drive.deviceid !== deviceid) continue;
-      if (drive.startMs < windowStart || drive.startMs > windowEnd) continue;
+      if (drive.endMs < windowStart || drive.startMs > windowEnd) continue;
+      const key = `${drive.deviceid}|${drive.startMs}|${drive.endMs}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
       drives.push(drive);
     }
   }

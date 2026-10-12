@@ -522,7 +522,8 @@ export async function POST(request: NextRequest) {
             deviceid: device.deviceid,
             starttime: begintime,
             endtime: endtime,
-            timezone: 8
+            begintime,
+            timezone: 1
           }),
         }, 0, 60000, true); // 0 retries (just attempt once), 60 second timeout, silent mode
 
@@ -554,7 +555,7 @@ export async function POST(request: NextRequest) {
               device.deviceid,
               begintime,
               endtime,
-              8,
+              1,
               60000
             );
             apiCallCount++;

@@ -59,7 +59,7 @@ const RATE_LIMIT_DELAY_MS = 150;
 const HERE_DELAY_MS = 100;
 const MIN_STAY_MS = 5 * 60 * 1000;
 const DEFAULT_INTERVAL_MIN = 5;
-const DEFAULT_TIMEZONE = 8;
+const DEFAULT_TIMEZONE = 1;
 const MAX_GEOCODE_KEYS = 250;
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 2, timeout = 30000) {

@@ -15,10 +15,16 @@ interface DriveRow {
   endMs: number;
   durationMin: number;
   distanceKm: number;
+  startMileageKm: number | null;
+  endMileageKm: number | null;
   maxSpeedKmh: number;
   avgSpeedKmh: number;
   startAddress: string;
   endAddress: string;
+  startLat: number | null;
+  startLon: number | null;
+  endLat: number | null;
+  endLon: number | null;
   reportDate: string;
 }
 
@@ -168,7 +174,12 @@ export default function DrivingReport() {
       minute: '2-digit',
     });
 
-  const place = (address: string) => address.trim() || 'Address not available';
+  const place = (address: string) => address.trim() || '—';
+
+  const formatKm = (value: number | null) => (value == null ? '—' : value.toFixed(2));
+
+  const coordText = (lat: number | null, lon: number | null) =>
+    lat == null || lon == null ? '—' : `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
 
   const totalDistanceKm = drives.reduce((sum, row) => sum + row.distanceKm, 0);
   const totalDurationMin = drives.reduce((sum, row) => sum + row.durationMin, 0);
@@ -178,28 +189,32 @@ export default function DrivingReport() {
   const exportToCSV = () => {
     if (drives.length === 0) return;
     const headers = [
-      'Drive #',
-      'Vehicle',
-      'Start',
-      'End',
-      'Duration',
-      'Distance (km)',
-      'Max Speed (km/h)',
-      'Avg Speed (km/h)',
-      'Start Location',
-      'End Location',
+      'Name',
+      'Start date/time',
+      'End date/time',
+      'Travel time',
+      'Start mileage',
+      'End mileage',
+      'Mileage',
+      'Start location',
+      'End location',
+      'Max speed',
+      'Start coordinate',
+      'End coordinate',
     ];
-    const rows = drives.map((drive, index) => [
-      String(index + 1),
+    const rows = drives.map((drive) => [
       drive.devicename,
       formatDateTime(drive.startMs),
       formatDateTime(drive.endMs),
       formatDuration(drive.durationMin),
+      formatKm(drive.startMileageKm),
+      formatKm(drive.endMileageKm),
       drive.distanceKm.toFixed(2),
-      drive.maxSpeedKmh.toFixed(1),
-      drive.avgSpeedKmh.toFixed(1),
       place(drive.startAddress),
       place(drive.endAddress),
+      drive.maxSpeedKmh.toFixed(1),
+      coordText(drive.startLat, drive.startLon),
+      coordText(drive.endLat, drive.endLon),
     ]);
     const csvContent = [headers.join(','), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(','))].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -340,33 +355,39 @@ export default function DrivingReport() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">#</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Start</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">End</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Duration</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Distance</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Max speed</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Avg speed</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">Start location</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600 uppercase">End location</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Name</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Start date/time</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">End date/time</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Travel time</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Start mileage</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">End mileage</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Mileage</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Start location</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">End location</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Max speed</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">Start coordinate</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-600">End coordinate</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {drives.map((drive, index) => (
                   <tr key={`${drive.startMs}-${index}`} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900 font-medium">{index + 1}</td>
+                    <td className="px-3 py-2 text-xs text-gray-900">{drive.devicename}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">{formatDateTime(drive.startMs)}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">{formatDateTime(drive.endMs)}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">{formatDuration(drive.durationMin)}</td>
-                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900">{drive.distanceKm.toFixed(2)} km</td>
-                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900 font-medium">{drive.maxSpeedKmh.toFixed(1)} km/h</td>
-                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">{drive.avgSpeedKmh.toFixed(1)} km/h</td>
+                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900">{formatKm(drive.startMileageKm)}</td>
+                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900">{formatKm(drive.endMileageKm)}</td>
+                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900">{drive.distanceKm.toFixed(2)}</td>
                     <td className="px-3 py-2 text-xs text-gray-600">
                       <div className="max-w-xs truncate" title={place(drive.startAddress)}>{place(drive.startAddress)}</div>
                     </td>
                     <td className="px-3 py-2 text-xs text-gray-600">
                       <div className="max-w-xs truncate" title={place(drive.endAddress)}>{place(drive.endAddress)}</div>
                     </td>
+                    <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-900 font-medium">{drive.maxSpeedKmh.toFixed(1)}</td>
+                    <td className="px-3 py-2 whitespace-nowrap text-xs"><MapPoint lat={drive.startLat} lon={drive.startLon} /></td>
+                    <td className="px-3 py-2 whitespace-nowrap text-xs"><MapPoint lat={drive.endLat} lon={drive.endLon} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -382,5 +403,19 @@ export default function DrivingReport() {
         </div>
       )}
     </div>
+  );
+}
+
+function MapPoint({ lat, lon }: { lat: number | null; lon: number | null }) {
+  if (lat == null || lon == null) return <span className="text-gray-400">—</span>;
+  return (
+    <a
+      href={`https://www.google.com/maps?q=${lat},${lon}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-700 underline"
+    >
+      {lat.toFixed(5)}, {lon.toFixed(5)}
+    </a>
   );
 }
