@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import ExcelJS from 'exceljs';
 import {
   filterParkingReportsByDateParams,
   listParkingReportFiles,
   resolveSafeParkingReportPath,
 } from '@/lib/parkingReportStorage';
+import { buildSavedReportCsv } from '@/lib/savedReportCsv';
 
 const MAX_RANGE_DAYS = 366;
 
@@ -17,25 +17,6 @@ function extractToken(request: NextRequest, body?: Record<string, unknown>): str
   const fromBody = body?.token;
   if (typeof fromBody === 'string' && fromBody.length > 0) return fromBody;
   return null;
-}
-
-function cellText(value: unknown): string {
-  if (value == null) return '';
-  if (typeof value === 'string') return value.trim();
-  if (typeof value === 'number') return String(value);
-  if (value instanceof Date) return value.toISOString();
-  if (typeof value === 'object' && value && 'text' in value) {
-    return String((value as { text: unknown }).text ?? '').trim();
-  }
-  if (typeof value === 'object' && value && 'result' in value) {
-    return cellText((value as { result: unknown }).result);
-  }
-  return String(value).trim();
-}
-
-function csvCell(value: string): string {
-  if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
-  return value;
 }
 
 function daySpan(from: string, to: string): number {
@@ -89,48 +70,18 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const rows: string[][] = [];
-  let headers: string[] = [];
-
-  for (const file of [...files].reverse()) {
+  const readable = [...files].reverse().flatMap((file) => {
     const filePath = resolveSafeParkingReportPath(file.filename);
-    if (!filePath) continue;
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(filePath);
-    const worksheet = workbook.worksheets[0];
-    if (!worksheet) continue;
-
-    let headerRow = 0;
-    const fileHeaders: string[] = [];
-    worksheet.eachRow((row, rowNumber) => {
-      if (headerRow || rowNumber > 8) return;
-      const values: string[] = [];
-      for (let col = 1; col <= 20; col++) values.push(cellText(row.getCell(col).value));
-      if (values.some((value) => value.toLowerCase() === 'device id' || value.toLowerCase().startsWith('device name'))) {
-        headerRow = rowNumber;
-        while (values.length > 0 && !values[values.length - 1]) values.pop();
-        fileHeaders.push(...values);
-      }
-    });
-    if (!headerRow) continue;
-    if (headers.length === 0) headers = ['Report date', ...fileHeaders];
-
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber <= headerRow) return;
-      const values = fileHeaders.map((_, index) => cellText(row.getCell(index + 1).value));
-      if (values.every((value) => !value)) return;
-      rows.push([file.reportDate || '', ...values]);
-    });
-  }
-
-  if (headers.length === 0) {
+    return filePath ? [{ reportDate: file.reportDate, filePath }] : [];
+  });
+  const csv = await buildSavedReportCsv(readable);
+  if (!csv) {
     return NextResponse.json(
       { status: -1, cause: 'Saved parking files have no readable rows', error: 'EMPTY' },
       { status: 404 }
     );
   }
 
-  const csv = [headers, ...rows].map((row) => row.map(csvCell).join(',')).join('\r\n');
   const startLabel = date || from || files[files.length - 1]?.reportDate || 'start';
   const endLabel = date || to || files[0]?.reportDate || 'end';
   const filename = startLabel === endLabel ? `parking_report_${startLabel}.csv` : `parking_report_${startLabel}_to_${endLabel}.csv`;

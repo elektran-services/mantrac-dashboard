@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAuthToken, getUserData } from "@/lib/auth";
+import ExportPeriodButton from "./ExportPeriodButton";
 
 type ReportFile = {
   filename: string;
@@ -517,6 +518,14 @@ export default function SavedMileageReports() {
             >
               {loading ? "Loading..." : "Apply filters"}
             </button>
+            <ExportPeriodButton
+              source="mileage"
+              category={activeTab === "monthly" ? "monthly" : "daily"}
+              date={date}
+              from={from}
+              to={to}
+              onError={setError}
+            />
             <button
               type="button"
               onClick={() => {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getAuthToken } from '@/lib/auth';
+import ExportPeriodButton from './ExportPeriodButton';
 import SavedFileSearch from './SavedFileSearch';
 
 type ReportFile = {
@@ -43,7 +44,6 @@ export default function ParkingReport() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState<string | null>(null);
-  const [exporting, setExporting] = useState(false);
 
   const applyFilters = async () => {
     setLoading(true);
@@ -113,50 +113,6 @@ export default function ParkingReport() {
     }
   };
 
-  const exportPeriodCsv = async () => {
-    if (!date.trim() && !from.trim() && !to.trim()) {
-      setError('Choose a date or a from and to period before exporting.');
-      return;
-    }
-    const token = getAuthToken();
-    if (!token) return;
-    setExporting(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/parking-reports/export', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          token,
-          ...(date.trim() ? { date: date.trim() } : {}),
-          ...(from.trim() ? { from: from.trim() } : {}),
-          ...(to.trim() ? { to: to.trim() } : {}),
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        setError(err.cause || `Export failed (${res.status})`);
-        return;
-      }
-      const blob = await res.blob();
-      const startLabel = date.trim() || from.trim() || 'start';
-      const endLabel = date.trim() || to.trim() || 'end';
-      const filename = startLabel === endLabel ? `parking_report_${startLabel}.csv` : `parking_report_${startLabel}_to_${endLabel}.csv`;
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Export failed');
-    } finally {
-      setExporting(false);
-    }
-  };
-
   const formatSize = (n: number) => {
     if (n < 1024) return `${n} B`;
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
@@ -221,14 +177,7 @@ export default function ParkingReport() {
             >
               {loading ? 'Loading...' : 'Apply filters'}
             </button>
-            <button
-              type="button"
-              onClick={exportPeriodCsv}
-              disabled={exporting}
-              className="px-4 py-2 rounded-lg border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 disabled:opacity-50"
-            >
-              {exporting ? 'Exporting...' : 'Export CSV'}
-            </button>
+            <ExportPeriodButton source="parking" date={date} from={from} to={to} onError={setError} />
             <button
               type="button"
               onClick={async () => {

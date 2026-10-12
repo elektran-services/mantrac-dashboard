@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAuthToken } from "@/lib/auth";
+import ExportPeriodButton from "./ExportPeriodButton";
 import SavedFileSearch from "./SavedFileSearch";
 
 type ReportFile = {
@@ -182,6 +183,7 @@ export default function SavedReports() {
             >
               {loading ? "Loading…" : "Apply filters"}
             </button>
+            <ExportPeriodButton source="overspeed" date={date} from={from} to={to} onError={setError} />
             <button
               type="button"
               onClick={async () => {
