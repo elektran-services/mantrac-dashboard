@@ -26,8 +26,22 @@ function isHeaderRow(values: string[]): boolean {
   });
 }
 
+function matchesDevice(headers: string[], values: string[], query: string): boolean {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return true;
+  const idCol = headers.findIndex((header) => {
+    const text = header.toLowerCase();
+    return text === 'device id' || text.startsWith('device id') || text === 'imei' || text.startsWith('imei');
+  });
+  const nameCol = headers.findIndex((header) => header.toLowerCase().includes('device name'));
+  const id = idCol >= 0 ? values[idCol].toLowerCase() : '';
+  const name = nameCol >= 0 ? values[nameCol].toLowerCase() : '';
+  return id.includes(needle) || name.includes(needle);
+}
+
 export async function buildSavedReportCsv(
-  files: { reportDate: string | null; filePath: string }[]
+  files: { reportDate: string | null; filePath: string }[],
+  query = ''
 ): Promise<string | null> {
   const rows: string[][] = [];
   let headers: string[] = [];
@@ -56,10 +70,11 @@ export async function buildSavedReportCsv(
       if (rowNumber <= headerRow) return;
       const values = fileHeaders.map((_, index) => cellText(row.getCell(index + 1).value));
       if (values.every((value) => !value)) return;
+      if (!matchesDevice(fileHeaders, values, query)) return;
       rows.push([file.reportDate || '', ...values]);
     });
   }
 
-  if (headers.length === 0) return null;
+  if (headers.length === 0 || (query.trim() && rows.length === 0)) return null;
   return [headers, ...rows].map((row) => row.map(csvCell).join(',')).join('\r\n');
 }

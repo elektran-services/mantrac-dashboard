@@ -58,7 +58,7 @@ function resolvePath(source: string, category: string, filename: string): string
 /**
  * POST /api/report-export
  * Combines saved Excel files for one report and period into a CSV. Does not call the tracker.
- * Body: { token?, source, category?, date?, from?, to? }
+ * Body: { token?, source, category?, date?, from?, to?, query? }
  */
 export async function POST(request: NextRequest) {
   let body: Record<string, unknown> = {};
@@ -81,6 +81,13 @@ export async function POST(request: NextRequest) {
   const date = typeof body.date === 'string' ? body.date.trim() : '';
   const from = typeof body.from === 'string' ? body.from.trim() : '';
   const to = typeof body.to === 'string' ? body.to.trim() : '';
+  const query = typeof body.query === 'string' ? body.query.trim() : '';
+  if (query && query.length < 2) {
+    return NextResponse.json(
+      { status: -1, cause: 'Enter at least 2 characters of an IMEI or device name', error: 'QUERY_TOO_SHORT' },
+      { status: 400 }
+    );
+  }
   if (!date && !from && !to) {
     return NextResponse.json(
       { status: -1, cause: 'Choose a date or a from and to period', error: 'MISSING_PERIOD' },
@@ -106,10 +113,16 @@ export async function POST(request: NextRequest) {
     const filePath = resolvePath(source, category, file.filename);
     return filePath ? [{ reportDate: file.reportDate, filePath }] : [];
   });
-  const csv = await buildSavedReportCsv(readable);
+  const csv = await buildSavedReportCsv(readable, query);
   if (!csv) {
     return NextResponse.json(
-      { status: -1, cause: 'Saved files have no readable rows', error: 'EMPTY' },
+      {
+        status: -1,
+        cause: query
+          ? 'No vehicle matched that IMEI or name in that period'
+          : 'Saved files have no readable rows',
+        error: 'EMPTY',
+      },
       { status: 404 }
     );
   }
@@ -117,7 +130,9 @@ export async function POST(request: NextRequest) {
   const prefix = source === 'mileage' ? `mileage_${category === 'monthly' ? 'monthly' : 'daily'}` : `${source}_report`;
   const startLabel = date || from || files[files.length - 1]?.reportDate || 'start';
   const endLabel = date || to || files[0]?.reportDate || 'end';
-  const filename = startLabel === endLabel ? `${prefix}_${startLabel}.csv` : `${prefix}_${startLabel}_to_${endLabel}.csv`;
+  const slug = query.replace(/[^\w.-]+/g, '_').replace(/_+/g, '_').slice(0, 40);
+  const range = startLabel === endLabel ? `${prefix}_${startLabel}` : `${prefix}_${startLabel}_to_${endLabel}`;
+  const filename = `${slug ? `${range}_${slug}` : range}.csv`;
 
   return new NextResponse(csv, {
     status: 200,

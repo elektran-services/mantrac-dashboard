@@ -104,7 +104,9 @@ export async function POST(request: NextRequest) {
   const date = typeof body.date === 'string' ? body.date.trim() : undefined;
   const from = typeof body.from === 'string' ? body.from.trim() : undefined;
   const to = typeof body.to === 'string' ? body.to.trim() : undefined;
-  const files = source.filter(source.list(), { date, from, to });
+  const files = source.filter(source.list(), { date, from, to }).filter((file) =>
+    sourceName !== 'overspeed' || /^overspeed_daily_report_/i.test(file.filename)
+  );
   const matches: ExcelDeviceHit[] = [];
   let truncated = false;
 

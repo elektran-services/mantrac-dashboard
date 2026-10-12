@@ -11,6 +11,7 @@ export default function ExportPeriodButton({
   date,
   from,
   to,
+  query,
   onError,
 }: {
   source: ReportSource;
@@ -18,11 +19,17 @@ export default function ExportPeriodButton({
   date: string;
   from: string;
   to: string;
+  query?: string;
   onError: (message: string) => void;
 }) {
   const [exporting, setExporting] = useState(false);
 
   const exportCsv = async () => {
+    const text = query?.trim() || "";
+    if (text && text.length < 2) {
+      onError("Enter at least 2 characters of an IMEI or device name.");
+      return;
+    }
     if (!date.trim() && !from.trim() && !to.trim()) {
       onError("Choose a date or a from and to period before exporting.");
       return;
@@ -44,6 +51,7 @@ export default function ExportPeriodButton({
           ...(date.trim() ? { date: date.trim() } : {}),
           ...(from.trim() ? { from: from.trim() } : {}),
           ...(to.trim() ? { to: to.trim() } : {}),
+          ...(text ? { query: text } : {}),
         }),
       });
       if (!res.ok) {

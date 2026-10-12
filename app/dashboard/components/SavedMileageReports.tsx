@@ -69,9 +69,33 @@ async function fetchMileageReportsList(
   return data as { files: ReportFile[]; retentionDays?: number };
 }
 
+async function searchMileageReports(
+  category: MileageCategory,
+  filters: { query: string; from?: string; to?: string }
+) {
+  const token = getAuthToken();
+  if (!token) throw new Error("Not logged in.");
+  const res = await fetch("/api/mileage-reports/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      token,
+      category,
+      query: filters.query,
+      ...(filters.from?.trim() ? { from: filters.from.trim() } : {}),
+      ...(filters.to?.trim() ? { to: filters.to.trim() } : {}),
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok || data.status !== 0) throw new Error(data.cause || "Search failed");
+  return data as { matches: MileageHit[]; filesSearched: number; truncated?: boolean };
+}
+
 export default function SavedMileageReports() {
   const [activeTab, setActiveTab] = useState<MileageTab>("daily");
-  const [date, setDate] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [files, setFiles] = useState<ReportFile[]>([]);
@@ -83,7 +107,6 @@ export default function SavedMileageReports() {
   const [matches, setMatches] = useState<MileageHit[]>([]);
   const [filesSearched, setFilesSearched] = useState(0);
   const [searchTruncated, setSearchTruncated] = useState(false);
-  const [searching, setSearching] = useState(false);
   const [searchRan, setSearchRan] = useState(false);
   const [serviceVehicles, setServiceVehicles] = useState<ServiceVehicle[]>([]);
   const [serviceLoading, setServiceLoading] = useState(true);
@@ -100,15 +123,28 @@ export default function SavedMileageReports() {
 
   const applyFilters = async () => {
     if (activeTab === "service") return;
+    const text = searchQuery.trim();
+    if (text && text.length < 2) {
+      setError("Enter at least 2 characters of an IMEI or device name.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchMileageReportsList(activeTab, { date, from, to });
-      setFiles(data.files || []);
-      if (typeof data.retentionDays === "number") setRetentionDays(data.retentionDays);
+      if (text) {
+        await runSearch();
+      } else {
+        const data = await fetchMileageReportsList(activeTab, { from, to });
+        setFiles(data.files || []);
+        setMatches([]);
+        setSearchRan(false);
+        setSearchTruncated(false);
+        if (typeof data.retentionDays === "number") setRetentionDays(data.retentionDays);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Request failed");
       setFiles([]);
+      setMatches([]);
     } finally {
       setLoading(false);
     }
@@ -193,46 +229,16 @@ export default function SavedMileageReports() {
   }, [activeTab]);
 
   const runSearch = async () => {
+    if (activeTab === "service") return;
     const query = searchQuery.trim();
     if (query.length < 2) {
-      setError("Enter at least 2 characters of an IMEI or device name.");
-      return;
+      throw new Error("Enter at least 2 characters of an IMEI or device name.");
     }
-    setSearching(true);
-    setError(null);
-    try {
-      const token = getAuthToken();
-      if (!token) throw new Error("Not logged in.");
-      const res = await fetch("/api/mileage-reports/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          token,
-          category: activeTab,
-          query,
-          ...(date.trim() ? { date: date.trim() } : {}),
-          ...(from.trim() ? { from: from.trim() } : {}),
-          ...(to.trim() ? { to: to.trim() } : {}),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.status !== 0) {
-        throw new Error(data.cause || "Search failed");
-      }
-      setMatches(data.matches || []);
-      setFilesSearched(data.filesSearched || 0);
-      setSearchTruncated(Boolean(data.truncated));
-      setSearchRan(true);
-    } catch (e) {
-      setMatches([]);
-      setSearchRan(true);
-      setError(e instanceof Error ? e.message : "Search failed");
-    } finally {
-      setSearching(false);
-    }
+    const data = await searchMileageReports(activeTab, { query, from, to });
+    setMatches(data.matches || []);
+    setFilesSearched(data.filesSearched || 0);
+    setSearchTruncated(Boolean(data.truncated));
+    setSearchRan(true);
   };
 
   const resetService = (vehicle: {
@@ -454,44 +460,21 @@ export default function SavedMileageReports() {
           </>
         ) : (
           <>
-        <div className="mb-4">
-          <label className="block text-xs font-medium text-gray-600 mb-1">Search IMEI or device name</label>
-          <div className="flex flex-col sm:flex-row gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-2">
+          <div className="md:col-span-4">
+            <label className="block text-xs font-medium text-gray-600 mb-1">Search IMEI or device name</label>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") runSearch();
+                if (e.key === "Enter") applyFilters();
               }}
               placeholder="IMEI or device name"
-              className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
-            />
-            <button
-              type="button"
-              onClick={runSearch}
-              disabled={searching}
-              className="px-4 py-2 rounded-lg bg-[#FFC107] text-gray-900 font-medium text-sm hover:bg-yellow-400 disabled:opacity-50"
-            >
-              {searching ? "Searching..." : "Search files"}
-            </button>
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            Search files looks through saved {activeTab === "daily" ? "daily" : "monthly"} Excel files and marks each file date.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Exact date</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-xs font-medium text-gray-600 mb-1">From</label>
             <input
               type="date"
@@ -500,7 +483,7 @@ export default function SavedMileageReports() {
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-xs font-medium text-gray-600 mb-1">To</label>
             <input
               type="date"
@@ -509,7 +492,7 @@ export default function SavedMileageReports() {
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
             />
           </div>
-          <div className="flex items-end gap-2">
+          <div className="md:col-span-4 flex items-end gap-2">
             <button
               type="button"
               onClick={applyFilters}
@@ -521,18 +504,32 @@ export default function SavedMileageReports() {
             <ExportPeriodButton
               source="mileage"
               category={activeTab === "monthly" ? "monthly" : "daily"}
-              date={date}
+              date=""
               from={from}
               to={to}
+              query={searchQuery}
               onError={setError}
             />
             <button
               type="button"
-              onClick={() => {
-                setDate("");
+              onClick={async () => {
+                setSearchQuery("");
                 setFrom("");
                 setTo("");
-                applyFilters();
+                setSearchRan(false);
+                setMatches([]);
+                setLoading(true);
+                setError(null);
+                try {
+                  const data = await fetchMileageReportsList(activeTab, {});
+                  setFiles(data.files || []);
+                  if (typeof data.retentionDays === "number") setRetentionDays(data.retentionDays);
+                } catch (e) {
+                  setError(e instanceof Error ? e.message : "Request failed");
+                  setFiles([]);
+                } finally {
+                  setLoading(false);
+                }
               }}
               className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm hover:bg-gray-50"
             >
@@ -540,8 +537,11 @@ export default function SavedMileageReports() {
             </button>
           </div>
         </div>
+        <p className="text-xs text-gray-500 mb-4">
+          Leave the search empty for every vehicle. Type an IMEI or device name to show only that vehicle. From and To limit the days. Use the same dates in both for one day.
+        </p>
 
-        {searchRan && (
+        {searchRan ? (
           <div className="mb-6">
             <h3 className="text-sm font-semibold text-gray-900 mb-2">
               Search results
@@ -612,8 +612,7 @@ export default function SavedMileageReports() {
               </table>
             </div>
           </div>
-        )}
-
+        ) : (
         <div className="rounded-lg border border-gray-200 overflow-hidden">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50 text-left text-gray-600">
@@ -655,6 +654,7 @@ export default function SavedMileageReports() {
             </tbody>
           </table>
         </div>
+        )}
           </>
         )}
       </div>
