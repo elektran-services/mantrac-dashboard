@@ -172,7 +172,7 @@ async function readTripFile(dateStr: string): Promise<SavedDrive[]> {
 /**
  * POST /api/driving-report
  * Reads trips/trips_daily_report_YYYY-MM-DD.xlsx only. Does not call GPS51.
- * Body: { token?, mode: "devices" | "report", from?, to?, deviceid?, startTime?, endTime? }
+ * Body: { token?, mode: "devices" | "report", from?, to?, query?, startTime?, endTime? }
  */
 export async function POST(request: NextRequest) {
   let body: Record<string, unknown> = {};
@@ -247,10 +247,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const deviceid = typeof body.deviceid === 'string' ? body.deviceid.trim() : '';
-  if (!deviceid) {
+  const query = typeof body.query === 'string' ? body.query.trim().toLowerCase() : '';
+  if (query && query.length < 2) {
     return NextResponse.json(
-      { status: -1, cause: 'Vehicle is required', error: 'MISSING_DEVICE' },
+      { status: -1, cause: 'Enter at least 2 characters of an IMEI or device name', error: 'QUERY_TOO_SHORT' },
       { status: 400 }
     );
   }
@@ -269,7 +269,7 @@ export async function POST(request: NextRequest) {
     if (!savedSet.has(dateStr)) continue;
     const rows = await readTripFile(dateStr);
     for (const drive of rows) {
-      if (drive.deviceid !== deviceid) continue;
+      if (query && !drive.deviceid.toLowerCase().includes(query) && !drive.devicename.toLowerCase().includes(query)) continue;
       if (drive.endMs < windowStart || drive.startMs > windowEnd) continue;
       const key = `${drive.deviceid}|${drive.startMs}|${drive.endMs}`;
       if (seen.has(key)) continue;

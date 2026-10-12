@@ -1,12 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getAuthToken } from '@/lib/auth';
-
-interface Device {
-  deviceid: string;
-  name: string;
-}
 
 interface DriveRow {
   deviceid: string;
@@ -44,7 +39,6 @@ async function postDrivingReport(body: Record<string, unknown>) {
     throw new Error(data.cause || 'Failed to load driving report');
   }
   return data as {
-    devices?: Device[];
     drives?: DriveRow[];
     missingDates?: string[];
     earliestReportDate?: string | null;
@@ -54,9 +48,7 @@ async function postDrivingReport(body: Record<string, unknown>) {
 }
 
 export default function DrivingReport() {
-  const [devices, setDevices] = useState<Device[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDevice, setSelectedDevice] = useState('');
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('00:00');
   const [endDate, setEndDate] = useState('');
@@ -67,30 +59,21 @@ export default function DrivingReport() {
   const [drives, setDrives] = useState<DriveRow[]>([]);
   const [missingDates, setMissingDates] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [loadingDevices, setLoadingDevices] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      setLoadingDevices(true);
       setError('');
       try {
         const data = await postDrivingReport({ mode: 'devices' });
         if (cancelled) return;
-        setDevices(data.devices || []);
         setFileCount(data.fileCount || 0);
         setEarliestReportDate(data.earliestReportDate ?? null);
         setLatestReportDate(data.latestReportDate ?? null);
-        if (data.latestReportDate) {
-          setStartDate(data.latestReportDate);
-          setEndDate(data.latestReportDate);
-        }
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load saved trips');
-      } finally {
-        if (!cancelled) setLoadingDevices(false);
       }
     })();
     return () => {
@@ -98,21 +81,14 @@ export default function DrivingReport() {
     };
   }, []);
 
-  const filteredDevices = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return devices;
-    return devices.filter(
-      (device) => device.name.toLowerCase().includes(query) || device.deviceid.toLowerCase().includes(query)
-    );
-  }, [devices, searchQuery]);
-
   const fetchDrivingReport = async () => {
-    if (!selectedDevice) {
-      setError('Please select a vehicle');
+    const text = searchQuery.trim();
+    if (text && text.length < 2) {
+      setError('Enter at least 2 characters of an IMEI or device name.');
       return;
     }
     if (!startDate || !endDate) {
-      setError('Start and end dates are required');
+      setError('Choose a from and to period.');
       return;
     }
 
@@ -125,7 +101,7 @@ export default function DrivingReport() {
     try {
       const data = await postDrivingReport({
         mode: 'report',
-        deviceid: selectedDevice,
+        ...(text ? { query: text } : {}),
         from: startDate,
         to: endDate,
         startTime,
@@ -184,8 +160,6 @@ export default function DrivingReport() {
   const totalDistanceKm = drives.reduce((sum, row) => sum + row.distanceKm, 0);
   const totalDurationMin = drives.reduce((sum, row) => sum + row.durationMin, 0);
   const maxSpeedKmh = drives.reduce((max, row) => Math.max(max, row.maxSpeedKmh), 0);
-  const selectedName = devices.find((device) => device.deviceid === selectedDevice)?.name;
-
   const exportToCSV = () => {
     if (drives.length === 0) return;
     const headers = [
@@ -221,7 +195,9 @@ export default function DrivingReport() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `driving-report-${selectedDevice}-${startDate}-to-${endDate}.csv`;
+    const slug = searchQuery.trim().replace(/[^\w.-]+/g, '_').replace(/_+/g, '_').slice(0, 40);
+    const range = startDate === endDate ? startDate : `${startDate}_to_${endDate}`;
+    a.download = `driving_report_${range}${slug ? `_${slug}` : ''}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -230,99 +206,100 @@ export default function DrivingReport() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="mb-6">
           <h2 className="text-xl font-bold text-gray-900">Driving Report</h2>
-          <p className="text-sm text-gray-600 mt-0.5">
+          <p className="text-sm text-gray-600 mt-1">
             {coverageText(fileCount, earliestReportDate, latestReportDate)}
           </p>
         </div>
-        <button
-          onClick={exportToCSV}
-          disabled={drives.length === 0}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-[#FFC107] text-gray-900 rounded hover:bg-[#FFD54F] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
-        >
-          Export CSV
-        </button>
-      </div>
-
-      <div className="bg-white rounded shadow-sm p-4">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Filters</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">Search vehicle or IMEI</label>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-2">
+          <div className="md:col-span-3">
+            <label className="block text-xs font-medium text-gray-600 mb-1">Search IMEI or device name</label>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search vehicles..."
-              className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900 placeholder:text-gray-400"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') fetchDrivingReport();
+              }}
+              placeholder="IMEI or device name"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
             />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">
-              Vehicle {!searchQuery && devices.length > 0 && <span className="text-gray-500">({devices.length})</span>}
-            </label>
-            <select
-              value={selectedDevice}
-              onChange={(e) => setSelectedDevice(e.target.value)}
-              disabled={loadingDevices || filteredDevices.length === 0}
-              className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900 disabled:bg-gray-100 disabled:cursor-not-allowed"
-            >
-              <option value="">
-                {loadingDevices ? 'Loading saved vehicles...' : filteredDevices.length === 0 ? 'No saved vehicles' : 'Select a vehicle'}
-              </option>
-              {filteredDevices.map((device) => (
-                <option key={device.deviceid} value={device.deviceid}>
-                  {device.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">Start</label>
+          <div className="md:col-span-3">
+            <label className="block text-xs font-medium text-gray-600 mb-1">From</label>
             <div className="flex gap-2">
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900"
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
               />
               <input
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="w-24 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900"
+                className="w-28 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
               />
             </div>
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">End</label>
+          <div className="md:col-span-3">
+            <label className="block text-xs font-medium text-gray-600 mb-1">To</label>
             <div className="flex gap-2">
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900"
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
               />
               <input
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="w-24 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#FFC107] text-gray-900"
+                className="w-28 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
               />
             </div>
           </div>
+          <div className="md:col-span-3 flex items-end gap-2">
+            <button
+              type="button"
+              onClick={fetchDrivingReport}
+              disabled={loading}
+              className="px-4 py-2 rounded-lg bg-[#FFC107] text-gray-900 font-medium text-sm hover:bg-yellow-400 disabled:opacity-50"
+            >
+              {loading ? 'Loading...' : 'Apply filters'}
+            </button>
+            <button
+              type="button"
+              onClick={exportToCSV}
+              disabled={drives.length === 0}
+              className="px-4 py-2 rounded-lg border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50 disabled:opacity-50"
+            >
+              Export CSV
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                setStartDate('');
+                setStartTime('00:00');
+                setEndDate('');
+                setEndTime('23:59');
+                setDrives([]);
+                setMissingDates([]);
+                setLoaded(false);
+                setError('');
+              }}
+              className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 text-sm hover:bg-gray-50"
+            >
+              Clear
+            </button>
+          </div>
         </div>
-        <div className="mt-3">
-          <button
-            onClick={fetchDrivingReport}
-            disabled={loading || loadingDevices || !selectedDevice}
-            className="px-4 py-1.5 text-sm bg-[#FFC107] text-gray-900 rounded hover:bg-[#FFD54F] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
-          >
-            {loading ? 'Loading...' : 'Generate Report'}
-          </button>
-        </div>
+        <p className="text-xs text-gray-500 mb-4">
+          Leave the search empty for every vehicle. Type an IMEI or device name to show only that vehicle. From and To include the time. Use the same dates in both for one day.
+        </p>
       </div>
 
       {error && (
@@ -340,7 +317,7 @@ export default function DrivingReport() {
       {!loading && loaded && drives.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 text-blue-800 px-3 py-2 rounded">
           <p className="text-xs">
-            {selectedName ? <span className="font-semibold">{selectedName}</span> : 'Vehicle'} —{' '}
+            <span className="font-semibold">{searchQuery.trim() || 'All vehicles'}</span> —{' '}
             <span className="font-semibold">{drives.length}</span> drive{drives.length === 1 ? '' : 's'},{' '}
             <span className="font-semibold">{formatDuration(totalDurationMin)}</span> moving,{' '}
             <span className="font-semibold">{totalDistanceKm.toFixed(2)} km</span>, max speed{' '}
@@ -399,7 +376,11 @@ export default function DrivingReport() {
       {!loading && loaded && drives.length === 0 && (
         <div className="bg-white rounded shadow-sm p-8 text-center">
           <h3 className="text-sm font-semibold text-gray-900 mb-1">No drives found</h3>
-          <p className="text-xs text-gray-600">No saved movement for this vehicle in the selected period.</p>
+          <p className="text-xs text-gray-600">
+            {searchQuery.trim()
+              ? 'No vehicle matched that IMEI or name in the selected period.'
+              : 'No saved movement in the selected period.'}
+          </p>
         </div>
       )}
     </div>
