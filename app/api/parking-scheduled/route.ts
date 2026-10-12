@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import ExcelJS from 'exceljs';
 import path from 'path';
-import { buildGPS51Url, buildHereReverseGeocodeUrl } from '@/lib/config';
+import { buildGPS51Url } from '@/lib/config';
+import { reverseGeocode } from '@/lib/reverseGeocode';
 import {
   PARKING_REPORTS_DIR,
   ensureParkingReportsDir,
@@ -56,7 +57,7 @@ type ParkingExcelRow = {
 };
 
 const RATE_LIMIT_DELAY_MS = 150;
-const HERE_DELAY_MS = 100;
+const GEOCODE_DELAY_MS = 100;
 const MIN_STAY_MS = 5 * 60 * 1000;
 const DEFAULT_INTERVAL_MIN = 5;
 const DEFAULT_TIMEZONE = 1;
@@ -165,19 +166,10 @@ async function buildAddressMap(keys: string[]) {
     if (n >= MAX_GEOCODE_KEYS) break;
     if (addressmap[key]) continue;
     const [latS, lonS] = key.split('_');
-    try {
-      const geoRes = await fetch(buildHereReverseGeocodeUrl(latS, lonS));
-      if (geoRes.ok) {
-        const geoData = await geoRes.json();
-        if (geoData?.items?.[0]?.address?.label) {
-          addressmap[key] = geoData.items[0].address.label;
-        }
-      }
-    } catch {
-      /* ignore */
-    }
+    const address = await reverseGeocode(latS, lonS);
+    if (address) addressmap[key] = address;
     n += 1;
-    await new Promise((r) => setTimeout(r, HERE_DELAY_MS));
+    await new Promise((r) => setTimeout(r, GEOCODE_DELAY_MS));
   }
   return addressmap;
 }

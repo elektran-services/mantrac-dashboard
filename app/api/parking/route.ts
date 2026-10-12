@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { buildGPS51Url, buildHereReverseGeocodeUrl } from '@/lib/config';
+import { buildGPS51Url } from '@/lib/config';
+import { reverseGeocode } from '@/lib/reverseGeocode';
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,49 +68,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Enhance with HERE API addresses (with timeout protection)
     if (data.status === 0 && data.records && data.records.length > 0) {
       const MAX_GEOCODE_RECORDS = 50; // Limit geocoding to prevent timeouts
-      const GEOCODE_TIMEOUT = 5000; // 5 seconds per geocode request
       
       const recordsToGeocode = data.records.slice(0, MAX_GEOCODE_RECORDS);
       
       for (const record of recordsToGeocode) {
-        // Validate coordinates
         if (record.callat && record.callon && 
             !isNaN(record.callat) && !isNaN(record.callon) &&
             Math.abs(record.callat) <= 90 && Math.abs(record.callon) <= 180 &&
             !record.address) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), GEOCODE_TIMEOUT);
-            
-            const geoResponse = await fetch(
-              buildHereReverseGeocodeUrl(record.callat, record.callon),
-              { signal: controller.signal }
-            );
-            
-            clearTimeout(timeoutId);
-            
-            if (geoResponse.ok) {
-              const geoData = await geoResponse.json();
-              if (geoData.items && geoData.items.length > 0 && geoData.items[0].address?.label) {
-                record.address = geoData.items[0].address.label;
-              }
-            } else {
-              console.warn(`Geocoding failed for ${record.callat},${record.callon}: ${geoResponse.status}`);
-            }
-            
-            // Rate limiting
-            await new Promise(resolve => setTimeout(resolve, 150));
-          } catch (err) {
-            if (err instanceof Error && err.name === 'AbortError') {
-              console.warn(`Geocoding timeout for ${record.callat},${record.callon}`);
-            } else {
-              console.error('Error fetching address:', err);
-            }
-            // Continue with next record even if geocoding fails
-          }
+          const address = await reverseGeocode(record.callat, record.callon);
+          if (address) record.address = address;
+          await new Promise(resolve => setTimeout(resolve, 150));
         }
       }
       

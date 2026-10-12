@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import ExcelJS from 'exceljs';
 import path from 'path';
-import { buildGPS51Url, buildHereReverseGeocodeUrl } from '@/lib/config';
+import { buildGPS51Url } from '@/lib/config';
+import { reverseGeocode } from '@/lib/reverseGeocode';
 import {
   OFFLINE_REPORTS_DIR,
   ensureOfflineReportsDir,
@@ -33,7 +34,7 @@ type OfflineExcelRow = {
 };
 
 const RATE_LIMIT_DELAY_MS = 150;
-const HERE_DELAY_MS = 100;
+const GEOCODE_DELAY_MS = 100;
 const OFFLINE_API_TIMEOUT_MS = 30000;
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 2, timeout = 15000) {
@@ -99,19 +100,10 @@ async function resolveAddressMap(records: OfflineRecord[]) {
   }
 
   for (const key of keys) {
-    try {
-      const [lat, lon] = key.split('_');
-      const geoRes = await fetch(buildHereReverseGeocodeUrl(lat, lon));
-      if (geoRes.ok) {
-        const geoData = await geoRes.json();
-        if (geoData?.items?.[0]?.address?.label) {
-          addressmap[key] = geoData.items[0].address.label;
-        }
-      }
-    } catch {
-      /* ignore geocode failures */
-    }
-    await new Promise((r) => setTimeout(r, HERE_DELAY_MS));
+    const [lat, lon] = key.split('_');
+    const address = await reverseGeocode(lat, lon);
+    if (address) addressmap[key] = address;
+    await new Promise((r) => setTimeout(r, GEOCODE_DELAY_MS));
   }
 
   return addressmap;

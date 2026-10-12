@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
       }))
     );
 
-    console.log(`[TripsDaily] ${allDevices.length} devices — querying trips (no HERE enrichment)`);
+    console.log(`[TripsDaily] ${allDevices.length} devices — querying trips`);
 
     type TripRow = {
       deviceid: string;

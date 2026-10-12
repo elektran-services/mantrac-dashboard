@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { buildGPS51Url, buildHereReverseGeocodeUrl } from '@/lib/config';
+import { buildGPS51Url } from '@/lib/config';
+import { reverseGeocode } from '@/lib/reverseGeocode';
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Enhance with HERE API addresses if available
+    // Fill missing device addresses
     if (data.status === 0 && data.records && data.records.length > 0) {
       const addressmap: Record<string, string> = data.addressmap || {};
       
@@ -57,20 +58,10 @@ export async function POST(request: NextRequest) {
 
       for (const coordKey of coordinates) {
         if (!addressmap[coordKey]) {
-          try {
-            const [lat, lon] = coordKey.split('_');
-            const geoResponse = await fetch(buildHereReverseGeocodeUrl(lat, lon));
-            
-            if (geoResponse.ok) {
-              const geoData = await geoResponse.json();
-              if (geoData.items && geoData.items.length > 0 && geoData.items[0].address.label) {
-                addressmap[coordKey] = geoData.items[0].address.label;
-              }
-            }
-            await new Promise(resolve => setTimeout(resolve, 100));
-          } catch (err) {
-            console.error('Error fetching address:', err);
-          }
+          const [lat, lon] = coordKey.split('_');
+          const address = await reverseGeocode(lat, lon);
+          if (address) addressmap[coordKey] = address;
+          await new Promise(resolve => setTimeout(resolve, 100));
         }
       }
       

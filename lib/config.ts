@@ -8,10 +8,6 @@ export const API_CONFIG = {
     BASE_URL: process.env.NEXT_PUBLIC_GPS51_API_URL || 'https://api.gps51.com/openapi',
     SERVER_ID: process.env.NEXT_PUBLIC_GPS51_SERVER_ID || '2',
   },
-  HERE: {
-    API_KEY: process.env.NEXT_PUBLIC_HERE_API_KEY || '',
-    REVGEOCODE_URL: 'https://revgeocode.search.hereapi.com/v1/revgeocode',
-  },
 } as const;
 
 export const APP_CONFIG = {
@@ -45,11 +41,4 @@ export function buildGPS51Url(action: string, token: string, additionalParams?: 
  */
 export function buildGPS51LoginUrl(): string {
   return `${API_CONFIG.GPS51.BASE_URL}?action=login`;
-}
-
-/**
- * Build HERE Maps reverse geocoding URL
- */
-export function buildHereReverseGeocodeUrl(lat: number | string, lon: number | string): string {
-  return `${API_CONFIG.HERE.REVGEOCODE_URL}?at=${lat},${lon}&apiKey=${API_CONFIG.HERE.API_KEY}`;
 }

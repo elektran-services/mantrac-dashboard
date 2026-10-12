@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getAuthToken, getUserData } from '@/lib/auth';
-import { buildHereReverseGeocodeUrl } from '@/lib/config';
+import { lookupAddress } from '@/lib/lookupAddress';
 import { apiCallWithAutoRefresh } from '@/lib/utils';
 
 interface Device {
@@ -143,13 +143,9 @@ export default function OverspeedReport() {
       // Fetch start address
       if (!record.startaddress && record.startlat && record.startlon) {
         try {
-          const response = await fetch(buildHereReverseGeocodeUrl(record.startlat, record.startlon));
-          if (response.ok) {
-            const data = await response.json();
-            if (data.items && data.items.length > 0 && data.items[0].address?.label) {
-              record.startaddress = data.items[0].address.label;
-            }
-          }
+          const token = getAuthToken();
+          const label = token ? await lookupAddress(token, record.startlat, record.startlon) : null;
+          if (label) record.startaddress = label;
           await new Promise(resolve => setTimeout(resolve, 150)); // Rate limit
         } catch (err) {
           console.error('Error fetching start address:', err);
@@ -159,13 +155,9 @@ export default function OverspeedReport() {
       // Fetch end address
       if (!record.endaddress && record.endlat && record.endlon) {
         try {
-          const response = await fetch(buildHereReverseGeocodeUrl(record.endlat, record.endlon));
-          if (response.ok) {
-            const data = await response.json();
-            if (data.items && data.items.length > 0 && data.items[0].address?.label) {
-              record.endaddress = data.items[0].address.label;
-            }
-          }
+          const token = getAuthToken();
+          const label = token ? await lookupAddress(token, record.endlat, record.endlon) : null;
+          if (label) record.endaddress = label;
           await new Promise(resolve => setTimeout(resolve, 150)); // Rate limit
         } catch (err) {
           console.error('Error fetching end address:', err);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAuthToken, getUserData } from "@/lib/auth";
-import { buildHereReverseGeocodeUrl } from "@/lib/config";
+import { lookupAddress } from "@/lib/lookupAddress";
 import { apiCallWithAutoRefresh } from "@/lib/utils";
 
 interface PositionRecord {
@@ -141,13 +141,9 @@ export default function LastPosition() {
         if (!newCache[key]) {
           try {
             const [lat, lon] = key.split('_');
-            const response = await fetch(buildHereReverseGeocodeUrl(lat, lon));
-            const data = await response.json();
-            if (data.items && data.items.length > 0) {
-              newCache[key] = data.items[0].address.label || `${lat}, ${lon}`;
-            } else {
-              newCache[key] = `${lat}, ${lon}`;
-            }
+            const token = getAuthToken();
+            const label = token ? await lookupAddress(token, lat, lon) : null;
+            newCache[key] = label || `${lat}, ${lon}`;
             await new Promise(resolve => setTimeout(resolve, 100)); // Reduced rate limiting
           } catch (err) {
             const [lat, lon] = key.split('_');

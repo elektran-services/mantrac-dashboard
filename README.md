@@ -75,7 +75,7 @@ npm run dev
 |----------|-------------|----------|---------|
 | `NEXT_PUBLIC_GPS51_API_URL` | GPS51 API base URL | Yes | `https://api.gps51.com/openapi` |
 | `NEXT_PUBLIC_GPS51_SERVER_ID` | GPS51 server ID | Yes | `2` |
-| `NEXT_PUBLIC_HERE_API_KEY` | HERE Maps API key for reverse geocoding | Yes | - |
+| `POSITIONSTACK_API_KEY` | PositionStack access key for reverse geocoding | Yes | - |
 | `NEXT_PUBLIC_APP_NAME` | Application display name | No | `Mantrac Dashboard` |
 | `NEXT_PUBLIC_APP_VERSION` | Application version | No | `1.0.0` |
 | `SESSION_TIMEOUT` | Session timeout in milliseconds | No | `3600000` (1 hour) |

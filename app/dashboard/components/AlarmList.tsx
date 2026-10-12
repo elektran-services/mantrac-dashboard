@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAuthToken, getUserData } from "@/lib/auth";
-import { buildHereReverseGeocodeUrl } from "@/lib/config";
+import { lookupAddress } from "@/lib/lookupAddress";
 import { apiCallWithAutoRefresh } from "@/lib/utils";
 
 // Address cell component
@@ -15,14 +15,9 @@ function AddressCell({ lat, lon }: { lat: number; lon: number }) {
 
     const fetchAddress = async () => {
       try {
-        const response = await fetch(buildHereReverseGeocodeUrl(lat, lon));
-
-        if (response.ok && mounted) {
-          const data = await response.json();
-          if (data.items && data.items.length > 0 && data.items[0].address.label) {
-            setAddress(data.items[0].address.label);
-          }
-        }
+        const token = getAuthToken();
+        const label = token ? await lookupAddress(token, lat, lon) : null;
+        if (label && mounted) setAddress(label);
       } catch (error) {
         console.error('Error fetching address:', error);
       } finally {

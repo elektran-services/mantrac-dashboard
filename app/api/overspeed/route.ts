@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { buildGPS51Url, buildHereReverseGeocodeUrl } from '@/lib/config';
+import { buildGPS51Url } from '@/lib/config';
+import { reverseGeocode } from '@/lib/reverseGeocode';
 import {
   buildTripOverspeedViolation,
   fetchDeviceTracks,
@@ -133,68 +134,26 @@ export async function POST(request: NextRequest) {
 
     console.log(`Found ${overspeedRecords.length} overspeed violations`);
 
-    // Enhance with HERE API addresses (limit to prevent timeout)
     if (overspeedRecords.length > 0) {
       const MAX_GEOCODE_RECORDS = 30;
-      const GEOCODE_TIMEOUT = 5000;
       
       const recordsToGeocode = overspeedRecords.slice(0, MAX_GEOCODE_RECORDS);
       
       for (const record of recordsToGeocode) {
-        // Geocode start location
         if (record.startlat && record.startlon &&
             !isNaN(record.startlat) && !isNaN(record.startlon) &&
             Math.abs(record.startlat) <= 90 && Math.abs(record.startlon) <= 180) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), GEOCODE_TIMEOUT);
-            
-            const geoResponse = await fetch(
-              buildHereReverseGeocodeUrl(record.startlat, record.startlon),
-              { signal: controller.signal }
-            );
-            
-            clearTimeout(timeoutId);
-            
-            if (geoResponse.ok) {
-              const geoData = await geoResponse.json();
-              if (geoData.items && geoData.items.length > 0 && geoData.items[0].address?.label) {
-                record.startaddress = geoData.items[0].address.label;
-              }
-            }
-            
-            await new Promise(resolve => setTimeout(resolve, 150));
-          } catch (err) {
-            console.error('Error fetching start address:', err);
-          }
+          const address = await reverseGeocode(record.startlat, record.startlon);
+          if (address) record.startaddress = address;
+          await new Promise(resolve => setTimeout(resolve, 150));
         }
 
-        // Geocode end location
         if (record.endlat && record.endlon &&
             !isNaN(record.endlat) && !isNaN(record.endlon) &&
             Math.abs(record.endlat) <= 90 && Math.abs(record.endlon) <= 180) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), GEOCODE_TIMEOUT);
-            
-            const geoResponse = await fetch(
-              buildHereReverseGeocodeUrl(record.endlat, record.endlon),
-              { signal: controller.signal }
-            );
-            
-            clearTimeout(timeoutId);
-            
-            if (geoResponse.ok) {
-              const geoData = await geoResponse.json();
-              if (geoData.items && geoData.items.length > 0 && geoData.items[0].address?.label) {
-                record.endaddress = geoData.items[0].address.label;
-              }
-            }
-            
-            await new Promise(resolve => setTimeout(resolve, 150));
-          } catch (err) {
-            console.error('Error fetching end address:', err);
-          }
+          const address = await reverseGeocode(record.endlat, record.endlon);
+          if (address) record.endaddress = address;
+          await new Promise(resolve => setTimeout(resolve, 150));
         }
       }
 
