@@ -44,11 +44,8 @@ type ParkingExcelRow = {
   updateTime: string;
   address: string;
   validPositionTime: string;
-  altitude: number | string;
-  radius: number | string;
   idleDurationMin: number | string;
   speed: number | string;
-  course: number | string;
   totalDistanceKm: number | string;
   startDistanceKm: number | string;
   endDistanceKm: number | string;
@@ -175,7 +172,7 @@ async function buildAddressMap(keys: string[]) {
 }
 
 function applySheetStyling(ws: ExcelJS.Worksheet, title: string, summary: string, data: ParkingExcelRow[]) {
-  const colCount = 19;
+  const colCount = 16;
   const lastCol = String.fromCharCode('A'.charCodeAt(0) + colCount - 1);
   ws.mergeCells(`A1:${lastCol}1`);
   const t = ws.getCell('A1');
@@ -203,11 +200,8 @@ function applySheetStyling(ws: ExcelJS.Worksheet, title: string, summary: string
     { key: 'updateTime', width: 22 },
     { key: 'address', width: 40 },
     { key: 'validPositionTime', width: 22 },
-    { key: 'altitude', width: 12 },
-    { key: 'radius', width: 10 },
     { key: 'idleDurationMin', width: 14 },
     { key: 'speed', width: 10 },
-    { key: 'course', width: 8 },
     { key: 'totalDistanceKm', width: 14 },
     { key: 'startDistanceKm', width: 14 },
     { key: 'endDistanceKm', width: 14 },
@@ -225,11 +219,8 @@ function applySheetStyling(ws: ExcelJS.Worksheet, title: string, summary: string
     'Update time',
     'Address',
     'Valid position time',
-    'Altitude (m)',
-    'Radius (m)',
     'Idle duration (min)',
     'Speed',
-    'Course',
     'Total distance (km)',
     'Start distance (km)',
     'End distance (km)',
@@ -271,11 +262,8 @@ function toExcelRow(
     updateTime: formatDateTimeMs(Number(rec.updatetime)),
     address: addr,
     validPositionTime: vpt !== undefined ? formatDateTimeMs(vpt) : '',
-    altitude: rec.altitude ?? '',
-    radius: rec.radius ?? '',
     idleDurationMin: Number.isFinite(idleMs) ? idleMsToMinutes(idleMs) : '',
     speed: rec.speed ?? '',
-    course: rec.course ?? '',
     totalDistanceKm: distanceFieldToKm(rec.totaldistance),
     startDistanceKm: distanceFieldToKm(rec.startdistance),
     endDistanceKm: distanceFieldToKm(rec.enddistance),

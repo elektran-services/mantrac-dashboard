@@ -12,6 +12,8 @@ export default function ExportPeriodButton({
   from,
   to,
   query,
+  startTime = "00:00",
+  endTime = "23:59",
   onError,
 }: {
   source: ReportSource;
@@ -20,6 +22,8 @@ export default function ExportPeriodButton({
   from: string;
   to: string;
   query?: string;
+  startTime?: string;
+  endTime?: string;
   onError: (message: string) => void;
 }) {
   const [exporting, setExporting] = useState(false);
@@ -52,6 +56,8 @@ export default function ExportPeriodButton({
           ...(from.trim() ? { from: from.trim() } : {}),
           ...(to.trim() ? { to: to.trim() } : {}),
           ...(text ? { query: text } : {}),
+          startTime,
+          endTime,
         }),
       });
       if (!res.ok) {

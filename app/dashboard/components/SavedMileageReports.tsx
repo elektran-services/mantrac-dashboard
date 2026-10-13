@@ -40,7 +40,7 @@ type ServiceVehicle = {
 };
 
 type MileageCategory = "daily" | "monthly";
-type MileageTab = MileageCategory | "service";
+type MileageTab = "daily" | "service";
 
 async function fetchMileageReportsList(
   category: MileageCategory,
@@ -404,17 +404,6 @@ export default function SavedMileageReports() {
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab("monthly")}
-              className={`px-4 py-2 text-sm font-medium rounded-t-lg ${
-                activeTab === "monthly"
-                  ? "bg-[#FFC107] text-gray-900"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Monthly Mileage Reports
-            </button>
-            <button
-              type="button"
               onClick={() => setActiveTab("service")}
               className={`px-4 py-2 text-sm font-medium rounded-t-lg ${
                 activeTab === "service"
@@ -503,7 +492,7 @@ export default function SavedMileageReports() {
             </button>
             <ExportPeriodButton
               source="mileage"
-              category={activeTab === "monthly" ? "monthly" : "daily"}
+              category="daily"
               date=""
               from={from}
               to={to}
@@ -569,16 +558,14 @@ export default function SavedMileageReports() {
                   {matches.length === 0 ? (
                     <tr>
                       <td colSpan={9} className="px-4 py-8 text-center text-gray-500">
-                        No vehicle matched that IMEI or name in the saved {activeTab} files.
+                        No vehicle matched that IMEI or name in the saved daily files.
                       </td>
                     </tr>
                   ) : (
                     matches.map((hit, index) => (
                       <tr key={`${hit.filename}-${hit.deviceid}-${index}`} className="hover:bg-gray-50">
                         <td className="px-4 py-3 text-gray-900 font-medium whitespace-nowrap">
-                          {activeTab === "monthly" && hit.reportDate
-                            ? hit.reportDate.slice(0, 7)
-                            : hit.reportDate || hit.filename}
+                          {hit.reportDate || hit.filename}
                         </td>
                         <td className="px-4 py-3 text-gray-800">{hit.devicename || "—"}</td>
                         <td className="px-4 py-3 text-gray-700 font-mono text-xs">{hit.deviceid || "—"}</td>

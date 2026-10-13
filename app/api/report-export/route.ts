@@ -82,6 +82,8 @@ export async function POST(request: NextRequest) {
   const from = typeof body.from === 'string' ? body.from.trim() : '';
   const to = typeof body.to === 'string' ? body.to.trim() : '';
   const query = typeof body.query === 'string' ? body.query.trim() : '';
+  const startTime = typeof body.startTime === 'string' && body.startTime ? body.startTime : '00:00';
+  const endTime = typeof body.endTime === 'string' && body.endTime ? body.endTime : '23:59';
   if (query && query.length < 2) {
     return NextResponse.json(
       { status: -1, cause: 'Enter at least 2 characters of an IMEI or device name', error: 'QUERY_TOO_SHORT' },
@@ -113,14 +115,12 @@ export async function POST(request: NextRequest) {
     const filePath = resolvePath(source, category, file.filename);
     return filePath ? [{ reportDate: file.reportDate, filePath }] : [];
   });
-  const csv = await buildSavedReportCsv(readable, query);
+  const csv = await buildSavedReportCsv(readable, query, from, to, startTime, endTime);
   if (!csv) {
     return NextResponse.json(
       {
         status: -1,
-        cause: query
-          ? 'No vehicle matched that IMEI or name in that period'
-          : 'Saved files have no readable rows',
+        cause: 'No rows matched that vehicle or time',
         error: 'EMPTY',
       },
       { status: 404 }

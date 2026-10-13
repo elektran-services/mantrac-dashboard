@@ -3,6 +3,21 @@ import { buildGPS51Url } from '@/lib/config';
 export interface TrackPoint {
   timeMs: number;
   speedKmh: number;
+  lat?: number;
+  lon?: number;
+}
+
+export interface OverspeedStretch {
+  begintime: number;
+  endtime: number;
+  durationMs: number;
+  maxSpeedKmh: number;
+  avgSpeedKmh: number;
+  distanceKm: number;
+  startlat: number;
+  startlon: number;
+  endlat: number;
+  endlon: number;
 }
 
 export interface OverspeedAnalysis {
@@ -54,10 +69,14 @@ export function formatGps51DateTime(date: Date): string {
 export function parseTrackRecords(records: unknown[]): TrackPoint[] {
   return records
     .map((record) => {
-      const row = record as { updatetime?: number; speed?: number };
+      const row = record as { updatetime?: number; speed?: number; callat?: number; callon?: number };
+      const lat = Number(row.callat);
+      const lon = Number(row.callon);
       return {
         timeMs: toEpochMs(Number(row.updatetime)),
         speedKmh: gpsSpeedToKmh(Number(row.speed) || 0),
+        ...(Number.isFinite(lat) ? { lat } : {}),
+        ...(Number.isFinite(lon) ? { lon } : {}),
       };
     })
     .filter((point) => point.timeMs > 0)
@@ -148,6 +167,107 @@ function clampFraction(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
+function crossingTimeMs(start: TrackPoint, end: TrackPoint, speedLimitKmh: number): number {
+  const deltaMs = end.timeMs - start.timeMs;
+  if (deltaMs <= 0 || start.speedKmh === end.speedKmh) return end.timeMs;
+  const fraction = (speedLimitKmh - start.speedKmh) / (end.speedKmh - start.speedKmh);
+  return start.timeMs + clampFraction(fraction) * deltaMs;
+}
+
+/** One stretch each time speed goes above the limit and comes back down. Durations are not added together. */
+export function listOverspeedStretches(points: TrackPoint[], speedLimitKmh: number): OverspeedStretch[] {
+  const stretches: OverspeedStretch[] = [];
+  let open: {
+    startMs: number;
+    startlat: number;
+    startlon: number;
+    maxSpeed: number;
+    speedTime: number;
+    timeMs: number;
+    distanceKm: number;
+    endlat: number;
+    endlon: number;
+  } | null = null;
+
+  const close = (endMs: number) => {
+    if (!open) return;
+    const durationMs = Math.max(0, Math.round(endMs - open.startMs));
+    stretches.push({
+      begintime: open.startMs,
+      endtime: open.startMs + durationMs,
+      durationMs,
+      maxSpeedKmh: open.maxSpeed,
+      avgSpeedKmh: open.timeMs > 0 ? open.speedTime / open.timeMs : open.maxSpeed,
+      distanceKm: open.distanceKm,
+      startlat: open.startlat,
+      startlon: open.startlon,
+      endlat: open.endlat,
+      endlon: open.endlon,
+    });
+    open = null;
+  };
+
+  const addPortion = (speedA: number, speedB: number, portionMs: number) => {
+    if (!open || portionMs <= 0) return;
+    const avg = (speedA + speedB) / 2;
+    open.speedTime += avg * portionMs;
+    open.timeMs += portionMs;
+    open.distanceKm += avg * (portionMs / 3600000);
+  };
+
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i];
+    const over = point.speedKmh > speedLimitKmh;
+    const next = i < points.length - 1 ? points[i + 1] : null;
+
+    if (over && !open) {
+      const previous = i > 0 ? points[i - 1] : null;
+      const startMs = previous && previous.speedKmh <= speedLimitKmh
+        ? crossingTimeMs(previous, point, speedLimitKmh)
+        : point.timeMs;
+      open = {
+        startMs,
+        startlat: point.lat ?? 0,
+        startlon: point.lon ?? 0,
+        maxSpeed: point.speedKmh,
+        speedTime: 0,
+        timeMs: 0,
+        distanceKm: 0,
+        endlat: point.lat ?? 0,
+        endlon: point.lon ?? 0,
+      };
+      if (startMs < point.timeMs) {
+        addPortion(speedLimitKmh, point.speedKmh, point.timeMs - startMs);
+      }
+    }
+
+    if (open && over) {
+      open.maxSpeed = Math.max(open.maxSpeed, point.speedKmh);
+      if (point.lat != null) open.endlat = point.lat;
+      if (point.lon != null) open.endlon = point.lon;
+    }
+
+    if (!next) {
+      if (open) close(point.timeMs);
+      break;
+    }
+
+    const deltaMs = next.timeMs - point.timeMs;
+    if (deltaMs <= 0) continue;
+    const nextOver = next.speedKmh > speedLimitKmh;
+
+    if (open && over && nextOver) {
+      addPortion(point.speedKmh, next.speedKmh, deltaMs);
+    } else if (open && over && !nextOver) {
+      const endMs = crossingTimeMs(point, next, speedLimitKmh);
+      addPortion(point.speedKmh, speedLimitKmh, Math.max(0, endMs - point.timeMs));
+      close(endMs);
+    }
+  }
+
+  return stretches;
+}
+
 export async function fetchDeviceTracks(
   token: string,
   deviceid: string,
@@ -235,4 +355,38 @@ export function buildTripOverspeedViolation(
     endlat: Number(trip.elat) || 0,
     endlon: Number(trip.elon) || 0,
   };
+}
+
+/** One saved row per speeding stretch. A stretch shorter than minDurationMs is left out. */
+export function buildTripOverspeedEvents(
+  deviceid: string,
+  devicename: string | undefined,
+  trip: TripLike,
+  speedLimitKmh: number,
+  trackPoints: TrackPoint[],
+  minDurationMs: number
+): TripOverspeedViolation[] {
+  const tripStartMs = toEpochMs(Number(trip.starttime));
+  const tripEndMs = toEpochMs(Number(trip.endtime));
+  const windowPoints = filterPointsInWindow(trackPoints, tripStartMs, tripEndMs);
+  return listOverspeedStretches(windowPoints, speedLimitKmh)
+    .filter((stretch) => stretch.durationMs >= minDurationMs)
+    .map((stretch) => ({
+      deviceid,
+      devicename,
+      begintime: stretch.begintime,
+      endtime: stretch.endtime,
+      maxspeed: stretch.maxSpeedKmh,
+      avgspeed: stretch.avgSpeedKmh,
+      speedlimit: speedLimitKmh,
+      overspeed: stretch.maxSpeedKmh - speedLimitKmh,
+      duration: stretch.durationMs,
+      overspeedduration: stretch.durationMs,
+      overspeedcrossings: 1,
+      distance: stretch.distanceKm,
+      startlat: stretch.startlat || Number(trip.slat) || 0,
+      startlon: stretch.startlon || Number(trip.slon) || 0,
+      endlat: stretch.endlat || Number(trip.elat) || 0,
+      endlon: stretch.endlon || Number(trip.elon) || 0,
+    }));
 }

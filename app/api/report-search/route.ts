@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { searchExcelDevices, type ExcelDeviceHit } from '@/lib/excelDeviceSearch';
+import { overlapsWindow, timeWindow } from '@/lib/reportTimeWindow';
 import { filterReportsByDateParams, listGeneratedReportFiles, resolveSafeGeneratedReportPath } from '@/lib/generatedReportsStorage';
 import { filterOfflineReportsByDateParams, listOfflineReportFiles, resolveSafeOfflineReportPath } from '@/lib/offlineReportStorage';
 import { filterParkingReportsByDateParams, listParkingReportFiles, resolveSafeParkingReportPath } from '@/lib/parkingReportStorage';
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
   const source = SOURCES[sourceName as SourceName];
 
   const query = typeof body.query === 'string' ? body.query.trim().toLowerCase() : '';
-  if (query.length < 2) {
+  if (query && query.length < 2) {
     return NextResponse.json(
       { status: -1, cause: 'Enter at least 2 characters of an IMEI or device name', error: 'QUERY_TOO_SHORT' },
       { status: 400 }
@@ -104,6 +105,9 @@ export async function POST(request: NextRequest) {
   const date = typeof body.date === 'string' ? body.date.trim() : undefined;
   const from = typeof body.from === 'string' ? body.from.trim() : undefined;
   const to = typeof body.to === 'string' ? body.to.trim() : undefined;
+  const startTime = typeof body.startTime === 'string' && body.startTime ? body.startTime : '00:00';
+  const endTime = typeof body.endTime === 'string' && body.endTime ? body.endTime : '23:59';
+  const window = timeWindow(from || '', to || '', startTime, endTime);
   const files = source.filter(source.list(), { date, from, to }).filter((file) =>
     sourceName !== 'overspeed' || /^overspeed_daily_report_/i.test(file.filename)
   );
@@ -129,6 +133,7 @@ export async function POST(request: NextRequest) {
         truncated = true;
         break;
       }
+      if (!overlapsWindow(hit.fields.startTime || '', hit.fields.endTime || '', window)) continue;
       matches.push(hit);
     }
   }

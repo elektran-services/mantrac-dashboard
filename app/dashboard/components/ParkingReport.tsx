@@ -48,7 +48,7 @@ async function fetchParkingReportsList(filters: { from?: string; to?: string }) 
   return data as { files: ReportFile[]; retentionDays?: number };
 }
 
-async function searchParking(filters: { query: string; from?: string; to?: string }) {
+async function searchParking(filters: { query: string; from?: string; to?: string; startTime: string; endTime: string }) {
   const token = getAuthToken();
   if (!token) throw new Error('Not logged in.');
   const res = await fetch('/api/report-search', {
@@ -63,6 +63,8 @@ async function searchParking(filters: { query: string; from?: string; to?: strin
       query: filters.query,
       ...(filters.from?.trim() ? { from: filters.from.trim() } : {}),
       ...(filters.to?.trim() ? { to: filters.to.trim() } : {}),
+      startTime: filters.startTime,
+      endTime: filters.endTime,
     }),
   });
   const data = await res.json();
@@ -74,6 +76,8 @@ export default function ParkingReport() {
   const [query, setQuery] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
+  const [fromTime, setFromTime] = useState('00:00');
+  const [toTime, setToTime] = useState('23:59');
   const [files, setFiles] = useState<ReportFile[]>([]);
   const [matches, setMatches] = useState<SearchHit[]>([]);
   const [filesSearched, setFilesSearched] = useState(0);
@@ -98,11 +102,16 @@ export default function ParkingReport() {
       setError('Enter at least 2 characters of an IMEI or device name.');
       return;
     }
+    const narrowed = fromTime !== '00:00' || toTime !== '23:59';
+    if (narrowed && !from.trim() && !to.trim()) {
+      setError('Choose a from or to date for the time.');
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      if (text) {
-        const data = await searchParking({ query: text, from, to });
+      if (text || narrowed) {
+        const data = await searchParking({ query: text, from, to, startTime: fromTime, endTime: toTime });
         setMatches(data.matches || []);
         setFilesSearched(data.filesSearched || 0);
         setTruncated(Boolean(data.truncated));
@@ -191,7 +200,7 @@ export default function ParkingReport() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-2">
-          <div className="md:col-span-4">
+          <div className="md:col-span-3">
             <label className="block text-xs font-medium text-gray-600 mb-1">Search IMEI or device name</label>
             <input
               type="text"
@@ -204,25 +213,41 @@ export default function ParkingReport() {
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
             />
           </div>
-          <div className="md:col-span-2">
+          <div className="md:col-span-3">
             <label className="block text-xs font-medium text-gray-600 mb-1">From</label>
-            <input
-              type="date"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
-            />
+            <div className="flex gap-2">
+              <input
+                type="date"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
+              />
+              <input
+                type="time"
+                value={fromTime}
+                onChange={(e) => setFromTime(e.target.value)}
+                className="w-28 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
+              />
+            </div>
           </div>
-          <div className="md:col-span-2">
+          <div className="md:col-span-3">
             <label className="block text-xs font-medium text-gray-600 mb-1">To</label>
-            <input
-              type="date"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
-            />
+            <div className="flex gap-2">
+              <input
+                type="date"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
+              />
+              <input
+                type="time"
+                value={toTime}
+                onChange={(e) => setToTime(e.target.value)}
+                className="w-28 px-3 py-2 rounded-lg border border-gray-200 text-gray-900 text-sm focus:ring-2 focus:ring-[#FFC107] focus:border-[#FFC107]"
+              />
+            </div>
           </div>
-          <div className="md:col-span-4 flex items-end gap-2">
+          <div className="md:col-span-3 flex items-end gap-2">
             <button
               type="button"
               onClick={applyFilters}
@@ -231,13 +256,15 @@ export default function ParkingReport() {
             >
               {loading ? 'Loading...' : 'Apply filters'}
             </button>
-            <ExportPeriodButton source="parking" date="" from={from} to={to} query={query} onError={setError} />
+            <ExportPeriodButton source="parking" date="" from={from} to={to} query={query} startTime={fromTime} endTime={toTime} onError={setError} />
             <button
               type="button"
               onClick={async () => {
                 setQuery('');
                 setFrom('');
                 setTo('');
+                setFromTime('00:00');
+                setToTime('23:59');
                 setLoading(true);
                 setError(null);
                 try {
@@ -256,7 +283,7 @@ export default function ParkingReport() {
           </div>
         </div>
         <p className="text-xs text-gray-500 mb-4">
-          Leave the search empty for every vehicle. Type an IMEI or device name to show only that vehicle. From and To limit the days. Use the same dates in both for one day.
+          Leave the search empty for every vehicle. Type an IMEI or device name to show only that vehicle. From and To include the time. Use the same dates in both for one day. A time other than the full day lists the matching rows.
         </p>
 
         {error && (
@@ -289,7 +316,7 @@ export default function ParkingReport() {
                   {matches.length === 0 ? (
                     <tr>
                       <td colSpan={4 + MATCH_COLUMNS.length} className="px-3 py-8 text-center text-gray-500">
-                        No vehicle matched that IMEI or name in the saved files.
+                        No rows matched that vehicle or time.
                       </td>
                     </tr>
                   ) : (

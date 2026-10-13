@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { buildGPS51Url } from '@/lib/config';
 import { MONITORING_CONFIG } from '@/lib/config';
 import {
-  buildTripOverspeedViolation,
+  buildTripOverspeedEvents,
   fetchDeviceTracks,
   gpsSpeedToKmh,
   toEpochMs,
@@ -248,8 +248,8 @@ async function sendEmailWithAttachment(
             <ul style="color: #666; line-height: 1.8;">
               <li>Device details and names</li>
               <li>Start and end times</li>
-              <li>Maximum and average speeds</li>
-              <li>Overspeed duration</li>
+              <li>Maximum speed</li>
+              <li>Overspeed duration in seconds, one row per occurrence</li>
               <li>Location coordinates</li>
             </ul>
             
@@ -279,6 +279,20 @@ async function sendEmailWithAttachment(
 }
 
 // Helper function to fetch with retries and timeout
+function setMapLink(cell: ExcelJS.Cell, lat: number, lon: number) {
+  const latitude = Number(lat);
+  const longitude = Number(lon);
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || (latitude === 0 && longitude === 0)) {
+    cell.value = '';
+    return;
+  }
+  cell.value = {
+    text: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`,
+    hyperlink: `https://www.google.com/maps?q=${latitude},${longitude}`,
+  };
+  cell.font = { color: { argb: 'FF0563C1' }, underline: true };
+}
+
 async function fetchWithRetry(url: string, options: any, retries = 3, timeout = 10000, silent = false) {
   const maxAttempts = retries + 1; // retries=0 means 1 attempt, retries=1 means 2 attempts, etc.
   
@@ -564,20 +578,15 @@ export async function POST(request: NextRequest) {
           }
 
           for (const trip of candidateTrips) {
-            const violation = buildTripOverspeedViolation(
+            const events = buildTripOverspeedEvents(
               device.deviceid,
               device.name,
               trip,
               MONITORING_CONFIG.OVERSPEED_LIMIT_KMH,
-              dayTracks
+              dayTracks,
+              MONITORING_CONFIG.OVERSPEED_DURATION_THRESHOLD_MS
             );
-
-            if (
-              violation &&
-              violation.overspeedduration >= MONITORING_CONFIG.OVERSPEED_DURATION_THRESHOLD_MS
-            ) {
-              allViolations.push(violation);
-            }
+            allViolations.push(...events);
           }
         }
       } catch (err) {
@@ -602,7 +611,7 @@ export async function POST(request: NextRequest) {
       const worksheet = workbook.addWorksheet('Daily Overspeed Report');
 
       // Add title row
-      worksheet.mergeCells('A1:P1');
+      worksheet.mergeCells('A1:L1');
       const titleCell = worksheet.getCell('A1');
       titleCell.value = `Daily Overspeed Report - ${dateStr}`;
       titleCell.font = { bold: true, size: 14, color: { argb: 'FFFFFFFF' } };
@@ -615,7 +624,7 @@ export async function POST(request: NextRequest) {
       worksheet.getRow(1).height = 25;
 
       // Add summary row
-      worksheet.mergeCells('A2:P2');
+      worksheet.mergeCells('A2:L2');
       const summaryCell = worksheet.getCell('A2');
       summaryCell.value = `Total Violations: ${allViolations.length} | Speed Limit: ${MONITORING_CONFIG.OVERSPEED_LIMIT_KMH} km/h | Duration Threshold: ${MONITORING_CONFIG.OVERSPEED_DURATION_THRESHOLD_MS / 1000}s`;
       summaryCell.font = { italic: true, size: 10 };
@@ -635,17 +644,13 @@ export async function POST(request: NextRequest) {
         { key: 'begintime', width: 20 },
         { key: 'endtime', width: 20 },
         { key: 'maxspeed', width: 15 },
-        { key: 'avgspeed', width: 15 },
         { key: 'speedlimit', width: 15 },
         { key: 'overspeed', width: 15 },
         { key: 'duration', width: 15 },
-        { key: 'overspeedduration', width: 22 },
-        { key: 'overspeedcrossings', width: 18 },
+        { key: 'overspeedduration', width: 24 },
         { key: 'distance', width: 15 },
-        { key: 'startlat', width: 12 },
-        { key: 'startlon', width: 12 },
-        { key: 'endlat', width: 12 },
-        { key: 'endlon', width: 12 },
+        { key: 'startcoord', width: 28 },
+        { key: 'endcoord', width: 28 },
       ];
 
       const headerLabels = [
@@ -654,17 +659,13 @@ export async function POST(request: NextRequest) {
         'Start Time',
         'End Time',
         'Max Speed (km/h)',
-        'Avg Speed (km/h)',
         'Speed Limit (km/h)',
         'Overspeed (km/h)',
         'Duration (min)',
-        'Overspeed Duration (min)',
-        'Times Over Limit',
+        'Overspeed Duration (s)',
         'Distance (km)',
-        'Start Lat',
-        'Start Lon',
-        'End Lat',
-        'End Lon',
+        'Start coordinate',
+        'End coordinate',
       ];
       const headerRow = worksheet.getRow(3);
       headerLabels.forEach((label, i) => {
@@ -679,24 +680,20 @@ export async function POST(request: NextRequest) {
 
       // Add data rows
       allViolations.forEach(violation => {
-        worksheet.addRow({
+        const row = worksheet.addRow({
           deviceid: violation.deviceid,
           devicename: violation.devicename,
           begintime: new Date(Number(violation.begintime)).toLocaleString(),
           endtime: new Date(Number(violation.endtime)).toLocaleString(),
           maxspeed: violation.maxspeed.toFixed(1),
-          avgspeed: violation.avgspeed.toFixed(1),
           speedlimit: violation.speedlimit,
           overspeed: violation.overspeed.toFixed(1),
           duration: (violation.duration / 60000).toFixed(1),
-          overspeedduration: (violation.overspeedduration / 60000).toFixed(1),
-          overspeedcrossings: violation.overspeedcrossings ?? 0,
+          overspeedduration: Math.round(violation.overspeedduration / 1000),
           distance: violation.distance.toFixed(2),
-          startlat: violation.startlat.toFixed(6),
-          startlon: violation.startlon.toFixed(6),
-          endlat: violation.endlat.toFixed(6),
-          endlon: violation.endlon.toFixed(6),
         });
+        setMapLink(row.getCell('startcoord'), violation.startlat, violation.startlon);
+        setMapLink(row.getCell('endcoord'), violation.endlat, violation.endlon);
       });
 
       // Save Excel file with date in filename (YYYY-MM-DD format)

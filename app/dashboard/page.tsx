@@ -7,7 +7,7 @@ import { getUserData, clearAuth, getAuthToken } from "@/lib/auth";
 import CustomSelect from "@/app/components/CustomSelect";
 import { buildGPS51Url } from "@/lib/config";
 import SavedMileageReports from "./components/SavedMileageReports";
-import OfflineReport from "./components/OfflineReport";
+import IdleReport from "./components/IdleReport";
 import ParkingReport from "./components/ParkingReport";
 import SavedReports from "./components/SavedReports";
 import SavedTripsReports from "./components/SavedTripsReports";
@@ -144,7 +144,7 @@ export default function DashboardPage() {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
     )},
-    { id: "offline", label: "Offline Devices", icon: (
+    { id: "idle", label: "Idle Report", icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3" />
       </svg>
@@ -382,11 +382,11 @@ export default function DashboardPage() {
                     iconBg: "bg-emerald-100 text-emerald-700",
                   },
                   {
-                    menu: "offline" as const,
-                    title: "Offline Devices",
-                    desc: "Daily offline snapshots",
-                    folder: "offline_reports/",
-                    bucket: reportStats.offline,
+                    menu: "idle" as const,
+                    title: "Idle Report",
+                    desc: "Engine on, not moving",
+                    folder: "parking_reports/",
+                    bucket: reportStats.parking,
                     icon: "signal" as const,
                     accent: "from-slate-500/15 to-gray-500/10 border-slate-200/80",
                     iconBg: "bg-slate-100 text-slate-700",
@@ -394,7 +394,7 @@ export default function DashboardPage() {
                   {
                     menu: "parking" as const,
                     title: "Parking Report",
-                    desc: "Daily parking / idle exports",
+                    desc: "Daily parking stops",
                     folder: "parking_reports/",
                     bucket: reportStats.parking,
                     icon: "pin" as const,
@@ -490,7 +490,7 @@ export default function DashboardPage() {
             </>
           )}
 
-          {activeMenu !== "dashboard" && activeMenu !== "mileage" && activeMenu !== "offline" && activeMenu !== "parking" && activeMenu !== "driving" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
+          {activeMenu !== "dashboard" && activeMenu !== "mileage" && activeMenu !== "idle" && activeMenu !== "parking" && activeMenu !== "driving" && activeMenu !== "saved-reports" && activeMenu !== "saved-trips-reports" && activeMenu !== "settings" && (
             <div className="bg-white rounded-lg shadow-sm p-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -508,8 +508,8 @@ export default function DashboardPage() {
             <SavedMileageReports />
           )}
 
-          {activeMenu === "offline" && (
-            <OfflineReport />
+          {activeMenu === "idle" && (
+            <IdleReport />
           )}
 
           {activeMenu === "parking" && (

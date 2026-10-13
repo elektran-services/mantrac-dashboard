@@ -1,4 +1,5 @@
 import ExcelJS from 'exceljs';
+import { overlapsWindow, timeWindow } from '@/lib/reportTimeWindow';
 
 function cellText(value: unknown): string {
   if (value == null) return '';
@@ -41,8 +42,13 @@ function matchesDevice(headers: string[], values: string[], query: string): bool
 
 export async function buildSavedReportCsv(
   files: { reportDate: string | null; filePath: string }[],
-  query = ''
+  query = '',
+  from = '',
+  to = '',
+  startTime = '00:00',
+  endTime = '23:59'
 ): Promise<string | null> {
+  const window = timeWindow(from, to, startTime, endTime);
   const rows: string[][] = [];
   let headers: string[] = [];
 
@@ -71,10 +77,13 @@ export async function buildSavedReportCsv(
       const values = fileHeaders.map((_, index) => cellText(row.getCell(index + 1).value));
       if (values.every((value) => !value)) return;
       if (!matchesDevice(fileHeaders, values, query)) return;
+      const startCol = fileHeaders.findIndex((header) => header.toLowerCase().includes('start time'));
+      const endCol = fileHeaders.findIndex((header) => header.toLowerCase().includes('end time'));
+      if (!overlapsWindow(startCol >= 0 ? values[startCol] : '', endCol >= 0 ? values[endCol] : '', window)) return;
       rows.push([file.reportDate || '', ...values]);
     });
   }
 
-  if (headers.length === 0 || (query.trim() && rows.length === 0)) return null;
+  if (headers.length === 0 || rows.length === 0) return null;
   return [headers, ...rows].map((row) => row.map(csvCell).join(',')).join('\r\n');
 }
